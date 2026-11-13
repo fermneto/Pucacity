@@ -46,7 +46,7 @@ describe('rotina casa → trabalho → casa', () => {
 
   it('estatísticas por bairro, cadeirantes e travessias radicais', () => {
     const byD = Object.values(st.tripsByDistrict);
-    expect(byD.length).toBe(4);
+    expect(byD.length).toBe(vitrine().districts.length); // a vitrine do PC1 muda; não fixar o número
     expect(byD.reduce((s, d) => s + d.completed, 0)).toBe(st.tripsCompleted);
     expect(st.wheelchairTrips.completed).toBeGreaterThan(0);
     expect(st.radicalCrossings).toBeGreaterThan(0);
