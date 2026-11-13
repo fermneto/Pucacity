@@ -1,0 +1,13 @@
+/* Elementos só do jogo (o resto do HUD é src/ui/hud.css, do PC1). */
+
+#hud .game-status { position: absolute; left: 10px; top: 140px; padding: 6px 10px; font-size: 11px; line-height: 1.5; }
+#hud .game-status div { position: relative; z-index: 1; }
+#hud .game-status b { font-family: 'Exo 2', sans-serif; }
+#hud .game-status .paused { color: var(--danger, #e8322c); }
+
+#game-error {
+  position: fixed; inset: 24px; z-index: 10; overflow: auto; padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.94); color: #0b2a52; border: 2px solid #e8322c; border-radius: 12px;
+  font: 13px/1.5 ui-monospace, Consolas, monospace; white-space: pre-wrap;
+}
+#game-error h1 { margin: 0 0 8px; font: 700 18px system-ui, sans-serif; color: #e8322c; }

@@ -19,8 +19,9 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npx vite build
+      # jogo (/), vitrine (/vitrine.html) e laboratório (/lab.html)
       - name: Capturas visuais (falha com erro de console)
-        run: npx playwright install chromium && PW_CHANNEL=chromium npm run shots
+        run: npx playwright install --with-deps chromium && PW_CHANNEL=chromium npm run shots
       - uses: actions/upload-artifact@v4
         if: always()
         with:
