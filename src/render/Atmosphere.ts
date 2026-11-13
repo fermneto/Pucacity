@@ -27,7 +27,8 @@ export class Atmosphere {
   private orbState: OrbState[] = [];
   private time = 0;
 
-  constructor(center: Vector3, canals: { y0: number; y1: number; x0: number; x1: number }[] = [], orbs: OrbSpot[] = []) {
+  /** `extent`: meia-diagonal da cidade em tiles; as nuvens ficam em volta dela, nunca por cima. */
+  constructor(center: Vector3, canals: { y0: number; y1: number; x0: number; x1: number }[] = [], orbs: OrbSpot[] = [], extent = 21) {
     const { texture } = getAtlas();
     // Céu: esfera com cor por vértice (azul royal no topo → azul bebê no horizonte)
     const geo = new SphereGeometry(160, 18, 12);
@@ -61,11 +62,11 @@ export class Atmosphere {
     const cloudGeo = buildModel('prop_cloud').opaque;
     this.clouds = new Group();
     const cloudMat = createPs1Material({ map: texture, noFog: true });
-    const N = 16;
+    const N = extent > 28 ? 22 : 16;
     const inst = new InstancedMesh(cloudGeo, cloudMat, N);
     for (let i = 0; i < N; i++) {
       const a = (i / N) * Math.PI * 2 + rng() * 0.3;
-      const r = 55 + rng() * 25;
+      const r = Math.max(55, extent + 34) + rng() * 25;
       const s = 9 + rng() * 7;
       inst.setMatrixAt(i, new Matrix4().compose(
         new Vector3(Math.cos(a) * r, 12 + rng() * 14, Math.sin(a) * r),

@@ -21,9 +21,9 @@ import { numParam, params } from './render/util';
 
 /**
  * VITRINE VISUAL — página de validação da direção de arte (docs/validacao-visual.md).
- * Parâmetros de URL: ?cam=overview|canal|canal2|ilha|loop|bowl|street|towers|spiral|megapipe
+ * Parâmetros de URL: ?cam=overview|canal|canal2|ilha|loop|bowl|street|towers|spiral|megapipe|parque|eolico|marcos
  *                    ?overlay=traffic|access  ?ps1=0  ?t=8 (congela após 8 s simulados)  ?hud=0
- *                    ?agents=1200  ?res=240
+ *                    ?agents=1600  ?res=240
  */
 let city = cityJson as unknown as CityFile;
 const canvas = document.getElementById('view') as HTMLCanvasElement;
@@ -38,13 +38,14 @@ const atmo = new Atmosphere(
   center,
   waterBands(city).map((c) => ({ ...c, x0: -25, x1: city.size.w + 25 })),
   (city.features ?? []).filter((f) => f.kind === 'orb').map((f) => ({ x: f.x, z: f.y, rot: f.rot })),
+  Math.hypot(city.size.w, city.size.h) / 2,
 );
 scene.add(atmo.group);
 
 const hud = new Hud();
 let lastTrick = 0;
 let simTime = 0;
-const AGENTS = numParam('agents', 1200);
+const AGENTS = numParam('agents', 1600);
 const trafficGroup = new Group();
 scene.add(trafficGroup);
 function makeTraffic(c: CityFile, v: CityView): DemoTraffic {
@@ -96,9 +97,9 @@ hud.onRedo = () => tools.redo();
 
 // Câmera e presets
 const rig = new CameraRig(canvas);
-// [alvo, distância, yaw, pitch] para a cidade de 33×27 tiles (2 canais, ilha central)
+// [alvo, distância, yaw, pitch] para a Metrópole Aero de 48×41 tiles (3 canais; marcos na faixa sul)
 type Preset = [Vector3, number, number, number];
-const OVERVIEW: Preset = [center.clone().setZ(center.z + 1.2), 42, 0, 0.95];
+const OVERVIEW: Preset = [center.clone().setZ(center.z + 1.5), 64, 0, 0.95];
 const PRESETS: Record<string, Preset> = {
   overview: OVERVIEW,
   canal: [new Vector3(8.5, 0, 8), 10, 0.55, 0.5],
@@ -110,6 +111,9 @@ const PRESETS: Record<string, Preset> = {
   towers: [new Vector3(18.5, 1, 3), 13, 3.4, 0.35],
   spiral: [new Vector3(28.6, 0.6, 3), 6.5, 0.55, 0.32],
   megapipe: [new Vector3(13.5, 0.3, 13), 6, 1.25, 0.4],
+  parque: [new Vector3(11.5, 1.5, 35), 21, 0.35, 0.5],
+  eolico: [new Vector3(33.5, 2.5, 34), 22, -0.45, 0.42],
+  marcos: [new Vector3(24, 4, 33), 41, 0.1, 0.24],
 };
 rig.set(...(PRESETS[params.get('cam') ?? 'overview'] ?? OVERVIEW));
 
@@ -153,8 +157,8 @@ fx.add(settings, 'dither', 0, 2, 0.1).name('Dither').onChange(() => r.resize());
 fx.add(settings, 'quantize15bit').name('Cor 15-bit').onChange(() => r.resize());
 const fog = gui.addFolder('Névoa');
 fog.add(fogAuto, 'on').name('Automática (pela distância)');
-fog.add(ps1Shared.uFogNear, 'value', 0, 80, 1).name('Início').listen();
-fog.add(ps1Shared.uFogFar, 'value', 5, 160, 1).name('Fim').listen();
+fog.add(ps1Shared.uFogNear, 'value', 0, 200, 1).name('Início').listen();
+fog.add(ps1Shared.uFogFar, 'value', 5, 400, 1).name('Fim').listen();
 const dbg = gui.addFolder('Debug');
 const debug = { wireframe: false, stats: '' };
 dbg.add(debug, 'wireframe').name('Wireframe (polígonos)').onChange(setWireframe);

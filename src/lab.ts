@@ -19,14 +19,14 @@ import { makeRng, numParam, params } from './render/util';
 
 /**
  * LABORATÓRIO DE ARTE — valida cada asset isoladamente (docs/validacao-visual.md).
- * ?tab=veiculos|predios|radicais|props|silhuetas|atlas|paleta  ?t=1.5 (congela o giro)  ?res=480
+ * ?tab=veiculos|predios|radicais|props|marcos|silhuetas|atlas|paleta  ?t=1.5 (congela o giro)  ?res=480
  */
-type Tab = 'veiculos' | 'predios' | 'radicais' | 'props' | 'silhuetas' | 'atlas' | 'paleta';
+type Tab = 'veiculos' | 'predios' | 'radicais' | 'props' | 'marcos' | 'silhuetas' | 'atlas' | 'paleta';
 const TABS: [Tab, string][] = [
-  ['veiculos', 'Veículos'], ['predios', 'Prédios'], ['radicais', 'Radicais'], ['props', 'Props'],
+  ['veiculos', 'Veículos'], ['predios', 'Prédios'], ['radicais', 'Radicais'], ['props', 'Props'], ['marcos', 'Marcos'],
   ['silhuetas', 'Silhuetas (densidade do jogo)'], ['atlas', 'Atlas de texturas'], ['paleta', 'Paleta'],
 ];
-const CAT_OF: Partial<Record<Tab, ModelDef['categoria']>> = { veiculos: 'veiculo', predios: 'predio', radicais: 'radical', props: 'prop' };
+const CAT_OF: Partial<Record<Tab, ModelDef['categoria']>> = { veiculos: 'veiculo', predios: 'predio', radicais: 'radical', props: 'prop', marcos: 'marco' };
 
 const canvas = document.getElementById('view') as HTMLCanvasElement;
 const r = new Ps1Renderer(canvas);
