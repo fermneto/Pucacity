@@ -66,10 +66,11 @@ describe('TransitSystem.addLine', () => {
 describe('lotação do coletivo', () => {
   it('nunca passa da capacidade; quem não cabe espera ou desiste', () => {
     // Todo mundo a pé (sem veículos próprios) e uma linha fraca: fila no pico da manhã.
-    const c = commuteCity(400, 0);
+    // Demanda alta para a linha lotar com qualquer número de balance (os tempos da rede vêm do balance.json).
+    const c = commuteCity(1600, 0);
     c.districts[0]!.ownership = {};
     const s = new Simulation(c, { seed: 5, startMinute: 6 * 60 + 30 });
-    const l = s.transit.addLine({ id: 'T1', kind: 'tuktuk', stops: [1, 2, 4], headwayMinutes: 15, fleet: 1 });
+    const l = s.transit.addLine({ id: 'T1', kind: 'tuktuk', stops: [1, 2, 4], headwayMinutes: 20, fleet: 1 });
     let maxLoad = 0;
     for (let i = 0; i < 4 * 60; i++) {
       s.tick();
@@ -106,8 +107,10 @@ describe('lotação do coletivo', () => {
     c.districts[0]!.ownership = {};
     const s = new Simulation(c, { seed: 2, startMinute: 7 * 60 });
     const l = s.transit.addLine({ id: 'T1', kind: 'tuktuk', stops: [1, 2, 4], headwayMinutes: 5, fleet: 4 });
-    s.step(40);
-    const onLine = l.waiting.reduce((n, q) => n + q.length, 0) + l.vehicles.reduce((n, v) => n + v.riders.length, 0);
+    // Avança até haver gente na linha (no máximo 3 h), sem depender dos tempos exatos da rede.
+    const countOnLine = () => l.waiting.reduce((n, q) => n + q.length, 0) + l.vehicles.reduce((n, v) => n + v.riders.length, 0);
+    for (let i = 0; i < 180 && countOnLine() === 0; i++) s.tick();
+    const onLine = countOnLine();
     expect(onLine).toBeGreaterThan(0);
     const gaveUp0 = s.getState().stats.transitGaveUp;
     expect(s.transit.removeLine('T1')).toBe(true);
