@@ -154,12 +154,29 @@ Em andamento: **metrópole Aero** (cidade cerca de 1,8× maior, Parque Aero e Di
 - Os sub-agentes em worktree usam um symlink para o `node_modules`; o `npm run shots` precisa de `server.fs.strict: false` nesse caso.
 - Os agentes de `.claude/agents/` só são carregados quando o Claude Code inicia.
 
+## 6.2 Merge das branches paralelas de PC2 e PC3 (13/11/2026)
+
+| Branch | Resultado |
+|---|---|
+| `pc2/onda1-design` (contém `pc2/vila-nova`, `pc2/conteudo-vila-nova`, `pc2/balance-casos`, `pc2/cenarios-2-4`) | **Integrada:** `vila-nova.json` (48×48, valida no `CityLoader`), `src/assets/text/vila-nova.json` (eventos, dilemas, falas, tutorial), `balance.json` v0.3 + `docs/design/balance-casos.md` (22 casos), cenários 2–4 |
+| `pc3/rede` (= `pc3/eng-rede` rebaseada) | **Integrada:** BPR por largura de faixa, travessias por modo, A\* com custo dinâmico |
+| `pc3/jogo` (= `pc3/eng-jogo` rebaseada) | **Integrada:** Commands com undo/redo e orçamento, KPIs, eventos/dilemas, save/load |
+| `pc3/core-rede` | **Superada** pela Onda 0. Só o `tests/core/Architecture.test.ts` foi aproveitado; o `enums.ts` duplicava as listas de `types.ts` |
+| `pc3/eng-rede`, `pc3/eng-jogo`, `pc2/*` individuais | Já contidas acima; podem ser apagadas pelos donos |
+
+**Ajustes de integração** (cada branch passava sozinha, juntas não):
+- `tests/core/Kpis.test.ts` usava `params.laneCapacityVph`, que a `pc3/rede` trocou pelo método `g.laneCapacityVph(edge, lane)`, porque a capacidade agora depende da largura.
+- `tests/core/RoadGraph.test.ts` esperava o tuk-tuk sem `fallRisk`, mas o balance v0.3 do PC2 passou a defini-lo.
+- Teste novo `tests/core/cenarios.test.ts`: **todo** mapa em `src/assets/cities/` precisa validar no `CityLoader`.
+
+Resultado: `npm run check` com **114/114 testes**, build ok, capturas sem erro.
+
 ## 7. Bloqueios entre PCs
 
 | Quem espera | De quem | O quê | Quando |
 |---|---|---|---|
 | PC1 (`SimView`) | PC3 | `Simulation.getState()` | Onda 1 |
-| PC2 (`vila-nova.json`) | PC3 | `CityLoader` na `main` | ✅ disponível |
+| PC2 (`vila-nova.json`) | PC3 | `CityLoader` na `main` | ✅ feito: `vila-nova.json` integrado e validado |
 | PC3 (testes de balance) | PC2 | Tabela de casos esperados | Onda 2 |
 | PC1 (`SimView` com dados reais) | PC3 | Implementar `Simulation.getState()` no formato de `src/render/SimState.ts` (ou superconjunto); decidir se o arquivo vai para `src/core/`; definir a interpolação entre ticks (1 tick = 1 min) e o render (por quadro) | Onda 1 |
 | PC1 (vulcões e dinossauros como features) | PC3 | Novos `FeatureKind` em `types.ts` (ex.: `volcano`, `dino` com espécie). Por enquanto eles entram como `buildings` com `kind: 'park'` | quando der |

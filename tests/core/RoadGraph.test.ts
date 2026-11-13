@@ -169,7 +169,7 @@ describe('risco de queda (KPI de Segurança)', () => {
     expect(DEFAULT_TRAFFIC.vehicleFallRisk.skate).toBe(V.skate.fallRisk);
     expect(DEFAULT_TRAFFIC.vehicleFallRisk.kick_scooter).toBe(V.patinete.fallRisk);
     expect(DEFAULT_TRAFFIC.vehicleFallRisk.wheelchair).toBe(V.cadeira_rodas.fallRisk);
-    expect(DEFAULT_TRAFFIC.vehicleFallRisk.tuktuk).toBeUndefined(); // sem número no balance → 0
+    expect(DEFAULT_TRAFFIC.vehicleFallRisk.tuktuk).toBe(V.tuktuk.fallRisk); // balance v0.3 (PC2) passou a definir o tuk-tuk
   });
 
   it('vias: risco do veículo × multiplicador da faixa × penalidade de faixa compartilhada', () => {

@@ -65,7 +65,7 @@ describe('computeKpis', () => {
     const g = new RoadGraph(city);
     expect(computeKpis(stats(), { city, graph: g }).congestionPct).toBe(0);
     const e = g.edges.find((x) => x.link === 'road')!;
-    e.flowVph.fast = g.params.laneCapacityVph.fast * 1.2;
+    e.flowVph.fast = g.laneCapacityVph(g.edges.indexOf(e), 'fast') * 1.2; // API da pc3/rede: capacidade depende da largura
     const roads = g.edges.filter((x) => x.link === 'road').length;
     expect(computeKpis(stats(), { city, graph: g }).congestionPct).toBeCloseTo(100 / roads);
   });
