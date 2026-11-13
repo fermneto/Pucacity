@@ -1,0 +1,80 @@
+{
+  "$descricao": "Elementos radicais espalhados pela cidade. Os marcados com 'substitui_ponte' são a única forma de atravessar rios, canais, avenidas ou desníveis; todos têm rota acessível alternativa.",
+  "elementos": [
+    {
+      "id": "rampa_ponte",
+      "nome": "Rampa-Ponte",
+      "substitui_ponte": true,
+      "descricao": "Kicker de lançamento numa margem e rampa de aterrissagem na outra.",
+      "vao_m": [8, 25],
+      "pontos_gap": 500,
+      "visual": "Concreto com borda zebrada amarelo/preto; aterrissagem com faixa verde-limão; placa em gel com o nome do gap.",
+      "rota_acessivel": "elevador_bolha"
+    },
+    {
+      "id": "loop_aereo",
+      "nome": "Loop Aéreo",
+      "substitui_ponte": true,
+      "descricao": "Loop vertical completo sobre avenidas largas.",
+      "diametro_m": [10, 18],
+      "velocidade_minima": 7.0,
+      "pontos_gap": 1500,
+      "visual": "Pista de vidro ciano translúcido com estrutura cromada e bolhas saindo das bordas.",
+      "rota_acessivel": "tuktuk"
+    },
+    {
+      "id": "salto_mortal",
+      "nome": "Salto Mortal",
+      "substitui_ponte": true,
+      "descricao": "Gap longo sobre canal ou trilho, com recorde de distância exibido na placa.",
+      "vao_m": [25, 60],
+      "pontos_gap": 3000,
+      "visual": "Rampa alta com bandeirolas, placar de recorde em CRT e rede de segurança verde-água embaixo.",
+      "rota_acessivel": "elevador_bolha"
+    },
+    {
+      "id": "rail_passarela",
+      "nome": "Rail-Passarela",
+      "substitui_ponte": true,
+      "descricao": "Corrimão longo entre prédios, atravessado só no grind.",
+      "comprimento_m": [15, 40],
+      "pontos_por_metro": 20,
+      "visual": "Tubo cromado com luzes de gel a cada 2 m; passarela de vidro coberta paralela para pedestres.",
+      "rota_acessivel": "passarela_vidro"
+    },
+    {
+      "id": "wallride_tubular",
+      "nome": "Wallride Tubular",
+      "substitui_ponte": false,
+      "descricao": "Túnel em meia-cana que atravessa o térreo de um prédio.",
+      "visual": "Interior de azulejo branco com faixa de grafite; entrada emoldurada em vidro."
+    },
+    {
+      "id": "quarter_esquina",
+      "nome": "Quarter-pipe de Esquina",
+      "substitui_ponte": false,
+      "descricao": "Os cruzamentos têm quarter-pipes nas quinas no lugar das guias retas.",
+      "visual": "Concreto liso com cantoneira cromada e marcas de roda."
+    },
+    {
+      "id": "funil_bowl",
+      "nome": "Funil Bowl",
+      "substitui_ponte": false,
+      "descricao": "Praça rebaixada em forma de bowl, usada como rotatória do trânsito de rodinhas.",
+      "visual": "Bowl de concreto com piscina-fonte no centro, borda de azulejo azul-céu."
+    },
+    {
+      "id": "elevador_bolha",
+      "nome": "Elevador de Bolha",
+      "substitui_ponte": false,
+      "descricao": "Cápsula Aero que sobe ao topo das rampas altas e atravessa os vãos por cabo. É a rota acessível padrão.",
+      "visual": "Esfera de vidro lustroso com anel cromado, sobe por um trilho transparente."
+    }
+  ],
+  "regras_de_posicionamento": {
+    "toda_travessia_tem_elemento_radical": true,
+    "toda_travessia_tem_rota_acessivel": true,
+    "distancia_maxima_entre_elementos_m": 120,
+    "cidadaos_npc_usam_elementos": "Só os veículos com 'manobras': true; os demais usam a rota acessível."
+  }
+}

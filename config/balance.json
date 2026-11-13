@@ -1,6 +1,6 @@
 {
-  "_nota": "Valores PROVISÓRIOS de game design. Ajustar em playtest. Sem dependência de código: a engenharia apenas lê este arquivo.",
-  "version": "0.1.0",
+  "_nota": "Valores PROVISÓRIOS de game design. Ajustar em playtest. Velocidades base vêm de data/arte/veiculos.json (ids iguais); aqui ficam só os números de equilíbrio.",
+  "version": "0.2.0",
 
   "time": {
     "tickMinutes": 1,
@@ -11,20 +11,28 @@
     ]
   },
 
-  "overboard": {
-    "types": {
-      "basico": { "speed": 10, "batteryCapacity": 100, "drainPerTile": 1.0, "fallRisk": 0.002, "price": 0 },
-      "rapido": { "speed": 18, "batteryCapacity": 80, "drainPerTile": 1.6, "fallRisk": 0.006, "price": 0 },
-      "x9": { "speed": 26, "batteryCapacity": 70, "drainPerTile": 2.2, "fallRisk": 0.015, "price": 0 }
-    },
+  "vehicles": {
+    "_nota": "fallRisk = chance base de queda por viagem. battery só para elétricos. modeCost = custo por viagem (0 = próprio). 'mvp' marca o que entra na v0.1.",
+    "pedestre": { "mvp": true, "fallRisk": 0.0005, "modeCost": 0 },
+    "cadeira_rodas": { "mvp": true, "fallRisk": 0.001, "modeCost": 0 },
+    "skate": { "mvp": true, "fallRisk": 0.008, "modeCost": 0 },
+    "patinete": { "mvp": true, "fallRisk": 0.004, "modeCost": 0 },
+    "longboard": { "mvp": false, "fallRisk": 0.006, "modeCost": 0 },
+    "patins": { "mvp": false, "fallRisk": 0.007, "modeCost": 0 },
+    "bmx": { "mvp": false, "fallRisk": 0.01, "modeCost": 0 },
+    "patinete_eletrico": { "mvp": false, "fallRisk": 0.012, "battery": 100, "drainPerTile": 1.4, "modeCost": 0 },
+    "hoverboard": { "mvp": false, "fallRisk": 0.01, "battery": 80, "drainPerTile": 1.2, "modeCost": 0 },
+    "monociclo_eletrico": { "mvp": false, "fallRisk": 0.014, "battery": 90, "drainPerTile": 1.3, "modeCost": 0 },
+    "cadeira_motorizada": { "mvp": false, "fallRisk": 0.002, "battery": 120, "drainPerTile": 1.0, "modeCost": 0 },
     "lowBatteryThreshold": 15
   },
 
   "lanes": {
-    "lenta": { "speed": 8, "capacityPerTile": 30, "fallRiskMultiplier": 0.5, "noiseMultiplier": 0.6 },
-    "normal": { "speed": 14, "capacityPerTile": 40, "fallRiskMultiplier": 1.0, "noiseMultiplier": 1.0 },
-    "expressa": { "speed": 24, "capacityPerTile": 55, "fallRiskMultiplier": 2.0, "noiseMultiplier": 1.6 },
-    "calcada": { "speed": 3, "capacityPerTile": 60, "fallRiskMultiplier": 0.1, "noiseMultiplier": 0.1 }
+    "sidewalk": { "capacityPerWidth": 60, "fallRiskMultiplier": 0.2, "noiseMultiplier": 0.1 },
+    "slow": { "capacityPerWidth": 40, "fallRiskMultiplier": 0.6, "noiseMultiplier": 0.7 },
+    "fast": { "capacityPerWidth": 55, "fallRiskMultiplier": 1.6, "noiseMultiplier": 1.4 },
+    "transit": { "capacityPerWidth": 45, "fallRiskMultiplier": 0.4, "noiseMultiplier": 0.5 },
+    "_sharedLanePenalty": { "speedFactor": 0.6, "fallRiskMultiplier": 2.0 }
   },
 
   "congestion": {
@@ -37,54 +45,66 @@
 
   "tools": {
     "sentidoVia": { "cost": 100, "buildDays": 0 },
-    "pistaLenta": { "cost": 150, "buildDays": 1 },
-    "pistaNormal": { "cost": 250, "buildDays": 1 },
-    "pistaExpressa": { "cost": 500, "buildDays": 2 },
+    "divisaoFaixas": { "cost": 120, "buildDays": 0 },
     "limiteVelocidade": { "cost": 50, "buildDays": 0 },
-    "rotatoriaMagnetica": { "cost": 800, "buildDays": 3, "blocksTrafficWhileBuilding": true },
-    "travessiaElevada": { "cost": 400, "buildDays": 2 },
-    "zonaPedestre": { "cost": 600, "buildDays": 2 },
-    "docaDeCarga": { "cost": 500, "buildDays": 2 },
-    "plataformaColetivaLinha": { "cost": 1500, "operationPerDay": 80, "capacityPerVehicle": 30, "headwayMinutes": 10 },
+    "semaforo": { "cost": 300, "buildDays": 1 },
+    "travessiaPedestre": { "cost": 400, "buildDays": 2 },
+    "rampaPonte": { "cost": 1200, "buildDays": 4, "blocksTrafficWhileBuilding": true },
+    "elevadorBolha": { "cost": 900, "buildDays": 3, "capacityPerMinute": 6 },
+    "linhaTukTuk": { "cost": 1500, "operationPerDay": 80, "capacityPerVehicle": 3, "headwayMinutes": 10 },
+    "linhaTandem": { "cost": 800, "operationPerDay": 35, "capacityPerVehicle": 3, "headwayMinutes": 12 },
+    "quarterPipeEsquina": { "cost": 700, "buildDays": 3 },
     "estacaoCarga": { "cost": 700, "buildDays": 2, "slots": 8 },
     "painelSolar": { "cost": 900, "energyPerDay": 40 },
-    "arvore": { "cost": 60, "heatReduction": 0.5, "noiseReduction": 0.3 }
+    "arvore": { "cost": 60, "heatReduction": 0.5, "noiseReduction": 0.3 },
+    "rackSkate": { "cost": 150, "buildDays": 1 }
+  },
+
+  "radical": {
+    "_nota": "Detalhes visuais e vãos em data/arte/elementos-radicais.json. Aqui ficam só efeitos de jogo.",
+    "rampa_ponte": { "crossSeconds": 6, "fallRisk": 0.006, "funBonus": 0.5, "requiresManeuvers": true, "accessRoute": "elevador_bolha" },
+    "loop_aereo": { "crossSeconds": 4, "fallRisk": 0.02, "funBonus": 1.2, "minSpeed": 7.0, "accessRoute": "tuktuk" },
+    "salto_mortal": { "crossSeconds": 5, "fallRisk": 0.025, "funBonus": 1.5, "requiresManeuvers": true, "accessRoute": "elevador_bolha" },
+    "rail_passarela": { "crossSeconds": 5, "fallRisk": 0.015, "funBonus": 1.0, "accessRoute": "passarela_vidro" },
+    "elevador_bolha": { "crossSeconds": 40, "fallRisk": 0.0, "funBonus": 0.1, "queue": true }
   },
 
   "modalChoice": {
-    "_nota": "Desutilidade = tempo*pesoTempo + custo*pesoCusto + risco*pesoRisco + (1-conforto)*pesoConforto. Menor vence, com ruído.",
-    "weights": { "tempo": 1.0, "custo": 0.6, "risco": 0.8, "conforto": 0.5 },
-    "noise": 0.15,
-    "modes": ["pe", "overboard", "plataforma"]
+    "_nota": "Desutilidade = tempo*wt + custo*wc + risco*wr + (1-conforto)*wf - diversao*wd. Menor vence, com ruído. Cadeirantes nunca trocam de modo.",
+    "weights": { "tempo": 1.0, "custo": 0.6, "risco": 0.8, "conforto": 0.5, "diversao": 0.4 },
+    "noise": 0.15
   },
 
   "citizens": {
     "groups": {
-      "adulto": { "share": 0.55, "speedFactor": 1.0 },
-      "idoso": { "share": 0.15, "speedFactor": 0.6, "fallPenalty": 2.0 },
-      "estudante": { "share": 0.2, "speedFactor": 1.2 },
-      "entregador": { "share": 0.1, "speedFactor": 1.3 }
+      "adulto": { "share": 0.5, "speedFactor": 1.0 },
+      "idoso": { "share": 0.15, "speedFactor": 0.7, "fallPenalty": 2.0 },
+      "estudante": { "share": 0.2, "speedFactor": 1.15 },
+      "entregador": { "share": 0.08, "speedFactor": 1.25 },
+      "cadeirante": { "share": 0.07, "speedFactor": 1.0 }
     },
     "patience": { "start": 70, "dropPerBadDay": 6, "protestThreshold": 20 }
   },
 
   "kpiWeights": {
-    "tempoMedioViagem": 0.30,
-    "quedasPor1000Viagens": 0.20,
-    "saldoOrcamento": 0.15,
-    "satisfacao": 0.15,
+    "tempoMedioViagem": 0.25,
+    "quedasPor1000Viagens": 0.15,
+    "acessibilidade": 0.20,
+    "saldoOrcamento": 0.10,
+    "satisfacao": 0.10,
     "energiaAtendida": 0.10,
-    "acessibilidade": 0.10
+    "radicalidade": 0.10
   },
 
   "economy": {
     "monthlyIncomePerResident": 1.5,
-    "overboardFare": 0,
-    "platformFare": 2
+    "tukTukFare": 2,
+    "tandemFare": 1,
+    "sharingFare": 1
   },
 
   "events": {
-    "festival_praca": {
+    "campeonato_bowl": {
       "scenario": "vila-nova",
       "day": 7,
       "startHour": 17,
@@ -93,10 +113,13 @@
       "warningHoursBefore": 24,
       "fail": { "occupationOver": 1.5, "forMinutes": 30, "satisfactionPenalty": 10, "extraFalls": 3 }
     },
+    "chuva_forte": { "durationHours": 6, "slipperyFallMultiplier": 2.0, "floodedLaneShare": 0.2 },
+    "vento_loop": { "durationDays": 1, "closes": ["loop_aereo"] },
     "apagao_parcial": { "durationHours": 4, "affectedShare": 0.35, "severity": "alta" },
-    "chuva_forte": { "durationHours": 6, "floodedLaneShare": 0.2 },
     "onda_de_calor": { "durationDays": 2, "heatBonus": 8, "flowPenalty": 0.25 },
-    "tempestade_magnetica": { "durationDays": 2, "stabilityPenalty": 0.5 }
+    "greve_tuktuk": { "durationDays": 2, "lineShutdown": "principais" },
+    "elevador_quebrado": { "durationHours": 8, "closes": ["elevador_bolha"] },
+    "bairro_novo": { "populationGrowth": 0.10 }
   },
 
   "scenarios": {
@@ -105,11 +128,13 @@
       "durationDays": 14,
       "goals": {
         "principal": { "metric": "tempoMedioViagem", "improvement": 0.20 },
-        "equilibrio1": { "metric": "quedasPor1000Viagens", "maxIncrease": 0.0 },
-        "equilibrio2": { "metric": "saldo", "min": 0 }
+        "equilibrio1": { "metric": "acessibilidade", "min": 0.95 },
+        "equilibrio2": { "metrics": { "quedasPor1000Viagens": "naoAumenta", "saldo": { "min": 0 } } }
       },
+      "threeStars": { "satisfacao_osvaldo_min": 0.6 },
+      "dilemmas": ["entregas_mercado", "elemento_travessia"],
       "unlocks": {
-        "plataformaColetiva": "sobreviver_festival_sem_multidao",
+        "linhaTukTuk": "sobreviver_campeonato_sem_multidao",
         "cenario02": "meta_principal"
       }
     }

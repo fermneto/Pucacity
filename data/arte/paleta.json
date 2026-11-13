@@ -1,0 +1,63 @@
+{
+  "$descricao": "Paleta oficial de Pucacity. 'mundo' = cores-base de cenário; 'veiculos_moda' = 35 cores sorteáveis para veículos e roupas dos cidadãos.",
+  "mundo": {
+    "ceu_topo": "#1F5FD6",
+    "ceu_horizonte": "#9FD4FF",
+    "nuvem": "#FFFFFF",
+    "agua": "#1FB5A6",
+    "grama": "#7BD13A",
+    "concreto": "#A9A397",
+    "concreto_sombra": "#6E6A62",
+    "asfalto": "#3A3F47",
+    "vidro": "#7FD8E8",
+    "cromo": "#D6DEE6",
+    "faixa_lancamento": "#FFD400",
+    "faixa_aterrissagem": "#B8F02A",
+    "sombra_blob": "#1A1B1E"
+  },
+  "veiculos_moda": [
+    { "id": "aqua_bolha",            "nome": "Aqua Bolha",             "hex": "#3FD0E8", "familia": "aero" },
+    { "id": "verde_gramado_aero",    "nome": "Verde Gramado Aero",     "hex": "#6CCB3F", "familia": "aero" },
+    { "id": "azul_ceu_xp",           "nome": "Azul Céu XP",            "hex": "#2E8BEA", "familia": "aero" },
+    { "id": "azul_bebe_aero",        "nome": "Azul Bebê Aero",         "hex": "#9FD4FF", "familia": "aero" },
+    { "id": "verde_agua_vidro",      "nome": "Verde-Água Vidro",       "hex": "#7FD8C8", "familia": "aero" },
+    { "id": "menta_gelo",            "nome": "Menta Gelo",             "hex": "#A6F0D2", "familia": "aero" },
+    { "id": "turquesa_piscina",      "nome": "Turquesa Piscina",       "hex": "#1FB5A6", "familia": "aero" },
+    { "id": "branco_gelo_lustroso",  "nome": "Branco Gelo Lustroso",   "hex": "#F2F8FC", "familia": "aero" },
+    { "id": "prata_cromo",           "nome": "Prata Cromo",            "hex": "#C9D3DC", "familia": "aero" },
+    { "id": "lilas_gloss",           "nome": "Lilás Gloss",            "hex": "#C9A4F2", "familia": "aero" },
+
+    { "id": "lima_acido",            "nome": "Lima Ácido",             "hex": "#B8F02A", "familia": "neon" },
+    { "id": "amarelo_grip_neon",     "nome": "Amarelo Grip Neon",      "hex": "#FFE23A", "familia": "neon" },
+    { "id": "ciano_crt",             "nome": "Ciano CRT",              "hex": "#00E5FF", "familia": "neon" },
+    { "id": "verde_neon_roda",       "nome": "Verde Neon Roda",        "hex": "#39FF6A", "familia": "neon" },
+    { "id": "rosa_chiclete",         "nome": "Rosa Chiclete",          "hex": "#FF5FA8", "familia": "neon" },
+    { "id": "magenta_minidisc",      "nome": "Magenta MiniDisc",       "hex": "#D22D9A", "familia": "neon" },
+    { "id": "laranja_cone",          "nome": "Laranja Cone",           "hex": "#FF7A1A", "familia": "neon" },
+    { "id": "tangerina_tamagotchi",  "nome": "Tangerina Tamagotchi",   "hex": "#FF9F1C", "familia": "neon" },
+
+    { "id": "vermelho_spray",        "nome": "Vermelho Lata de Spray", "hex": "#E8322C", "familia": "rua" },
+    { "id": "azul_royal_ploc",       "nome": "Azul Royal Ploc",        "hex": "#2340C8", "familia": "rua" },
+    { "id": "roxo_uva_translucido",  "nome": "Roxo Uva Translúcido",   "hex": "#7B4FD6", "familia": "rua" },
+    { "id": "verde_garrafa_pet",     "nome": "Verde Garrafa PET",      "hex": "#1E8E5A", "familia": "rua" },
+    { "id": "coral_por_do_sol",      "nome": "Coral Pôr do Sol",       "hex": "#FF8466", "familia": "rua" },
+    { "id": "rosa_algodao_doce",     "nome": "Rosa Algodão-Doce",      "hex": "#FFC2E2", "familia": "rua" },
+    { "id": "pessego_walkman",       "nome": "Pêssego Walkman",        "hex": "#FFB98A", "familia": "rua" },
+    { "id": "ouro_trofeu",           "nome": "Ouro Troféu",            "hex": "#E3B23C", "familia": "rua" },
+
+    { "id": "grafite_asfalto",       "nome": "Grafite Asfalto",        "hex": "#3A3F47", "familia": "base" },
+    { "id": "preto_lixa",            "nome": "Preto Lixa",             "hex": "#1A1B1E", "familia": "base" },
+    { "id": "bege_concreto",         "nome": "Bege Concreto",          "hex": "#BDB4A4", "familia": "base" },
+    { "id": "marrom_maple",          "nome": "Marrom Prancha Maple",   "hex": "#C68A4E", "familia": "base" },
+    { "id": "azul_jeans_largo",      "nome": "Azul Jeans Largo",       "hex": "#3E5E8E", "familia": "base" },
+    { "id": "verde_militar_cargo",   "nome": "Verde Militar Cargo",    "hex": "#6B7445", "familia": "base" },
+    { "id": "vinho_moletom",         "nome": "Vinho Moletom",          "hex": "#7A2238", "familia": "base" },
+    { "id": "cobre_rolamento",       "nome": "Cobre Rolamento",        "hex": "#B8653A", "familia": "base" },
+    { "id": "areia_camurca",         "nome": "Areia Tênis Camurça",    "hex": "#D8C49A", "familia": "base" }
+  ],
+  "regras_combinacao": {
+    "$descricao": "Como sortear um visual: 1 cor 'base' para a peça grande (calça/shape), 1 cor de 'aero' ou 'rua' para a peça média (blusa/carenagem) e no máximo 1 'neon' como acento (rodas, tênis, boné).",
+    "max_neon_por_cidadao": 1,
+    "peso_familias": { "base": 0.40, "rua": 0.25, "aero": 0.25, "neon": 0.10 }
+  }
+}
