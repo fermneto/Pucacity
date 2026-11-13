@@ -1,0 +1,40 @@
+html, body { overflow: auto !important; height: auto !important; min-height: 100%; background: #cfe9ff !important; }
+body { font-family: 'Varela Round', system-ui, sans-serif; color: #0b2a52; }
+canvas#view { pointer-events: none; z-index: 0; }
+
+.lab { position: relative; z-index: 1; padding: 12px 16px 40px; }
+.lab header { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+.lab header .logo { font-size: 20px; }
+.lab header h1 { font-size: 13px; font-weight: 400; margin: 0 8px; }
+.lab nav { display: flex; gap: 6px; flex-wrap: wrap; }
+.lab nav button { font: inherit; font-size: 13px; color: inherit; border: 0; cursor: pointer; padding: 6px 12px; }
+.lab nav button.on { --gel-mid: rgba(214, 255, 150, 0.85); --gel-bot: rgba(108, 203, 63, 0.92); }
+
+.summary { margin: 0 0 12px; padding: 8px 12px; font-size: 13px; }
+.summary b { font-family: 'Exo 2'; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.grid.wide { grid-template-columns: 1fr; }
+.card { background: rgba(255, 255, 255, 0.25); border: 2px solid #f2f8fc; display: flex; flex-direction: column; }
+.card .view { height: 210px; }
+.grid.wide .card .view { height: 420px; }
+.card .info { background: rgba(242, 248, 252, 0.92); padding: 6px 8px; font-size: 12px; }
+.card .info .name { font-weight: 700; }
+.card .info code { font-size: 11px; opacity: 0.75; }
+.card .info .tris { float: right; font-family: 'Exo 2'; font-weight: 700; }
+.card .info .ok { color: #1e8e5a; }
+.card .info .over { color: #e8322c; }
+.card .info .note { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+.atlas { display: grid; grid-template-columns: repeat(4, 160px); gap: 10px; }
+.atlas figure { margin: 0; background: #f2f8fc; padding: 6px; }
+.atlas canvas { width: 148px; height: 148px; image-rendering: pixelated; display: block; }
+.atlas figcaption { font-size: 11px; margin-top: 4px; }
+.atlas figcaption code { font-weight: 700; }
+
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-bottom: 16px; }
+.sw { background: #f2f8fc; font-size: 11px; display: flex; align-items: center; gap: 8px; padding: 4px; }
+.sw i { width: 34px; height: 34px; display: block; border: 1px solid rgba(0, 0, 0, 0.2); flex: none; }
+.sw b { display: block; font-size: 12px; }
+h2 { font-family: 'Bungee', sans-serif; font-weight: 400; font-size: 16px; margin: 18px 0 8px; }
+.hidden { display: none !important; }

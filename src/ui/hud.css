@@ -1,0 +1,138 @@
+/*
+ * HUD Pucacity — vidro em gel Frutiger Aero + texto "radical" de jogo de skate Y2K.
+ * Fontes OFL (docs/referencias.md): Varela Round (HUD), Exo 2 (números), Bungee (manobras).
+ * Bordas em degrau (sem arredondamento suave) para combinar com o pixel do PS1.
+ */
+:root {
+  --gel-top: rgba(255, 255, 255, 0.92);
+  --gel-mid: rgba(159, 212, 255, 0.82);
+  --gel-bot: rgba(46, 139, 234, 0.88);
+  --gel-edge: #f2f8fc;
+  --gel-ink: #0b2a52;
+  --gel-shadow: rgba(10, 30, 70, 0.35);
+  --lime: #b8f02a;
+  --grip: #ffe23a;
+  --aqua: #3fd0e8;
+  --rosa: #ff5fa8;
+  --danger: #e8322c;
+  --px: 3px; /* tamanho do "degrau" dos cantos */
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #9fd4ff; }
+canvas#view { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; image-rendering: pixelated; }
+
+#hud {
+  position: fixed; inset: 0; pointer-events: none;
+  font-family: 'Varela Round', system-ui, sans-serif; color: var(--gel-ink);
+  -webkit-font-smoothing: none; font-smooth: never;
+}
+#hud.hidden { display: none; }
+#hud .interactive { pointer-events: auto; }
+
+/* Pílula/painel de gel: gradiente + brilho na metade de cima + borda clara + cantos em degrau */
+.gel {
+  position: relative;
+  background: linear-gradient(180deg, var(--gel-top) 0%, var(--gel-mid) 48%, var(--gel-bot) 52%, #7fc4ff 100%);
+  border: 2px solid var(--gel-edge);
+  box-shadow: 0 3px 0 var(--gel-shadow), inset 0 -2px 0 rgba(255, 255, 255, 0.5);
+  clip-path: polygon(
+    var(--px) 0, calc(100% - var(--px)) 0, 100% var(--px), 100% calc(100% - var(--px)),
+    calc(100% - var(--px)) 100%, var(--px) 100%, 0 calc(100% - var(--px)), 0 var(--px));
+}
+.gel::after { /* reflexo "botão do XP" */
+  content: ''; position: absolute; left: 6%; right: 6%; top: 2px; height: 38%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.15));
+  pointer-events: none;
+}
+.gel.lime { --gel-mid: rgba(214, 255, 150, 0.85); --gel-bot: rgba(108, 203, 63, 0.92); }
+.gel.rosa { --gel-mid: rgba(255, 194, 226, 0.85); --gel-bot: rgba(255, 95, 168, 0.9); }
+.gel.dark { --gel-top: rgba(120, 140, 170, 0.9); --gel-mid: rgba(40, 60, 90, 0.88); --gel-bot: rgba(20, 30, 50, 0.92); color: #e9f6ff; }
+
+/* conteúdo sempre acima do reflexo */
+.gel > span { position: relative; z-index: 1; }
+
+/* Barra superior */
+.topbar { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; gap: 8px; align-items: stretch; flex-wrap: wrap; }
+.logo {
+  font-family: 'Bungee', sans-serif; font-size: 22px; padding: 4px 14px; letter-spacing: 1px;
+  color: #fff; -webkit-text-stroke: 1.5px #0b2a52; text-shadow: 2px 2px 0 #0b2a52;
+  background: linear-gradient(180deg, #fff 0%, #3fd0e8 50%, #2e8bea 51%, #2340c8 100%);
+}
+.pill { padding: 5px 12px; display: flex; flex-direction: column; justify-content: center; min-width: 78px; }
+.pill .k { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; position: relative; z-index: 1; }
+.pill .v { font-family: 'Exo 2', sans-serif; font-weight: 700; font-size: 18px; line-height: 1.05; position: relative; z-index: 1; }
+.pill .v small { font-size: 11px; }
+.pill.warn .v { color: var(--danger); }
+.spacer { flex: 1; }
+.speed { display: flex; gap: 4px; }
+.speed button, .tool, .tab {
+  font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0;
+}
+.speed button { padding: 4px 10px; font-family: 'Exo 2', sans-serif; font-weight: 700; }
+.speed button.on { --gel-mid: rgba(255, 246, 180, 0.9); --gel-bot: rgba(255, 226, 58, 0.95); }
+
+/* Ferramentas (orbs de gel) */
+.toolbar { position: absolute; left: 10px; bottom: 10px; display: flex; gap: 8px; align-items: flex-end; }
+.tool { display: flex; flex-direction: column; align-items: center; gap: 3px; width: 64px; }
+.orb {
+  width: 46px; height: 46px; display: grid; place-items: center; font-family: 'Bungee', sans-serif; font-size: 17px; color: #fff;
+  -webkit-text-stroke: 1px #0b2a52; text-shadow: 1px 2px 0 #0b2a52;
+}
+.tool .lbl { font-size: 10px; background: rgba(242, 248, 252, 0.85); padding: 1px 5px; color: var(--gel-ink); }
+.tool:hover .orb { filter: brightness(1.12); }
+
+/* Abas de overlay */
+.tabs { position: absolute; right: 10px; bottom: 10px; display: flex; gap: 6px; }
+.tab { padding: 6px 12px; font-size: 12px; }
+.tab.on { --gel-mid: rgba(214, 255, 150, 0.85); --gel-bot: rgba(108, 203, 63, 0.92); }
+.tab kbd { font-family: 'Exo 2'; font-size: 10px; opacity: 0.7; position: relative; z-index: 1; }
+.tab span { position: relative; z-index: 1; }
+
+/* Painel de seleção */
+.panel { position: absolute; right: 10px; top: 76px; width: 240px; padding: 10px 12px; font-size: 12px; display: none; }
+.panel.show { display: block; }
+.panel h3 { margin: 0 0 6px; font-family: 'Bungee', sans-serif; font-size: 14px; font-weight: 400; position: relative; z-index: 1; }
+.panel .row { display: flex; justify-content: space-between; padding: 2px 0; border-bottom: 1px dashed rgba(11, 42, 82, 0.2); position: relative; z-index: 1; }
+.panel .row b { font-family: 'Exo 2'; }
+.panel .bad { color: var(--danger); }
+
+/* Legenda do overlay */
+.legend { position: absolute; right: 10px; bottom: 56px; padding: 6px 10px; font-size: 11px; display: none; }
+.legend.show { display: block; }
+.legend .bar { height: 8px; width: 160px; margin-top: 4px; background: linear-gradient(90deg, #39ff6a, #ffe23a, #e8322c); position: relative; z-index: 1; }
+.legend span { position: relative; z-index: 1; }
+
+/* Texto radical de manobra */
+.tricks { position: absolute; left: 0; right: 0; bottom: 96px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.trick {
+  font-family: 'Bungee', sans-serif; font-size: 30px; transform: skewX(-12deg); letter-spacing: 1px;
+  color: #fff; -webkit-text-stroke: 2px #0b2a52; text-shadow: 3px 3px 0 #0b2a52;
+  background: linear-gradient(180deg, #ffffff 0%, #bff6ff 45%, #3fd0e8 55%, #2e8bea 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  animation: pop 2.2s steps(12) forwards;
+}
+.trick.combo { font-size: 18px; -webkit-text-fill-color: var(--grip); }
+@keyframes pop {
+  0% { transform: skewX(-12deg) scale(0.4); opacity: 0; }
+  15% { transform: skewX(-12deg) scale(1.15); opacity: 1; }
+  25% { transform: skewX(-12deg) scale(1); }
+  80% { opacity: 1; }
+  100% { transform: skewX(-12deg) translateY(-30px); opacity: 0; }
+}
+
+/* Dicas de teclado */
+.keys { position: absolute; left: 10px; top: 70px; font-size: 11px; padding: 6px 10px; }
+.keys div { position: relative; z-index: 1; }
+
+/* Selo "modo validação" */
+.badge { position: absolute; left: 50%; top: 70px; transform: translateX(-50%); padding: 3px 10px; font-size: 11px; display: none; }
+.badge.show { display: block; }
+.badge span { position: relative; z-index: 1; }
+
+@media (max-width: 800px) {
+  .pill .v { font-size: 14px; }
+  .keys { display: none; }
+  .tool { width: 52px; }
+  .orb { width: 38px; height: 38px; font-size: 14px; }
+}
