@@ -1,4 +1,5 @@
 import './hud.css';
+import { TOOL_BUTTONS, type ToolKey } from './tools';
 
 /** HUD de gestão (SPEC §8) com linguagem Frutiger Aero. Só apresentação: os dados vêm de fora. */
 
@@ -14,10 +15,6 @@ export interface HudKpis {
   satisfaction: number;
 }
 
-const TOOLS: [string, string][] = [
-  ['≡', 'Faixas'], ['⇄', 'Sentido'], ['●', 'Semáforo'], ['T', 'Tuk-tuk'],
-  ['∩', 'Travessia'], ['⚡', 'Compart.'], ['$', 'Tarifa'],
-];
 
 export class Hud {
   readonly root: HTMLElement;
@@ -29,6 +26,9 @@ export class Hud {
   private badge: HTMLElement;
   onOverlay?: (m: OverlayMode) => void;
   onSpeed?: (s: number) => void;
+  onTool?: (key: ToolKey) => void;
+  onUndo?: () => void;
+  onRedo?: () => void;
 
   constructor() {
     const root = document.createElement('div');
@@ -54,7 +54,9 @@ export class Hud {
       <div class="gel legend"><span>Ocupação da faixa</span><div class="bar"></div></div>
       <div class="tricks"></div>
       <div class="toolbar interactive">
-        ${TOOLS.map(([i, l], k) => `<button class="tool"><div class="gel orb ${k % 3 === 1 ? 'lime' : k % 3 === 2 ? 'rosa' : ''}"><span>${i}</span></div><div class="lbl">${l}</div></button>`).join('')}
+        ${TOOL_BUTTONS.map((t, k) => `<button class="tool" data-tool="${t.key}" title="${t.hint}"><div class="gel orb ${k % 3 === 1 ? 'lime' : k % 3 === 2 ? 'rosa' : ''}"><span>${t.icon}</span></div><div class="lbl">${t.label}</div></button>`).join('')}
+        <button class="tool" data-undo title="Desfazer (Ctrl+Z)"><div class="gel orb"><span>↶</span></div><div class="lbl">Desfazer</div></button>
+        <button class="tool" data-redo title="Refazer (Ctrl+Y)"><div class="gel orb"><span>↷</span></div><div class="lbl">Refazer</div></button>
       </div>
       <div class="tabs interactive">
         <button class="gel tab on" data-m="none"><span>Normal</span></button>
@@ -76,9 +78,11 @@ export class Hud {
         this.onSpeed?.(Number(b.dataset.s));
       });
     }
-    for (const b of root.querySelectorAll<HTMLElement>('.tool')) {
-      b.addEventListener('click', () => this.trick('FERRAMENTA EM BREVE', true));
+    for (const b of root.querySelectorAll<HTMLElement>('[data-tool]')) {
+      b.addEventListener('click', () => this.onTool?.(b.dataset.tool as ToolKey));
     }
+    root.querySelector('[data-undo]')?.addEventListener('click', () => this.onUndo?.());
+    root.querySelector('[data-redo]')?.addEventListener('click', () => this.onRedo?.());
   }
 
   private pill(id: string, label: string) {
@@ -99,6 +103,13 @@ export class Hud {
     set('access', `${Math.round(k.access * 100)}<small>%</small>`, k.access < 0.95);
     set('radical', `${Math.round(k.radical * 100)}<small>%</small>`);
     set('satisfaction', `${Math.round(k.satisfaction * 100)}<small>%</small>`);
+  }
+
+  /** Destaca a ferramenta ativa e liga/desliga Desfazer/Refazer. */
+  setTools(active: ToolKey | null, canUndo: boolean, canRedo: boolean) {
+    for (const b of this.root.querySelectorAll<HTMLElement>('[data-tool]')) b.classList.toggle('on', b.dataset.tool === active);
+    this.root.querySelector('[data-undo]')?.classList.toggle('off', !canUndo);
+    this.root.querySelector('[data-redo]')?.classList.toggle('off', !canRedo);
   }
 
   setOverlay(m: OverlayMode) {

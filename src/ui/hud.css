@@ -136,3 +136,31 @@ canvas#view { position: fixed; inset: 0; width: 100vw; height: 100vh; display: b
   .tool { width: 52px; }
   .orb { width: 38px; height: 38px; font-size: 14px; }
 }
+
+/* Ferramentas ativas e painel de ferramenta (src/ui/tools.ts) */
+.tool.on .orb { --gel-mid: rgba(255, 246, 180, 0.95); --gel-bot: rgba(255, 226, 58, 0.98); transform: translateY(-3px); }
+.tool.on .lbl { background: var(--grip); }
+.tool.off { opacity: 0.4; }
+.speed button { background: var(--gel-bot); }
+.tool-panel { font-family: 'Varela Round', system-ui, sans-serif; color: var(--gel-ink); position: absolute; right: 10px; top: 76px; width: 270px; max-height: calc(100vh - 150px); overflow: auto;
+  padding: 10px 12px; font-size: 12px; display: none; pointer-events: auto; }
+.tool-panel.show { display: block; }
+.tool-panel h3 { margin: 0 0 4px; font-family: 'Bungee', sans-serif; font-size: 14px; font-weight: 400; position: relative; z-index: 1; }
+.tool-panel > p, .tool-panel .tp-preview p { margin: 4px 0; position: relative; z-index: 1; }
+.tp-sub { opacity: 0.8; font-size: 11px; }
+.tp-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px dashed rgba(11, 42, 82, 0.2); position: relative; z-index: 1; }
+.tp-row b { font-family: 'Exo 2'; }
+.tp-row b.bad { color: var(--danger); }
+.tp-step { display: inline-flex; align-items: center; gap: 6px; }
+.tp-step button { width: 22px; height: 22px; border: 1px solid #0b2a52; background: #f2f8fc; font: 700 14px 'Exo 2'; cursor: pointer; padding: 0; }
+.tp-step b { min-width: 34px; text-align: center; }
+.tp-choices { display: flex; flex-wrap: wrap; gap: 5px; margin: 6px 0; position: relative; z-index: 1; }
+.tp-choices button, .tp-actions button { font: inherit; font-size: 11px; color: inherit; border: 0; cursor: pointer; padding: 5px 8px; }
+.tp-choices button.on { --gel-mid: rgba(255, 246, 180, 0.95); --gel-bot: rgba(255, 226, 58, 0.98); }
+.tool-panel input[type=range] { width: 100%; position: relative; z-index: 1; accent-color: #2e8bea; }
+.tp-preview { margin-top: 6px; position: relative; z-index: 1; }
+.tp-err { color: var(--danger); font-size: 11px; }
+.tp-warn { color: #9a6a00; font-size: 11px; }
+.tp-actions { display: flex; gap: 6px; margin-top: 8px; position: relative; z-index: 1; }
+.tp-actions button:disabled { opacity: 0.45; cursor: not-allowed; }
+.tp-hint { font-size: 12px; }

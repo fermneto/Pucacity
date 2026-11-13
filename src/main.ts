@@ -1,7 +1,7 @@
 import '@fontsource/varela-round';
 import '@fontsource/bungee';
 import '@fontsource/exo-2/700.css';
-import { Plane, Raycaster, Scene, Vector2, Vector3 } from 'three';
+import { Group, Plane, Raycaster, Scene, Vector2, Vector3 } from 'three';
 import GUI from 'lil-gui';
 import cityJson from './assets/cities/vitrine.json';
 import type { CityFile } from './core/CityFile';
@@ -13,6 +13,10 @@ import { Atmosphere } from './render/Atmosphere';
 import { CameraRig } from './render/CameraRig';
 import { ps1Shared, setWireframe } from './render/ps1/Ps1Material';
 import { Hud, type OverlayMode } from './ui/hud';
+import { ToolController, type PickTarget } from './ui/tools';
+import { CommandStack } from './core/Commands';
+import { LinesView } from './render/LinesView';
+import type { Object3D, Mesh } from 'three';
 import { numParam, params } from './render/util';
 
 /**
@@ -21,13 +25,13 @@ import { numParam, params } from './render/util';
  *                    ?overlay=traffic|access  ?ps1=0  ?t=8 (congela após 8 s simulados)  ?hud=0
  *                    ?agents=1200  ?res=240
  */
-const city = cityJson as unknown as CityFile;
+let city = cityJson as unknown as CityFile;
 const canvas = document.getElementById('view') as HTMLCanvasElement;
 const r = new Ps1Renderer(canvas);
 r.apply({ internalHeight: numParam('res', 240), ps1: params.get('ps1') !== '0' });
 
 const scene = new Scene();
-const view = new CityView(city);
+let view = new CityView(city);
 scene.add(view.group);
 const center = new Vector3(city.size.w / 2 - 0.5, 0, city.size.h / 2 - 0.5);
 const atmo = new Atmosphere(
@@ -40,13 +44,55 @@ scene.add(atmo.group);
 const hud = new Hud();
 let lastTrick = 0;
 let simTime = 0;
-const traffic = new DemoTraffic(city, view, numParam('agents', 1200), 7, {
-  onTrick: (t) => { if (simTime - lastTrick > 3) { lastTrick = simTime; hud.trick(t); } },
+const AGENTS = numParam('agents', 1200);
+const trafficGroup = new Group();
+scene.add(trafficGroup);
+function makeTraffic(c: CityFile, v: CityView): DemoTraffic {
+  const t = new DemoTraffic(c, v, AGENTS, 7, {
+    onTrick: (txt) => { if (simTime - lastTrick > 3) { lastTrick = simTime; hud.trick(txt); } },
+  });
+  for (const m of t.meshes.values()) trafficGroup.add(m);
+  trafficGroup.add(t.cabins);
+  const glass = t.cabinGlass();
+  if (glass) trafficGroup.add(glass);
+  return t;
+}
+let traffic = makeTraffic(city, view);
+
+// Ferramentas do jogador: CommandStack do core (custo, validação, undo/redo) + painel em gel
+const stack = new CommandStack(city, { money: city.scenario?.budget ?? 48250 });
+const linesView = new LinesView();
+scene.add(linesView.group);
+function disposeTree(o: Object3D) {
+  o.traverse((x) => { const m = x as Mesh; if (m.isMesh) m.geometry.dispose(); });
+}
+/** A cidade mudou por uma ferramenta: redesenha vias/travessias e reinicia o trânsito de demonstração. */
+function rebuildWorld(c: CityFile) {
+  city = c;
+  scene.remove(view.group);
+  disposeTree(view.group);
+  view = new CityView(city);
+  scene.add(view.group);
+  for (const ch of [...trafficGroup.children]) { trafficGroup.remove(ch); disposeTree(ch); }
+  traffic = makeTraffic(city, view);
+  view.overlay.visible = overlay === 'traffic';
+  view.accessOverlay.visible = overlay === 'access';
+}
+const tools = new ToolController(stack, {
+  onChange: (c, lines) => {
+    if (c !== city) rebuildWorld(c);
+    linesView.update(c, lines);
+    syncTools();
+    updateKpis();
+  },
+  toast: (txt, good) => hud.trick(txt, !good),
+  onActive: () => syncTools(),
+  day: () => 3,
 });
-for (const m of traffic.meshes.values()) scene.add(m);
-scene.add(traffic.cabins);
-const cabinGlass = traffic.cabinGlass();
-if (cabinGlass) scene.add(cabinGlass);
+function syncTools() { hud.setTools(tools.active, stack.canUndo, stack.canRedo); }
+hud.onTool = (k) => { hud.showPanel(null); tools.activate(k); };
+hud.onUndo = () => tools.undo();
+hud.onRedo = () => tools.redo();
 
 // Câmera e presets
 const rig = new CameraRig(canvas);
@@ -118,6 +164,10 @@ gui.hide();
 // Teclado
 addEventListener('keydown', (e) => {
   const k = e.key.toLowerCase();
+  if ((e.target as HTMLElement | null)?.closest?.('input, select, textarea')) return;
+  if ((e.ctrlKey || e.metaKey) && k === 'z') { e.preventDefault(); return e.shiftKey ? tools.redo() : tools.undo(); }
+  if ((e.ctrlKey || e.metaKey) && k === 'y') { e.preventDefault(); return tools.redo(); }
+  if (k === 'escape' && tools.active) return tools.activate(null);
   if (k === ' ') { paused = !paused; e.preventDefault(); }
   else if (k === 't') setOverlay('traffic');
   else if (k === 'a') setOverlay('access');
@@ -150,7 +200,36 @@ const NOMES: Record<string, string> = {
   ramp_bridge: 'Rampa-Ponte', death_jump: 'Salto Mortal', rail_walkway: 'Rail-Passarela', air_loop: 'Loop Aéreo',
   bubble_lift: 'Elevador de Bolha', glass_walkway: 'Passarela de vidro', transit_only: 'Só coletivo',
 };
+/** O que está sob o clique: travessia (sobre o canal), cruzamento ou via. */
+function pickTarget(p: Vector3): PickTarget {
+  const t: PickTarget = {};
+  const canal = waterBands(city).find((c) => p.z > c.y0 - 0.6 && p.z < c.y1 + 0.6);
+  if (canal) {
+    const c = city.crossings.find((c) => {
+      const A = city.nodes.find((n) => n.id === c.from), B = city.nodes.find((n) => n.id === c.to);
+      return !!A && !!B && Math.abs(A.x - p.x) < 0.9 && Math.min(A.y, B.y) < canal.y0 && Math.max(A.y, B.y) > canal.y1;
+    });
+    if (c) t.crossing = c.id;
+  }
+  let bestN = 0.75;
+  for (const n of city.nodes) {
+    const d = Math.hypot(n.x - p.x, n.y - p.z);
+    if (d < bestN) { bestN = d; t.node = n.id; }
+  }
+  let bestE = 0.6;
+  for (const e of city.edges) {
+    const A = city.nodes.find((n) => n.id === e.from), B = city.nodes.find((n) => n.id === e.to);
+    if (!A || !B) continue;
+    const L2 = (B.x - A.x) ** 2 + (B.y - A.y) ** 2;
+    const k = Math.max(0, Math.min(1, ((p.x - A.x) * (B.x - A.x) + (p.z - A.y) * (B.y - A.y)) / L2));
+    const d = Math.hypot(p.x - (A.x + k * (B.x - A.x)), p.z - (A.y + k * (B.y - A.y)));
+    if (d < bestE) { bestE = d; t.edge = e.id; }
+  }
+  return t;
+}
+
 function select(p: Vector3) {
+  if (tools.active) return tools.pick(pickTarget(p));
   const canal = waterBands(city).find((c) => p.z > c.y0 - 0.6 && p.z < c.y1 + 0.6);
   if (canal) {
     const c = city.crossings.find((c) => {
@@ -198,7 +277,7 @@ function updateKpis() {
   const tricksters = traffic.agents.filter((a) => a.info?.tricks).length || 1;
   const minutes = 7 * 60 + 40 + Math.floor(simTime * 2);
   hud.setKpis({
-    money: 48250 - Math.floor(simTime * 3),
+    money: stack.money,
     clock: `Dia 3 · ${String(Math.floor(minutes / 60) % 24).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`,
     travelMin: 14 + over * 20,
     congestion: over,
@@ -259,3 +338,6 @@ function frame(now: number) {
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+
+// Handle de depuração/testes ponta a ponta (scripts e console do navegador)
+(window as unknown as { __puca: unknown }).__puca = { tools, stack, pickTarget, get city() { return city; } };
