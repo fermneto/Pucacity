@@ -7,12 +7,20 @@ import { chromium } from 'playwright';
 import { mkdirSync } from 'node:fs';
 
 const SHOTS = [
+  ['ui-baloes', '/ui.html?show=bubbles'],
+  ['ui-dilema', '/ui.html?show=dilemma'],
+  ['ui-radio', '/ui.html?show=radio'],
+  ['ui-balanco', '/ui.html?show=report'],
   ['cidade-visao-geral', '/?cam=overview&t=12'],
   ['cidade-canal-travessias', '/?cam=canal&t=12'],
+  ['cidade-canal-sul', '/?cam=canal2&t=12'],
+  ['cidade-ilha-orla-bolha', '/?cam=ilha&t=12'],
   ['cidade-loop-aereo', '/?cam=loop&t=12.4'],
   ['cidade-praca-bowl', '/?cam=bowl&t=12'],
   ['cidade-rua-de-perto', '/?cam=street&t=12'],
   ['cidade-torres-aero', '/?cam=towers&t=12'],
+  ['cidade-espiral', '/?cam=spiral&t=12'],
+  ['cidade-megapipe', '/?cam=megapipe&t=12'],
   ['cidade-overlay-trafego', '/?cam=overview&t=12&overlay=traffic'],
   ['cidade-overlay-acessibilidade', '/?cam=overview&t=12&overlay=access'],
   ['cidade-sem-ps1', '/?cam=canal&t=12&ps1=0'],
@@ -45,7 +53,7 @@ page.on('console', (m) => { if (m.type() === 'error') errors.push(`${page.url()}
 for (const [name, path] of SHOTS) {
   if (filter && !name.includes(filter)) continue;
   await page.goto(base + path);
-  await page.waitForFunction(() => window.__ready === true || document.querySelector('.atlas'), null, { timeout: 60000 });
+  await page.waitForFunction(() => window.__ready === true || document.querySelector('.atlas') || (location.pathname.endsWith('ui.html') && document.querySelector('.gel')), null, { timeout: 60000 });
   if (path.includes('scroll=end')) await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await page.waitForTimeout(400);
   const fullPage = !path.includes('scroll=end') && (path.includes('tab=paleta') || path.includes('tab=atlas'));

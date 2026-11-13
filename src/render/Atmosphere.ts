@@ -8,9 +8,14 @@ import { MeshBuilder } from './models/MeshBuilder';
 import { WORLD } from './palette';
 import { makeRng } from './util';
 
+/** Bolha gigante flutuante (feature `orb` do city.json), em tiles; `rot` (0–3) varia tamanho e fase. */
+export interface OrbSpot { x: number; z: number; rot: number }
+
+interface OrbState { x: number; z: number; y: number; r: number; phase: number; bob: number; speed: number }
+
 /**
  * Camada Frutiger Aero do mundo: céu em gradiente (com bandas do 15-bit), nuvens fofas,
- * sol e bolhas subindo no canal.
+ * sol, bolhas subindo no canal e bolhas gigantes de vidro flutuando sobre a cidade.
  */
 export class Atmosphere {
   readonly group = new Group();
@@ -18,9 +23,11 @@ export class Atmosphere {
   private bubbles: InstancedMesh | null = null;
   private bubbleState: { x: number; z: number; y: number; v: number }[] = [];
   private clouds: Group;
+  private orbLayers: { mesh: InstancedMesh; scale: number; offset: Vector3 }[] = [];
+  private orbState: OrbState[] = [];
   private time = 0;
 
-  constructor(center: Vector3, canal?: { y0: number; y1: number; x0: number; x1: number }) {
+  constructor(center: Vector3, canals: { y0: number; y1: number; x0: number; x1: number }[] = [], orbs: OrbSpot[] = []) {
     const { texture } = getAtlas();
     // Céu: esfera com cor por vértice (azul royal no topo → azul bebê no horizonte)
     const geo = new SphereGeometry(160, 18, 12);
@@ -71,14 +78,15 @@ export class Atmosphere {
     this.clouds.position.copy(center);
     this.group.add(this.clouds);
 
-    // Bolhas no canal
-    if (canal) {
+    // Bolhas nos canais
+    if (canals.length) {
       const b = new MeshBuilder();
       b.sphere(0.05, 4, 3, { color: '#E8FFFF', gloss: 1 });
-      const M = 70;
+      const M = 70 * canals.length;
       this.bubbles = new InstancedMesh(b.build(), createPs1Material({ map: texture, opacity: 0.7 }), M);
       this.bubbles.frustumCulled = false;
       for (let i = 0; i < M; i++) {
+        const canal = canals[i % canals.length]!;
         this.bubbleState.push({
           x: canal.x0 + rng() * (canal.x1 - canal.x0),
           z: canal.y0 + 0.15 + rng() * (canal.y1 - canal.y0 - 0.3),
@@ -88,6 +96,56 @@ export class Atmosphere {
       }
       this.group.add(this.bubbles);
     }
+
+    if (orbs.length) this.buildOrbs(orbs, rng);
+  }
+
+  /**
+   * Bolhas gigantes: casca de vidro translúcida, um véu interno iridescente (rosa/lilás) e o
+   * brilho especular branco voltado para o sol. Cada camada é um InstancedMesh (3 draw calls).
+   */
+  private buildOrbs(orbs: OrbSpot[], rng: () => number) {
+    const { texture } = getAtlas();
+    // esfera unitária com a base em y = 0 (convenção do MeshBuilder): centro em y = 1
+    const layer = (paint: { color: string; gloss: number }, lon: number, lat: number, opacity: number, scale: number, offset: Vector3) => {
+      const b = new MeshBuilder();
+      b.sphere(1, lon, lat, paint);
+      const mesh = new InstancedMesh(b.build(), createPs1Material({ map: texture, opacity }), orbs.length);
+      mesh.frustumCulled = false;
+      mesh.renderOrder = 3;
+      this.group.add(mesh);
+      this.orbLayers.push({ mesh, scale, offset });
+    };
+    layer({ color: '#BFF4FF', gloss: 1 }, 12, 7, 0.32, 1, new Vector3());
+    layer({ color: '#F6C8FF', gloss: 0.8 }, 10, 6, 0.18, 0.86, new Vector3(0.06, 0.04, 0));
+    layer({ color: '#FFFFFF', gloss: 1 }, 6, 4, 0.85, 0.2, new Vector3(-0.38, 0.42, 0.5));
+    for (const o of orbs) {
+      const k = ((o.rot % 4) + 4) % 4;
+      this.orbState.push({
+        x: o.x, z: o.z,
+        r: 0.75 + k * 0.18 + rng() * 0.15,
+        y: 6.2 + rng() * 2 + k * 0.3, // 60–90 m: acima das torres mais altas
+        phase: rng() * Math.PI * 2,
+        bob: 0.35 + rng() * 0.3,
+        speed: 0.22 + rng() * 0.12,
+      });
+    }
+    this.placeOrbs();
+  }
+
+  private placeOrbs() {
+    const m = new Matrix4();
+    this.orbState.forEach((o, i) => {
+      const t = this.time * o.speed + o.phase;
+      const cx = o.x + Math.sin(t * 0.6) * 0.25, cz = o.z + Math.cos(t * 0.45) * 0.2;
+      const cy = o.y + Math.sin(t) * o.bob;
+      for (const L of this.orbLayers) {
+        const s = o.r * L.scale;
+        m.makeScale(s, s, s).setPosition(cx + L.offset.x * o.r, cy - s + L.offset.y * o.r, cz + L.offset.z * o.r);
+        L.mesh.setMatrixAt(i, m);
+      }
+    });
+    for (const L of this.orbLayers) L.mesh.instanceMatrix.needsUpdate = true;
   }
 
   update(dt: number) {
@@ -104,5 +162,6 @@ export class Atmosphere {
       });
       this.bubbles.instanceMatrix.needsUpdate = true;
     }
+    if (this.orbState.length) this.placeOrbs();
   }
 }

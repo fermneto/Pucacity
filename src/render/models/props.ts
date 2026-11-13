@@ -1,5 +1,6 @@
 import { MeshBuilder } from './MeshBuilder';
 import { tree } from './buildings';
+import { DINO_BUILDERS } from './dinos';
 import { WORLD } from '../palette';
 
 /** Props urbanos. Tudo "grindável" sempre que der. Frente = +z. */
@@ -42,6 +43,25 @@ export const PROP_BUILDERS: Record<string, (o: B, g: B) => void> = {
     o.at(1.9, 0, 0, 0, (b) => b.box(0.5, 1.8, 0.4, { color: '#F2F8FC', faces: { pz: { color: '#3FD0E8', gloss: 1 } }, gloss: 0.5, omit: ['bottom'] }));
   },
 
+  /** Estação de carga de patinetes e hoverboards: totem em gel com tomadas, rack cromado e cobertura solar de vidro. */
+  prop_charge_station: (o, g) => {
+    o.box(3.4, 0.12, 1.2, { tile: 'concrete', omit: ['bottom'] });
+    // totem em gel: corpo verde-água, tela ciano, três tomadas com LED verde e luz no topo
+    o.at(1.35, 0.12, 0, 0, (b) => {
+      b.box(0.6, 1.8, 0.45, { color: '#1FB5A6', gloss: 1, faces: { pz: { color: '#7FD8C8', gloss: 1 } }, omit: ['bottom'] });
+      b.at(0, 1.2, 0.23, 0, (b) => b.box(0.42, 0.4, 0.04, { color: '#00E5FF', gloss: 0.8, omit: ['bottom', 'nz'] }));
+      for (const y of [0.45, 0.7, 0.95]) b.at(0, y, 0.23, 0, (b) => b.box(0.22, 0.14, 0.05, { color: '#39FF6A', gloss: 1, omit: ['bottom', 'nz'] }));
+      b.at(0, 1.8, 0, 0, (b) => b.prism(0.22, 0.22, 6, { color: '#B8F02A', gloss: 1, radiusTop: 0.12 }));
+    });
+    // rack: barra cromada para encostar/travar, três vagas com plug laranja
+    for (const x of [-1.5, 0.6]) o.at(x, 0.12, -0.25, 0, (b) => b.prism(0.05, 0.8, 4, { color: CHROME, gloss: 1, top: false }));
+    o.at(-0.45, 0.88, -0.25, 0, (b) => b.box(2.15, 0.08, 0.08, { color: CHROME, gloss: 1, omit: ['bottom'] }));
+    for (const x of [-1.1, -0.45, 0.2]) o.at(x, 0.12, 0.1, 0, (b) => b.box(0.18, 0.06, 0.7, { color: '#FF7A1A', gloss: 0.7, omit: ['bottom'] }));
+    // cobertura solar: dois postes e placa de vidro azul
+    for (const x of [-1.55, 1.55]) o.at(x, 0.12, -0.5, 0, (b) => b.prism(0.05, 2.3, 4, { color: CHROME, top: false }));
+    g.at(0, 2.42, -0.15, 0, (b) => b.box(3.5, 0.08, 1.3, { color: '#2E8BEA', gloss: 1 }));
+  },
+
   /** Telão CRT com moldura de plástico cinza dos anos 2000. */
   prop_crt_billboard: (o) => {
     o.prism(0.12, 3.2, 4, { color: CHROME, top: false });
@@ -50,8 +70,10 @@ export const PROP_BUILDERS: Record<string, (o: B, g: B) => void> = {
 
   /** Nuvem cúmulo fofa (céu Aero). */
   prop_cloud: (o) => {
-    for (const [x, y, r] of [[0, 0, 2.4], [2.4, -0.5, 1.8], [-2.3, -0.4, 1.7], [0.8, 1.2, 1.6]]) {
+    for (const [x, y, r] of [[0, 0, 2.4], [2.4, -0.5, 1.8], [-2.3, -0.4, 1.7], [0.8, 1.2, 1.6]] as const) {
       o.at(x, y, 0, 0, (b) => b.sphere(r, 6, 4, { color: '#FFFFFF' }));
     }
   },
+
+  ...DINO_BUILDERS,
 };

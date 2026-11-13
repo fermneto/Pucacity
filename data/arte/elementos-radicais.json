@@ -100,6 +100,16 @@
       "substitui_ponte": false,
       "descricao": "Cápsula Aero que sobe ao topo das rampas altas e atravessa os vãos por cabo. É a rota acessível padrão.",
       "visual": "Esfera de vidro lustroso com anel cromado, sobe por um trilho transparente."
+    },
+    {
+      "id": "vulcao_gel",
+      "nome": "Vulcão de Gel",
+      "substitui_ponte": false,
+      "descricao": "Morro-vulcão de praça com a cratera cheia de gel neon; uma rampa de skate sobe pela encosta até um deck com coping na beira da cratera.",
+      "altura_m": 7,
+      "diametro_m": 16,
+      "pontos_gap": 1200,
+      "visual": "Cone facetado de rocha/concreto, lava de gel rosa-chiclete lustroso transbordando em escorridos laranja e magenta, gotas de gel e bolhas de vidro subindo do topo; rampa de madeira com laterais cromadas e deck zebrado no alto."
     }
   ],
   "regras_de_posicionamento": {
