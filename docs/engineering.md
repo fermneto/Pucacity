@@ -1,17 +1,10 @@
 # Pucacity — Planejamento de Engenharia
 
 > Escopo deste documento: **apenas a frente de Engenharia** (Three.js, simulação, ferramentas, build, desempenho).
-> Fonte de verdade do produto: [`SPEC.md`](SPEC.md) (cidade radical sem carros, PS1 + Frutiger Aero) e [`docs/style-guide.md`](docs/style-guide.md).
-> Aqui ficam decisões técnicas, ordem de implementação, contratos e critérios de pronto.
+> Fonte de verdade do produto: [`SPEC.md`](../SPEC.md) (cidade radical sem carros, PS1 + Frutiger Aero) e [`docs/style-guide.md`](style-guide.md).
+> Planejamento dos três PCs: [`docs/planning.md`](planning.md). Aqui ficam decisões técnicas, contratos e critérios de pronto.
 
-
-> **Integração de 13/11/2026 (Onda 0):** esta branch entrou na `main` junto com a camada visual do PC1. Mudanças em relação ao texto abaixo:
-> - O **render da `main` prevaleceu** (`Renderer`, `ps1/*`, `CityView`, `CameraRig`, `palette`, mais `MeshBuilder`, `Atlas`, `models/*`, `DemoTraffic`). `RadicalView`, `QuadBuilder`, `shading` e `textures` foram removidos porque já existiam em versão própria. O `Picking.ts` foi mantido.
-> - O protótipo `src/main.ts` desta branch foi substituído pela vitrine; o loop do jogo vai para `src/game/` (tarefa `pc3-eng-infra`).
-> - **O contrato oficial é `src/core/types.ts`**, estendido com `features`, `characters` e `scenario.id/events/dilemmas`. `src/core/CityFile.ts` só reexporta e oferece `waterBands()`.
-> - **Versões:** three 0.187, vite 8, vitest 4 e TypeScript 5.9 (por causa do `typescript-eslint`). O `noUncheckedIndexedAccess` vale para `src/core` e `tests` (`tsconfig.core.json`); o render ainda não segue a regra (dívida do PC1).
-> - Planejamento geral dos três PCs: `docs/planning.md`.
-
+> **Onda 0 (13/11/2026), resumo:** `eng/fundacao` entrou na `main` junto com a camada visual do PC1. O render do PC1 prevaleceu; o contrato oficial é `src/core/types.ts` (`CityFile.ts` só reexporta). A vitrine virou `vitrine.html` e o `index.html` passou a ser o jogo (`src/game/`).
 
 ---
 
@@ -19,58 +12,55 @@
 
 | Tema | Decisão | Motivo |
 |---|---|---|
-| Stack | TypeScript (strict) + Vite + Three.js + Vitest + ESLint | Como na spec; build rápido, testes nativos em TS |
-| Separação | `src/core/` **nunca** importa `three`, `render/`, `ui/`, `window`/`document` (regra de lint) | Simulação testável e portável para Web Worker (v0.2) |
-| Unidades | 1 tile = 1 unidade Three.js = **10 m**; `edge.width` em **metros**; `edge.speed` = limite em **km/h**; velocidade dos veículos em **m/s**; tempo em **minutos de jogo** | Contrato único entre Arte (escala do .glb), Design (balance) e código |
-| Eixos | `city.x` → Three `x`; `city.y` → Three `z`; altura = Three `y` | Mapa no plano XZ, câmera olhando de cima |
-| Tick | 1 tick = 1 min de jogo; passo fixo com acumulador | Determinismo e independência de FPS |
-| Aleatoriedade | PRNG próprio com seed (`mulberry32`); `Math.random` proibido em `core/` (lint) | Cenários reproduzíveis e testáveis |
-| Dados da Arte | `core/` e `render/` importam **direto** `data/arte/*.json` (veículos, elementos radicais, paleta) | A Arte muda números/cores sem pedir código |
-| Faixas | `lanes` conta faixas **por sentido** em vias de mão dupla; sem a faixa própria o veículo usa a vizinha mais lenta (`LANE_FALLBACK`) a 70% da velocidade | SPEC §4.2 |
-| Tráfego MVP | Modelo de **fluxo por faixa** com BPR + agentes visíveis como amostra | Barato e legível (SPEC §13) |
-| Rotas | A\* **por modo**: cada aresta devolve `Infinity` para quem não pode usá-la; heurística = distância / velocidade de cruzeiro do veículo (admissível) | SPEC §4.4 |
-| Travessias | Cada `crossing` vira 2 ligações nos 2 sentidos: **radical** (só `manobras: true` e acima da velocidade mínima) + **acessível** (`lift`, `walkway` ou `transit_only`) | SPEC §4.5 |
-| Elevador de Bolha | Espera fixa (1,5 min) + 1 m/s + capacidade baixa (120/h) com BPR → forma fila | Dilema "radical × inclusão" |
-| Câmera | Começa **perspectiva FOV 40°**, toggle para ortográfica | Decisão em aberto na spec; o playtest decide |
-| Render | Um único `ShaderMaterial` PS1; render target 240/360/480 linhas → tela com `NearestFilter`; vias desenhadas **2,2× mais largas** que o real | Legibilidade das faixas em baixa resolução |
-| Comandos | Padrão Command (`apply`/`revert`/`cost`) + pilhas undo/redo | SPEC §4.7 |
-| Dados | `city.json` validado na carga com **erros** (bloqueiam) e **avisos** (não bloqueiam) legíveis para o Design | Design/Arte editam sem depender de código |
+| Stack | TypeScript 5.9 (strict) + Vite 8 + Three.js 0.187 + Vitest 4 + ESLint 9 | TS 5.9 porque o `typescript-eslint` ainda não suporta o TS 7 |
+| Rigor de tipos | `noUncheckedIndexedAccess` vale para `src/core` e `tests` via `tsconfig.core.json` (o `npm run typecheck` roda os dois tsconfigs); o render ainda não segue (dívida do PC1) | Core sem `undefined` escondido |
+| Separação | `src/core/` **nunca** importa `three`, `render/`, `ui/`, `window`/`document` (regra de lint) | Simulação testável e portável para Web Worker |
+| Unidades | 1 tile = 1 unidade Three.js = **10 m**; `edge.width` em **metros**; `edge.speed` = limite em **km/h**; velocidade dos veículos em **m/s**; tempo em **minutos de jogo** | Contrato único entre Arte, Design e código |
+| Eixos | `city.x` → Three `x`; `city.y` → Three `z`; altura = Three `y` | Mapa no plano XZ |
+| Tick | 1 tick = 1 min de jogo; **passo fixo com acumulador** (`src/game/GameLoop.ts`); 1× = 1 tick/s real (`?tps=`), 2× e 4× multiplicam | Determinismo e independência de FPS |
+| Aleatoriedade | PRNG próprio com seed (`core/Rng.ts`, mulberry32); `Math.random` proibido em `core/` (lint) | Cenários reproduzíveis |
+| Dados | `core/` e `render/` importam **direto** `data/arte/*.json` e `config/balance.json` | Arte e Design mudam números sem pedir código |
+| Faixas | `lanes` conta faixas **por sentido** em vias de mão dupla; sem a faixa própria o veículo usa a vizinha mais lenta (`LANE_FALLBACK`). Fator de velocidade no fallback (hoje 70%), capacidades, espera e velocidade do Elevador de Bolha **passam a vir de `config/balance.json`** (tarefa `pc3-eng-rede`); até lá ficam em `DEFAULT_TRAFFIC` (`core/RoadGraph.ts`) | SPEC §4.2 |
+| Tráfego MVP | Fluxo por faixa com BPR + agentes visíveis como amostra | Barato e legível (SPEC §13) |
+| Rotas | A\* **por modo**: aresta devolve `Infinity` para quem não pode usá-la; heurística admissível | SPEC §4.4 |
+| Travessias | Cada `crossing` vira ligações nos 2 sentidos: **radical** (só `manobras: true` e acima da velocidade mínima) + **acessível** (`lift`, `walkway` ou `transit_only`) | SPEC §4.5 |
+| Render | Do PC1: `ShaderMaterial` PS1 único, render target de 240 linhas → tela com `NearestFilter`, dither 15-bit | SPEC §7 |
+| Comandos | Padrão Command (`apply`/`revert`/`cost`) + undo/redo | SPEC §4.7 |
+| Validação | `city.json` e `config/balance.json` validados na carga com **erros** (bloqueiam, aparecem na tela) e **avisos** (console) | Design/Arte editam sem depender de código |
 
 ---
 
 ## 1. Estrutura do repositório
 
 ```
-pucacity/
-  SPEC.md  docs/engineering.md
-  docs/                        # style-guide, referências (Arte); engineering.md (a escrever)
-  data/arte/*.json             # paleta, veículos, elementos radicais (Arte) — lidos pelo código
-  config/balance.json          # números do Design (Sprint 2+)
-  public/cities/*.json         # cidades servidas como estático
-  scripts/gen-demo-city.ts     # gera a cidade-demo (npm run gen:demo)
-  src/
-    core/                      # lógica pura (sem three)
-      types.ts                 # CityFile e tipos do contrato
-      CityLoader.ts            # parse + validação (erros e avisos)
-      Vehicles.ts              # perfis dos 13 veículos a partir de veiculos.json
-      Crossings.ts             # elementos radicais (elementos-radicais.json), travessias sem acesso
-      RoadGraph.ts             # grafo dirigido: vias com faixas + travessias; BPR por faixa
-      Pathfinding.ts           # A* por modo
-      Spatial.ts               # nó/aresta mais próximos (picking)
-      Rng.ts                   # PRNG com seed
-      Agents.ts  Transit.ts  Simulation.ts  Kpis.ts  Commands.ts  Save.ts   # próximos sprints
-    render/
-      Renderer.ts              # low-res target + upscale
-      ps1/Ps1Material.ts       # snap + affine + vertex color + fog (env map Aero: Sprint 5)
-      ps1/PostFx.ts            # dither + 15-bit
-      CityView.ts              # chão, água, vias (uma tira por faixa), prédios
-      RadicalView.ts           # rampas, loop, rail, elevador, passarela (placeholders)
-      palette.ts               # cores de paleta.json + cores de faixa (placeholder)
-      CameraRig.ts  Picking.ts  QuadBuilder.ts  shading.ts  textures.ts
-      VehicleView.ts Overlays.ts                                            # próximos sprints
-    ui/                        # HUD HTML/CSS
-    main.ts
-  tests/core/*.test.ts
+index.html        → jogo (src/game/main.ts)
+vitrine.html      → vitrine visual do PC1 (src/vitrine.ts)
+lab.html          → laboratório de assets do PC1 (src/lab.ts)
+config/balance.json            # números do Design (validados por loadBalance)
+data/arte/*.json               # paleta, veículos, elementos radicais (Arte)
+public/cities/*.json           # cidades servidas como estático (demo.json; vila-nova.json do PC2)
+src/assets/cities/vitrine.json # cidade da vitrine (gerada por scripts/gen-vitrine.mjs)
+scripts/                       # gen-demo-city.ts, gen-vitrine.mjs, screenshots.mjs
+src/
+  core/                        # lógica pura (sem three) — PC3
+    types.ts                   # contrato oficial (CityFile etc.); CityFile.ts só reexporta + waterBands()
+    CityLoader.ts              # validateCity/parseCity/loadCity + validateBalance/loadBalance
+    Vehicles.ts  Crossings.ts  RoadGraph.ts  Pathfinding.ts  Spatial.ts  Rng.ts
+    Simulation.ts  Agents.ts  Transit.ts  Commands.ts  Kpis.ts  Events.ts  Save.ts   # em andamento (Ondas 1–4)
+  game/                        # loop do jogo — PC3
+    main.ts                    # entrada: carrega cidade/balance, liga simulação, render e HUD
+    GameLoop.ts                # passo fixo + acumulador, pausa/1×/2×/4×
+    SimulationPort.ts          # interface que espelha a API de core/Simulation.ts
+    createSimulation.ts        # ÚNICO ponto de troca mock → Simulation real
+    MockSimulation.ts          # simulação de mentira (agentes passeando pelo RoadGraph)
+    SimpleSimView.ts           # agentes desenhados com os modelos do PC1 (provisório até o SimView do PC1)
+    game.css
+  render/                      # PC1 (referência; não editar fora do PC1)
+    Renderer.ts  ps1/*  CityView.ts  CameraRig.ts  Atmosphere.ts  DemoTraffic.ts  Picking.ts
+    palette.ts  util.ts  models/*  textures/Atlas.ts
+  ui/                          # PC1: hud.ts, hud.css
+  vitrine.ts  lab.ts           # PC1
+tests/core/*.test.ts
 ```
 
 ---
@@ -78,7 +68,7 @@ pucacity/
 ## 2. Contratos
 
 ### 2.1 `city.json` (Design → Engenharia)
-Implementado em `src/core/types.ts` (SPEC §6). Regras de validação (`CityLoader`):
+Implementado em `src/core/types.ts` (SPEC §6). Regras de validação (`CityLoader.validateCity`):
 
 **Erros (a cidade não carrega):**
 - `size.w`, `size.h` inteiros > 0; nós e prédios dentro de `[0, w] × [0, h]`.
@@ -88,29 +78,25 @@ Implementado em `src/core/types.ts` (SPEC §6). Regras de validação (`CityLoad
 - Travessia: `over` ∈ river/canal/expressway, `radical` ∈ ramp_bridge/air_loop/death_jump/rail_walkway, `access` (se houver) ∈ bubble_lift/glass_walkway/transit_only.
 - Bairro: `ownership` só com veículos conhecidos, valores 0–100 (%); `wheelchairShare` entre 0 e 1.
 - Semáforo: fases apontam para arestas existentes; soma dos verdes ≤ ciclo.
+- `scenario.goals[]`: `kpi` ∈ `KPI_IDS`, `op` ∈ `<=`/`>=`, `stars` ∈ 1/2/3.
 - Mensagens com caminho, ex.: `edges[12].lanes.bus: faixa desconhecida`.
 
-**Avisos (a cidade carrega, mas o jogo sofre):**
-- Via sem calçada.
-- Travessia sem rota acessível (a regra "ninguém fica preso" vira problema de jogo, não de arquivo).
+**Avisos (a cidade carrega, mas o jogo sofre):** via sem calçada; travessia sem rota acessível.
 
-**Extensões propostas ao Design (já aceitas pelo validador, opcionais):**
-- `building.district?: number`: liga prédio ao bairro (Equidade/Acessibilidade).
-- `areas?: { kind: 'water' | 'blocked'; x; y; w; h }[]`: canais, rios e patrimônio. A spec cita áreas bloqueadas, mas o contrato não tinha onde desenhá-las.
-- `SignalCfg = { cycle; phases: { edges: number[]; green: number }[] }` (segundos).
-- `Goal = { kpi; op: '<=' | '>='; value; stars }` com `kpi` ∈ avgTripMinutes, congestionPct, accessibilityPct, equityGapMinutes, radicalityPct, energyKwh, balance, satisfaction.
+### 2.2 `config/balance.json` (Design → Engenharia)
+`loadBalance()` (em `CityLoader.ts`) valida só as chaves que o código usa e devolve o tipo `Balance`; o resto do arquivo é livre. Teste: `tests/core/Balance.test.ts`.
 
-### 2.2 Dados e assets (Arte → Engenharia)
-- `data/arte/veiculos.json`: `kind`, `faixa`, `velocidade` [mín, máx] m/s, `manobras`. O código usa a média como velocidade de cruzeiro e o máximo para a velocidade mínima dos elementos.
-- `data/arte/elementos-radicais.json`: `velocidade_minima` (Loop Aéreo = 7 m/s), `pontos_gap`.
-- `data/arte/paleta.json`: cores `mundo` (céu, água, grama, concreto, vidro, cromo, faixas de lançamento/aterrissagem).
-- `.glb`, origem na base/centro, 1 tile = 1 unidade, nomes `bld_<kind>_<n>.glb`, `veh_<kind>.glb`, `rad_<kind>.glb`.
-- Até os modelos chegarem: **placeholders procedurais**. Nunca bloquear em asset.
+- **Erros:** `version`; `time.{tickMinutes, minutesPerDay, peaks[]}`; `vehicles.<id>.{fallRisk 0–1, modeCost ≥ 0}`; `lanes.<sidewalk|slow|fast|transit>.{capacityPerWidth, fallRiskMultiplier, noiseMultiplier}`; `congestion.{alpha, beta, saturatedThreshold, gridlockThreshold}`; `modalChoice.weights.{tempo, custo, risco, conforto, diversao}` e `modalChoice.noise`; `citizens.groups.<g>.{share 0–1, speedFactor}`; `citizens.patience.{start, dropPerBadDay, protestThreshold}`.
+- **Avisos:** id de veículo que não existe em `data/arte/veiculos.json`; soma dos `share` dos grupos ≠ 1.
+- Ao usar uma chave nova do balance no core, acrescente-a ao validador e ao teste.
 
-### 2.3 Entregas da Engenharia para o time
-- Build jogável no fim de cada sprint (o CI gera o artefato `dist/`).
-- Página `?viewer=assets` para a Arte checar modelos com o filtro PS1 (Sprint 1).
-- Painel de debug: hoje o HUD + `__puca` no console em dev; `F3` com toggles na Sprint 2.
+### 2.3 Simulação → jogo/render
+`src/game/SimulationPort.ts` espelha a API de `src/core/Simulation.ts`: `tick()`, `step(min)`, `getState()`, `setCity()`, `serialize()`, `graph`, `city`; construtor `new Simulation(city, { seed, scale, startMinute })`. `SimState` traz `minute/day/minuteOfDay`, `agents` (`AgentView`: x, y em tiles, `heading` em rad com 0 = +x, `edge` = índice de aresta dirigida no `RoadGraph`, `lane`, `group`), `transit`, `edgeSaturation` (por aresta dirigida), `stats` e `statsToday`.
+
+### 2.4 Dados e assets (Arte → Engenharia)
+- `data/arte/veiculos.json`: `kind`, `faixa`, `velocidade` [mín, máx] m/s, `manobras`.
+- `data/arte/elementos-radicais.json`: `velocidade_minima`, `pontos_gap`.
+- Modelos procedurais do PC1 com ids `veh_<kind>`, `bld_*`, `rad_*`, `prop_*`; os `.glb` substituem com o mesmo id.
 
 ---
 
@@ -118,63 +104,26 @@ Implementado em `src/core/types.ts` (SPEC §6). Regras de validação (`CityLoad
 
 | # | Questão | Hoje no código |
 |---|---|---|
-| 1 | **Cadeira de rodas manual faz manobras?** `veiculos.json` diz `manobras: true`, mas a premissa da SPEC (§1) diz que a cadeira "não consegue atravessar o canal porque a única travessia é uma rampa de salto". | Segue o JSON: a cadeira manual usa rampas. Basta mudar para `false` no JSON para ela passar a precisar do elevador. |
-| 2 | **Cores do piso de cada faixa.** O style guide pede cores diferentes, mas `paleta.json` não define quais. | Placeholders em `render/palette.ts`: calçada = concreto, lenta = Lilás Gloss, rápida = Azul Céu XP, coletiva = Laranja Cone. |
-| 3 | `lanes` é **por sentido** ou **total**? | Por sentido (como estava no contrato anterior). |
-| 4 | Como o tuk-tuk cruza numa travessia `transit_only`? | Ligação plana só para coletivo (faixa laranja). |
-| 5 | Quem pode usar o Elevador de Bolha e a passarela de vidro? | Todo mundo menos veículos coletivos. Skatista também pode, só que mais devagar. |
-| 6 | Capacidades, esperas e penalidades (faixa, elevador, elementos). | Placeholders em `DEFAULT_TRAFFIC` (`core/RoadGraph.ts`), a migrar para `config/balance.json`. |
+| 1 | **Cadeira de rodas manual faz manobras?** `veiculos.json` diz `manobras: true`; a premissa do SPEC §1 diz que a cadeira não atravessa sem rota acessível. | Segue o JSON. |
+| 2 | `lanes` é **por sentido** ou **total**? | Por sentido. |
+| 3 | Como o tuk-tuk cruza numa travessia `transit_only`? | Ligação plana só para coletivo. |
+| 4 | Quem pode usar o Elevador de Bolha e a passarela de vidro? | Todos menos coletivos. |
+| 5 | **Unidade de `balance.lanes.capacityPerWidth`**: usuários/hora por metro de largura? por faixa? | Ainda não usado; `DEFAULT_TRAFFIC.laneCapacityVph` (usuários/hora por faixa) até o `pc3-eng-rede` migrar. |
+| 6 | **Linhas de coletivo** (tuk-tuk, tandem): paradas, rotas e frota não cabem no `city.json` atual. Vão para o `city.json` (`transitLines[]`) ou para o cenário? | O mock cria coletivos de mentira nas vias com faixa coletiva. |
+| 7 | **`Goal.op`**: `types.ts` usa `<=`/`>=` sobre o valor absoluto; o `CityFile` antigo propunha `delta<=`/`delta>=` (melhora relativa, como `improvement: 0.20` no balance). | Só `<=`/`>=`; metas relativas precisam de mudança de contrato. |
+| 8 | **Ids de veículo no balance**: `config/balance.json → vehicles` usa `pedestre`, `cadeira_rodas`, `patinete`…, mas os ids oficiais são os de `veiculos.json` (`pedestrian`, `wheelchair`, `kick_scooter`…). | `loadBalance` avisa no console; o core não acha esses números até o PC2 alinhar os ids. |
 
 ---
 
-## 4. Plano por sprint (só Engenharia)
+## 4. Plano por ondas (Engenharia)
 
-### Sprint 0 — Fundação
+As ondas são as de `docs/planning.md` §4.
 
-- [x] Projeto Vite + TS strict + Three.js + Vitest + ESLint
-- [x] Contrato `city.json` da spec nova + validador com erros/avisos + testes
-- [x] Perfis de veículos e elementos radicais lidos de `data/arte/*.json`
-- [x] `RoadGraph`: faixas por tipo, fallback de faixa, BPR por faixa, travessias (radical + acessível)
-- [x] A\* por modo + testes (rampa, loop com velocidade mínima, elevador, só coletivo, travessia sem acesso)
-- [x] PRNG com seed + testes
-- [x] Render target low-res, `Ps1Material`, PostFx (dither 15-bit), toggles
-- [x] Cidade-demo com canal, 6 travessias (1 sem rota acessível), faixas por tipo, céu e gramado Aero
-- [x] CI (`.github/workflows/ci.yml`: typecheck, lint, testes, build, artefato `dist/`)
-- [ ] Revisão do PR `eng/fundacao` pelo time
-
-Verificado em 2026-11-13: 36 testes, `tsc` e lint limpos, cidade-demo renderizando sem erros no console, 60 fps.
-
-### Sprint 1 — Cidade parada e visível
-- Carregar `public/cities/*.json` com erro na tela (feito) e avisos visíveis no HUD.
-- `CityView`: curvas e cruzamentos melhores, marcação de faixa, quarter-pipes de esquina.
-- `RadicalView`: trocar placeholders por `rad_*.glb` quando chegarem; `InstancedMesh` por tipo.
-- `CameraRig`: limites e zoom ajustados; `Picking` de via/nó/**travessia** com painel de seleção.
-- Céu com nuvens e brilho Aero (gradiente já existe).
-- **Decisão a tomar:** editor de cidade (SPEC §13). Proposta: estender `scripts/gen-demo-city.ts` para ler uma planilha/grid do Design.
-
-### Sprint 2 — Gente rolando
-- `Simulation` com relógio, acumulador e velocidades (pausa, 1×, 2×, 4×).
-- `Agents`: cidadãos a partir de `district.population`, `ownership` e `wheelchairShare`; destinos em `com/ind/school/skatepark`; picos ~8h/~18h.
-- Escolha modal v1 (logit: tempo + custo + conforto + **diversão** dos elementos radicais na rota).
-- Fluxo por faixa e por ligação de travessia (janela móvel) → BPR.
-- `VehicleView`: `InstancedMesh` por tipo de veículo, cor sorteada de `veiculos_moda` respeitando `regras_combinacao`.
-- Teste de determinismo: mesma seed ⇒ mesmo estado após N ticks.
-
-### Sprint 3 — Ferramentas, KPIs e travessias
-- `Commands`: divisão de faixas, sentido, semáforo, limite, **trocar elemento/rota acessível da travessia**; undo/redo; custo.
-- `Kpis`: tempo médio, congestionamento por faixa, divisão modal, **acessibilidade** (inclui cadeirantes), equidade, radicalidade, saldo.
-- `Overlays`: tráfego (`T`) e **acessibilidade** (`A`, destaca travessias sem rota acessível).
-- Animação de salto/loop sobre a curva do elemento.
-
-### Sprint 4 — Transporte coletivo
-- `Transit`: linhas de tuk-tuk (paradas, headway, frota) na faixa coletiva; lotação e espera.
-- Escolha modal com coletivo; tuk-tuk acessível leva cadeirantes pelas travessias `transit_only`.
-
-### Sprint 5 — Vertical slice
-- `Save` (< 100 ms), desempenho (60 FPS com 2.000 agentes), env map Aero (vidro/cromo), feedback "radical" no HUD, tutorial interativo.
-
-### Sprint 6 — Polimento
-- Bugs, otimização, build final publicada.
+- **Onda 0 — integração ✅ (13/11/2026):** core com testes (`types`, `CityLoader`, `RoadGraph` com BPR por faixa, A\* por modo, `Crossings`, `Vehicles`, `Rng`, `Spatial`), cidade-demo, ESLint com regras do core, CI com capturas.
+- **Onda 1 — Contratos:** `src/game/` (loop de passo fixo, loader, HUD mínimo) ✅ com `MockSimulation`; `loadBalance` ✅; `Simulation` com tick e seed e `getState()` para o render (em andamento) → trocar em `createSimulation.ts`.
+- **Onda 2 — Movimento:** `Agents` (rotinas, posse por bairro, cadeirantes), A\* + BPR com fluxo real, escolha modal, `Transit`; números de `config/balance.json`.
+- **Onda 3 — Ferramentas:** `Commands` com undo/redo e custo, `Kpis`, `Events`/dilemas, paciência.
+- **Onda 4 — Vertical slice:** `Save`/load, desempenho (60 FPS com 2.000 agentes), determinismo (mesma seed ⇒ mesmo estado).
 
 ---
 
@@ -183,30 +132,44 @@ Verificado em 2026-11-13: 36 testes, `tsc` e lint limpos, cidade-demo renderizan
 | Risco | Mitigação |
 |---|---|
 | A\* por modo × milhares de agentes | Cache de rotas por (modo, zona origem, zona destino); recalcular a cada N ticks ou quando o custo mudar > X% |
-| 13 veículos × faixas × travessias = muitas combinações para testar | Testes por regra (fallback, velocidade mínima, acesso) na cidade mínima + A\* = Dijkstra na demo para cada modo |
-| Faixas ilegíveis em 320×240 | Exagero visual de largura (`ROAD_VISUAL_SCALE`), cores contrastantes, playtest de legibilidade |
-| Vertex snapping "dançando" demais | Intensidade em uniform; desliga no menu |
-| Gargalo da Engenharia (1 pessoa) | Placeholders procedurais, dados da Arte lidos direto, validador com mensagens claras |
+| Escala de tempo: 1 tick = 1 min, mas a pé/skate um agente anda 100–300 m (10–30 tiles) por minuto | O render interpola entre ticks; o `SimView` do PC1 deve interpolar **ao longo da aresta** (há `edge` no estado). O mock anda só `velocidade × 1,5 s` por tick para ficar legível |
+| Faixas ilegíveis em 240 linhas | Exagero visual de largura, cores contrastantes, playtest |
+| Gargalo da Engenharia | Mock da simulação, placeholders procedurais, validadores com mensagens claras |
 | Determinismo quebrado por ordem de iteração | Arrays ordenados por ID; nada de iterar `Set`/`Map` com inserção dependente de tempo |
 
 ---
 
 ## 6. Como rodar
 
-Pré-requisito: **Node.js 22+** (o script da cidade-demo usa TypeScript nativo do Node 23.6+).
+Pré-requisito: **Node.js 22+** (o `gen:demo` usa TypeScript nativo do Node 23.6+).
 
 ```bash
 npm install
-npm run dev        # abre em http://localhost:5173
-npm run check      # typecheck + lint + testes
-npm run build      # build de produção em dist/
+npm run dev        # http://localhost:5173/  (jogo)
+npm run check      # typecheck (app + core rígido) + lint + testes
+npm run build      # typecheck + build de produção em dist/
+npm run shots      # capturas em shots/ (jogo, vitrine e lab); falha com erro de console
 npm run gen:demo   # regenera public/cities/demo.json
 ```
 
-Teclas (protótipo):
-- `WASD`/arrastar = mover, roda = zoom, `Q/E` = girar, `P` = alterna perspectiva/ortográfica.
-- Clique em dois cruzamentos = rota A\*; `M` = troca o modo (Pedestre, Cadeira de Rodas, Skate, Patinete, Tuk-tuk).
-- `C` = "hora do rush" aleatória (o BPR muda a rota), `X` = zera fluxos, `T` = overlay de congestionamento.
-- `1` jitter, `2` affine, `3` dither, `R` = altura low-res 240/360/480.
+| Página | URL | O quê |
+|---|---|---|
+| **Jogo** | `/` | `src/game/main.ts`: cidade + simulação + HUD |
+| **Vitrine** | `/vitrine.html` | validação visual do PC1 (`?cam=`, `?t=`, `?overlay=`; ver `docs/validacao-visual.md`) |
+| **Laboratório** | `/lab.html` | assets isolados com orçamento de polígonos |
 
-Outra cidade: `http://localhost:5173/?city=cities/minha.json` (arquivo em `public/cities/`). Se o JSON tiver erro, a tela lista todos os problemas; os avisos vão para o console.
+**Teclas do jogo:** `Espaço` pausa · `1`/`2`/`3` = 1×/2×/4× (também nos botões ▶ do HUD) · arrastar/`WASD`/setas = mover · roda = zoom · `Q`/`E` = girar · `T` overlay de tráfego · `A` overlay de acessibilidade · `P` liga/desliga PS1 · `H` esconde o HUD · `G` painel visual. O quadro de status mostra pausa/velocidade, relógio, FPS e se a simulação é o mock.
+
+**Parâmetros de URL do jogo:** `?city=` (`vitrine` é o padrão; um nome curto vira `public/cities/<nome>.json`, ex. `?city=vila-nova`; ou um caminho), `?seed=1`, `?scale=0.05` (fração da população que vira agente), `?start=420` (minuto inicial), `?tps=1` (ticks/s em 1×), `?t=30` (pré-roda 30 ticks e pausa, para capturas), `?res=240`, `?ps1=0`, `?hud=0`, `?overlay=traffic|access`.
+
+Por que a vitrine é a cidade padrão: é o mapa para o qual o render do PC1 foi afinado (canal, travessias, features) e já valida no `CityLoader`. Hoje o `CityView` assume `node.id === índice` e por isso `?city=demo` (ids começando em 1) mostra erro na tela; correção pendente no PC1.
+
+Se o `city.json` ou o `balance.json` tiver erro, a tela lista todos os problemas; os avisos vão para o console.
+
+**Debug (só em dev):** `__puca` no console: `__puca.state()`, `__puca.sim`, `__puca.graph`, `__puca.loop` (`loop.setSpeed(4)`, `loop.togglePause()`), `__puca.rig`, `__puca.balance`.
+
+### Trocar o mock pela `Simulation` real
+1. Quando `src/core/Simulation.ts` estiver na `main`, edite **só** `src/game/createSimulation.ts`: `return new Simulation(city, opts)` e `SIMULATION_KIND = 'core'`.
+2. Se a API divergir, ajuste `src/game/SimulationPort.ts` (ou faça-o reexportar os tipos do core).
+3. Apague `MockSimulation.ts` quando ninguém mais usar.
+4. A vista provisória dos agentes troca pelo `SimView` do PC1 em `createSimView()` (`src/game/main.ts`).

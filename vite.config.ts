@@ -6,7 +6,9 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
+        // index.html = o jogo (src/game/main.ts); vitrine.html = validação visual do PC1; lab.html = laboratório de assets
         main: resolve(import.meta.dirname, 'index.html'),
+        vitrine: resolve(import.meta.dirname, 'vitrine.html'),
         lab: resolve(import.meta.dirname, 'lab.html'),
         ui: resolve(import.meta.dirname, 'ui.html'),
       },

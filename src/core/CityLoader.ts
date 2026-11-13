@@ -10,7 +10,9 @@ import {
   RADICAL_KINDS,
   VEHICLE_KINDS,
   type CityFile,
+  type LaneKind,
 } from './types';
+import balanceJson from '../../config/balance.json';
 
 export type ValidationResult =
   | { ok: true; city: CityFile; warnings: string[] }
@@ -248,4 +250,171 @@ export async function loadCity(url: string): Promise<{ city: CityFile; warnings:
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Não foi possível carregar ${url} (HTTP ${res.status})`);
   return parseCity(await res.json());
+}
+
+// ===================================================================== config/balance.json
+
+/**
+ * Parte de config/balance.json que o código usa (o resto do arquivo é livre para o Design).
+ * Validação MÍNIMA: presença e tipo das chaves abaixo. Os valores são do Design (PC2).
+ */
+export interface LaneBalance {
+  capacityPerWidth: number;
+  fallRiskMultiplier: number;
+  noiseMultiplier: number;
+}
+
+export interface Balance {
+  version: string;
+  time: {
+    tickMinutes: number;
+    minutesPerDay: number;
+    peaks: { name: string; startHour: number; endHour: number; intensity: number }[];
+  };
+  /** Por id de veículo; chaves que começam com '_' e valores não-objeto (ex.: lowBatteryThreshold) são ignorados. */
+  vehicles: Record<string, unknown>;
+  lanes: Record<LaneKind, LaneBalance>;
+  congestion: { alpha: number; beta: number; saturatedThreshold: number; gridlockThreshold: number };
+  modalChoice: {
+    weights: { tempo: number; custo: number; risco: number; conforto: number; diversao: number };
+    noise: number;
+  };
+  citizens: {
+    groups: Record<string, { share: number; speedFactor: number }>;
+    patience: { start: number; dropPerBadDay: number; protestThreshold: number };
+  };
+  [key: string]: unknown;
+}
+
+export type BalanceValidationResult =
+  | { ok: true; balance: Balance; warnings: string[] }
+  | { ok: false; errors: string[]; warnings: string[] };
+
+export class BalanceValidationError extends Error {
+  constructor(public readonly errors: string[]) {
+    super(`balance.json inválido (${errors.length} erro(s)):\n- ${errors.join('\n- ')}`);
+    this.name = 'BalanceValidationError';
+  }
+}
+
+/** Valida as chaves de config/balance.json usadas pelo core. Coleta todos os erros, com caminho. */
+export function validateBalance(raw: unknown): BalanceValidationResult {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+  const err = (path: string, msg: string) => errors.push(`${path}: ${msg}`);
+  const warn = (path: string, msg: string) => warnings.push(`${path}: ${msg}`);
+
+  if (!isObj(raw)) return { ok: false, errors: ['raiz: precisa ser um objeto'], warnings };
+
+  const obj = (parent: Obj, key: string, path: string): Obj | null => {
+    const v = parent[key];
+    if (!isObj(v)) {
+      err(path, 'objeto obrigatório');
+      return null;
+    }
+    return v;
+  };
+  const num = (parent: Obj, key: string, path: string, min = -Infinity, max = Infinity) => {
+    const v = parent[key];
+    if (!isNum(v)) err(path, 'número obrigatório');
+    else if (v < min || v > max) err(path, `fora do intervalo [${min}, ${max}]`);
+  };
+
+  if (typeof raw.version !== 'string') err('version', 'texto obrigatório (ex.: "0.2.0")');
+
+  // time
+  const time = obj(raw, 'time', 'time');
+  if (time) {
+    num(time, 'tickMinutes', 'time.tickMinutes', 0.0001);
+    num(time, 'minutesPerDay', 'time.minutesPerDay', 1);
+    if (!Array.isArray(time.peaks)) err('time.peaks', 'lista obrigatória');
+    else time.peaks.forEach((p, i) => {
+      const pp = `time.peaks[${i}]`;
+      if (!isObj(p)) return err(pp, 'objeto');
+      if (typeof p.name !== 'string') err(`${pp}.name`, 'texto obrigatório');
+      num(p, 'startHour', `${pp}.startHour`, 0, 24);
+      num(p, 'endHour', `${pp}.endHour`, 0, 24);
+      num(p, 'intensity', `${pp}.intensity`, 0);
+    });
+  }
+
+  // vehicles
+  const vehicles = obj(raw, 'vehicles', 'vehicles');
+  if (vehicles) {
+    for (const [k, v] of Object.entries(vehicles)) {
+      if (k.startsWith('_') || !isObj(v)) continue;
+      const p = `vehicles.${k}`;
+      num(v, 'fallRisk', `${p}.fallRisk`, 0, 1);
+      num(v, 'modeCost', `${p}.modeCost`, 0);
+      if (!oneOf(VEHICLE_KINDS, k)) warn(p, `não é um id de veículo de data/arte/veiculos.json (${VEHICLE_KINDS.join(', ')}); o core não vai achá-lo`);
+    }
+  }
+
+  // lanes
+  const lanes = obj(raw, 'lanes', 'lanes');
+  if (lanes) {
+    for (const lane of LANE_KINDS) {
+      const l = obj(lanes, lane, `lanes.${lane}`);
+      if (!l) continue;
+      num(l, 'capacityPerWidth', `lanes.${lane}.capacityPerWidth`, 0.0001);
+      num(l, 'fallRiskMultiplier', `lanes.${lane}.fallRiskMultiplier`, 0);
+      num(l, 'noiseMultiplier', `lanes.${lane}.noiseMultiplier`, 0);
+    }
+  }
+
+  // congestion
+  const cong = obj(raw, 'congestion', 'congestion');
+  if (cong) {
+    num(cong, 'alpha', 'congestion.alpha', 0);
+    num(cong, 'beta', 'congestion.beta', 0);
+    num(cong, 'saturatedThreshold', 'congestion.saturatedThreshold', 0);
+    num(cong, 'gridlockThreshold', 'congestion.gridlockThreshold', 0);
+  }
+
+  // modalChoice
+  const modal = obj(raw, 'modalChoice', 'modalChoice');
+  if (modal) {
+    const w = obj(modal, 'weights', 'modalChoice.weights');
+    if (w) for (const k of ['tempo', 'custo', 'risco', 'conforto', 'diversao']) num(w, k, `modalChoice.weights.${k}`);
+    num(modal, 'noise', 'modalChoice.noise', 0);
+  }
+
+  // citizens
+  const cit = obj(raw, 'citizens', 'citizens');
+  if (cit) {
+    const groups = obj(cit, 'groups', 'citizens.groups');
+    if (groups) {
+      let total = 0;
+      for (const [k, g] of Object.entries(groups)) {
+        if (k.startsWith('_')) continue;
+        if (!isObj(g)) {
+          err(`citizens.groups.${k}`, 'objeto { share, speedFactor }');
+          continue;
+        }
+        num(g, 'share', `citizens.groups.${k}.share`, 0, 1);
+        num(g, 'speedFactor', `citizens.groups.${k}.speedFactor`, 0.0001);
+        if (isNum(g.share)) total += g.share;
+      }
+      if (Math.abs(total - 1) > 0.01) warn('citizens.groups', `soma dos share = ${total.toFixed(3)} (esperado 1)`);
+    }
+    const pat = obj(cit, 'patience', 'citizens.patience');
+    if (pat) {
+      num(pat, 'start', 'citizens.patience.start', 0, 100);
+      num(pat, 'dropPerBadDay', 'citizens.patience.dropPerBadDay', 0);
+      num(pat, 'protestThreshold', 'citizens.patience.protestThreshold', 0, 100);
+    }
+  }
+
+  if (errors.length > 0) return { ok: false, errors, warnings };
+  return { ok: true, balance: raw as unknown as Balance, warnings };
+}
+
+/**
+ * Valida e devolve o balance (e os avisos), ou lança BalanceValidationError.
+ * Sem argumento, usa o config/balance.json do repositório (importado no build, como data/arte/*.json).
+ */
+export function loadBalance(raw: unknown = balanceJson): { balance: Balance; warnings: string[] } {
+  const r = validateBalance(raw);
+  if (!r.ok) throw new BalanceValidationError(r.errors);
+  return { balance: r.balance, warnings: r.warnings };
 }
