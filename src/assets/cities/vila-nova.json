@@ -1,0 +1,980 @@
+{
+  "name": "Vila Nova",
+  "size": {
+    "w": 48,
+    "h": 48
+  },
+  "nodes": [
+    {
+      "id": 1,
+      "x": 6,
+      "y": 8
+    },
+    {
+      "id": 2,
+      "x": 16,
+      "y": 8
+    },
+    {
+      "id": 3,
+      "x": 26,
+      "y": 8
+    },
+    {
+      "id": 4,
+      "x": 6,
+      "y": 20
+    },
+    {
+      "id": 5,
+      "x": 16,
+      "y": 20
+    },
+    {
+      "id": 6,
+      "x": 26,
+      "y": 20
+    },
+    {
+      "id": 7,
+      "x": 6,
+      "y": 32
+    },
+    {
+      "id": 8,
+      "x": 16,
+      "y": 32
+    },
+    {
+      "id": 9,
+      "x": 26,
+      "y": 32
+    },
+    {
+      "id": 10,
+      "x": 6,
+      "y": 42
+    },
+    {
+      "id": 11,
+      "x": 16,
+      "y": 42
+    },
+    {
+      "id": 12,
+      "x": 26,
+      "y": 42
+    },
+    {
+      "id": 13,
+      "x": 36,
+      "y": 20
+    },
+    {
+      "id": 14,
+      "x": 44,
+      "y": 20
+    },
+    {
+      "id": 15,
+      "x": 36,
+      "y": 32
+    },
+    {
+      "id": 16,
+      "x": 44,
+      "y": 32
+    },
+    {
+      "id": 17,
+      "x": 36,
+      "y": 42
+    },
+    {
+      "id": 18,
+      "x": 44,
+      "y": 42
+    }
+  ],
+  "edges": [
+    {
+      "id": 1,
+      "from": 1,
+      "to": 2,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 2,
+      "from": 2,
+      "to": 3,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 3,
+      "from": 4,
+      "to": 5,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 4,
+      "from": 5,
+      "to": 6,
+      "width": 10,
+      "speed": 30,
+      "oneWay": false,
+      "kind": "avenue",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 5,
+      "from": 7,
+      "to": 8,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 6,
+      "from": 8,
+      "to": 9,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 7,
+      "from": 10,
+      "to": 11,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 8,
+      "from": 11,
+      "to": 12,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 9,
+      "from": 1,
+      "to": 4,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 10,
+      "from": 4,
+      "to": 7,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 11,
+      "from": 7,
+      "to": 10,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 12,
+      "from": 2,
+      "to": 5,
+      "width": 10,
+      "speed": 30,
+      "oneWay": false,
+      "kind": "avenue",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 13,
+      "from": 5,
+      "to": 8,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 14,
+      "from": 8,
+      "to": 11,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 15,
+      "from": 3,
+      "to": 6,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 16,
+      "from": 6,
+      "to": 9,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 17,
+      "from": 9,
+      "to": 12,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 18,
+      "from": 13,
+      "to": 14,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 19,
+      "from": 15,
+      "to": 16,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 20,
+      "from": 17,
+      "to": 18,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 21,
+      "from": 13,
+      "to": 15,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 22,
+      "from": 15,
+      "to": 17,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 23,
+      "from": 14,
+      "to": 16,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    },
+    {
+      "id": 24,
+      "from": 16,
+      "to": 18,
+      "width": 8,
+      "speed": 15,
+      "oneWay": false,
+      "kind": "street",
+      "lanes": {
+        "sidewalk": 1,
+        "slow": 1,
+        "fast": 1
+      }
+    }
+  ],
+  "crossings": [
+    {
+      "id": 1,
+      "from": 6,
+      "to": 13,
+      "over": "canal",
+      "radical": "ramp_bridge",
+      "access": "bubble_lift"
+    },
+    {
+      "id": 2,
+      "from": 12,
+      "to": 17,
+      "over": "canal",
+      "radical": "ramp_bridge"
+    }
+  ],
+  "buildings": [
+    {
+      "id": 0,
+      "x": 3,
+      "y": 5,
+      "kind": "res",
+      "capacity": 60,
+      "model": "bld_res_1",
+      "rotation": 2,
+      "district": 0
+    },
+    {
+      "id": 1,
+      "x": 4.5,
+      "y": 5,
+      "kind": "res",
+      "capacity": 60,
+      "model": "bld_res_2",
+      "rotation": 2,
+      "district": 0
+    },
+    {
+      "id": 2,
+      "x": 9,
+      "y": 5,
+      "kind": "res",
+      "capacity": 60,
+      "model": "bld_res_1",
+      "rotation": 2,
+      "district": 0
+    },
+    {
+      "id": 3,
+      "x": 10.5,
+      "y": 5,
+      "kind": "res",
+      "capacity": 60,
+      "model": "bld_res_2",
+      "rotation": 2,
+      "district": 0
+    },
+    {
+      "id": 4,
+      "x": 13,
+      "y": 5,
+      "kind": "res",
+      "capacity": 60,
+      "model": "bld_res_1",
+      "rotation": 2,
+      "district": 0
+    },
+    {
+      "id": 5,
+      "x": 19,
+      "y": 5,
+      "kind": "res",
+      "capacity": 60,
+      "model": "bld_res_2",
+      "rotation": 2,
+      "district": 0
+    },
+    {
+      "id": 6,
+      "x": 21,
+      "y": 5,
+      "kind": "res",
+      "capacity": 60,
+      "model": "bld_res_1",
+      "rotation": 2,
+      "district": 0
+    },
+    {
+      "id": 7,
+      "x": 23,
+      "y": 5,
+      "kind": "res",
+      "capacity": 60,
+      "model": "bld_res_2",
+      "rotation": 2,
+      "district": 0
+    },
+    {
+      "id": 8,
+      "x": 9,
+      "y": 12,
+      "kind": "res",
+      "capacity": 60,
+      "model": "bld_res_1",
+      "rotation": 2,
+      "district": 0
+    },
+    {
+      "id": 9,
+      "x": 12,
+      "y": 12,
+      "kind": "res",
+      "capacity": 60,
+      "model": "bld_res_2",
+      "rotation": 2,
+      "district": 0
+    },
+    {
+      "id": 10,
+      "x": 19,
+      "y": 12,
+      "kind": "res",
+      "capacity": 60,
+      "model": "bld_res_1",
+      "rotation": 2,
+      "district": 0
+    },
+    {
+      "id": 11,
+      "x": 22,
+      "y": 12,
+      "kind": "res",
+      "capacity": 60,
+      "model": "bld_res_2",
+      "rotation": 2,
+      "district": 0
+    },
+    {
+      "id": 12,
+      "x": 9,
+      "y": 17,
+      "kind": "com",
+      "capacity": 40,
+      "model": "bld_com_1",
+      "rotation": 2,
+      "district": 1
+    },
+    {
+      "id": 13,
+      "x": 12,
+      "y": 17,
+      "kind": "com",
+      "capacity": 40,
+      "model": "bld_com_2",
+      "rotation": 2,
+      "district": 1
+    },
+    {
+      "id": 14,
+      "x": 20,
+      "y": 17,
+      "kind": "com",
+      "capacity": 40,
+      "model": "bld_com_1",
+      "rotation": 2,
+      "district": 1
+    },
+    {
+      "id": 15,
+      "x": 23,
+      "y": 17,
+      "kind": "com",
+      "capacity": 40,
+      "model": "bld_com_2",
+      "rotation": 2,
+      "district": 1
+    },
+    {
+      "id": 16,
+      "x": 9,
+      "y": 23,
+      "kind": "com",
+      "capacity": 40,
+      "model": "bld_com_1",
+      "rotation": 0,
+      "district": 1
+    },
+    {
+      "id": 17,
+      "x": 12,
+      "y": 23,
+      "kind": "com",
+      "capacity": 40,
+      "model": "bld_com_2",
+      "rotation": 0,
+      "district": 1
+    },
+    {
+      "id": 18,
+      "x": 20,
+      "y": 23,
+      "kind": "com",
+      "capacity": 40,
+      "model": "bld_com_1",
+      "rotation": 0,
+      "district": 1
+    },
+    {
+      "id": 19,
+      "x": 23,
+      "y": 23,
+      "kind": "com",
+      "capacity": 40,
+      "model": "bld_com_2",
+      "rotation": 0,
+      "district": 1
+    },
+    {
+      "id": 20,
+      "x": 3,
+      "y": 17,
+      "kind": "com",
+      "capacity": 40,
+      "model": "bld_com_1",
+      "rotation": 0,
+      "district": 1
+    },
+    {
+      "id": 21,
+      "x": 10,
+      "y": 28,
+      "kind": "school",
+      "capacity": 200,
+      "model": "bld_school",
+      "rotation": 0,
+      "district": 2
+    },
+    {
+      "id": 22,
+      "x": 10,
+      "y": 37,
+      "kind": "skatepark",
+      "capacity": 300,
+      "model": "bld_skatepark",
+      "rotation": 0,
+      "district": 3
+    },
+    {
+      "id": 23,
+      "x": 21,
+      "y": 37,
+      "kind": "park",
+      "capacity": 100,
+      "model": "bld_park",
+      "rotation": 0,
+      "district": 3
+    },
+    {
+      "id": 24,
+      "x": 4,
+      "y": 37,
+      "kind": "park",
+      "capacity": 100,
+      "model": "bld_park",
+      "rotation": 0,
+      "district": 3
+    },
+    {
+      "id": 25,
+      "x": 39,
+      "y": 24,
+      "kind": "res",
+      "capacity": 50,
+      "model": "bld_res_1",
+      "rotation": 0,
+      "district": 4
+    },
+    {
+      "id": 26,
+      "x": 42,
+      "y": 24,
+      "kind": "res",
+      "capacity": 50,
+      "model": "bld_res_2",
+      "rotation": 0,
+      "district": 4
+    },
+    {
+      "id": 27,
+      "x": 39,
+      "y": 28,
+      "kind": "res",
+      "capacity": 50,
+      "model": "bld_res_1",
+      "rotation": 0,
+      "district": 4
+    },
+    {
+      "id": 28,
+      "x": 42,
+      "y": 28,
+      "kind": "res",
+      "capacity": 50,
+      "model": "bld_res_2",
+      "rotation": 0,
+      "district": 4
+    },
+    {
+      "id": 29,
+      "x": 39,
+      "y": 36,
+      "kind": "res",
+      "capacity": 50,
+      "model": "bld_res_1",
+      "rotation": 2,
+      "district": 4
+    },
+    {
+      "id": 30,
+      "x": 42,
+      "y": 36,
+      "kind": "res",
+      "capacity": 50,
+      "model": "bld_res_2",
+      "rotation": 2,
+      "district": 4
+    },
+    {
+      "id": 31,
+      "x": 40,
+      "y": 40,
+      "kind": "res",
+      "capacity": 50,
+      "model": "bld_res_1",
+      "rotation": 2,
+      "district": 4
+    },
+    {
+      "id": 32,
+      "x": 41.5,
+      "y": 40,
+      "kind": "res",
+      "capacity": 50,
+      "model": "bld_res_2",
+      "rotation": 2,
+      "district": 4
+    },
+    {
+      "id": 33,
+      "x": 40,
+      "y": 45,
+      "kind": "ind",
+      "capacity": 60,
+      "model": "bld_ind_1",
+      "rotation": 0,
+      "district": 4
+    },
+    {
+      "id": 34,
+      "x": 40,
+      "y": 16,
+      "kind": "com",
+      "capacity": 30,
+      "model": "bld_com_1",
+      "rotation": 0,
+      "district": 4
+    }
+  ],
+  "districts": [
+    {
+      "id": 0,
+      "name": "Residencial Norte",
+      "income": "mid",
+      "population": 720,
+      "wheelchairShare": 0.02,
+      "ownership": {
+        "skate": 25,
+        "kick_scooter": 35,
+        "bmx": 10,
+        "e_scooter": 10
+      }
+    },
+    {
+      "id": 1,
+      "name": "Centro / Mercado",
+      "income": "mid",
+      "population": 120,
+      "wheelchairShare": 0.03,
+      "ownership": {
+        "kick_scooter": 30,
+        "skate": 20,
+        "tandem": 10,
+        "e_scooter": 15
+      }
+    },
+    {
+      "id": 2,
+      "name": "Escola Municipal",
+      "income": "low",
+      "population": 60,
+      "wheelchairShare": 0.03,
+      "ownership": {
+        "skate": 40,
+        "kick_scooter": 40,
+        "bmx": 15
+      }
+    },
+    {
+      "id": 3,
+      "name": "Praça do Bowl",
+      "income": "low",
+      "population": 60,
+      "wheelchairShare": 0.02,
+      "ownership": {
+        "skate": 60,
+        "longboard": 25,
+        "bmx": 30,
+        "skates": 20
+      }
+    },
+    {
+      "id": 4,
+      "name": "Zona Leste",
+      "income": "low",
+      "population": 240,
+      "wheelchairShare": 0.06,
+      "ownership": {
+        "skate": 20,
+        "kick_scooter": 25,
+        "wheelchair_powered": 5,
+        "wheelchair": 3,
+        "bmx": 10
+      }
+    }
+  ],
+  "areas": [
+    {
+      "kind": "water",
+      "x": 29,
+      "y": 0,
+      "w": 4,
+      "h": 48
+    }
+  ],
+  "features": [
+    {
+      "kind": "bowl",
+      "x": 10,
+      "y": 35,
+      "rot": 0
+    },
+    {
+      "kind": "stop_shelter",
+      "x": 15,
+      "y": 19,
+      "rot": 0
+    },
+    {
+      "kind": "tree",
+      "x": 7,
+      "y": 6,
+      "rot": 0
+    },
+    {
+      "kind": "bench",
+      "x": 17,
+      "y": 22,
+      "rot": 0
+    },
+    {
+      "kind": "lamp",
+      "x": 14,
+      "y": 21,
+      "rot": 0
+    }
+  ],
+  "characters": [
+    {
+      "id": "dona_rita",
+      "name": "Dona Rita",
+      "group": "Zona Leste",
+      "vehicle": "wheelchair_powered",
+      "home": 25,
+      "work": 12
+    },
+    {
+      "id": "bia",
+      "name": "Bia",
+      "group": "Praça do Bowl",
+      "vehicle": "skate",
+      "home": 0,
+      "work": 21
+    },
+    {
+      "id": "seu_osvaldo",
+      "name": "Seu Osvaldo",
+      "group": "Centro / Mercado",
+      "vehicle": "pedestrian",
+      "home": 12,
+      "work": 12
+    },
+    {
+      "id": "tuco",
+      "name": "Tuco",
+      "group": "Praça do Bowl",
+      "vehicle": "bmx",
+      "home": 1,
+      "work": 22
+    }
+  ],
+  "scenario": {
+    "id": "vila-nova",
+    "budget": 5000,
+    "durationDays": 14,
+    "goals": [
+      {
+        "kpi": "avgTripMinutes",
+        "op": "<=",
+        "value": 14.4,
+        "stars": 1
+      },
+      {
+        "kpi": "accessibilityPct",
+        "op": ">=",
+        "value": 95,
+        "stars": 2
+      },
+      {
+        "kpi": "balance",
+        "op": ">=",
+        "value": 0,
+        "stars": 2
+      }
+    ],
+    "events": [
+      "campeonato_bowl"
+    ],
+    "dilemmas": [
+      "entregas_mercado",
+      "elemento_travessia"
+    ]
+  }
+}
