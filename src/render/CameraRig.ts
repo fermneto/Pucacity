@@ -5,6 +5,9 @@ import { PerspectiveCamera, Vector3 } from 'three';
  * pan arrastando/WASD, zoom na roda e rotação em passos de 90° (Q/E).
  */
 export class CameraRig {
+  /** Limites do zoom (distância ao alvo, em tiles). O máximo cobre a Metrópole Aero inteira (48×41). */
+  static readonly MIN_ZOOM = 4;
+  static readonly MAX_ZOOM = 80;
   readonly camera = new PerspectiveCamera(38, 1, 0.1, 400);
   target = new Vector3();
   yaw = 0;
@@ -23,7 +26,7 @@ export class CameraRig {
       drag = { x: e.clientX, y: e.clientY };
     });
     el.addEventListener('wheel', (e) => {
-      this.distance = Math.min(45, Math.max(4, this.distance * (1 + Math.sign(e.deltaY) * 0.1)));
+      this.distance = Math.min(CameraRig.MAX_ZOOM, Math.max(CameraRig.MIN_ZOOM, this.distance * (1 + Math.sign(e.deltaY) * 0.1)));
     }, { passive: true });
   }
 

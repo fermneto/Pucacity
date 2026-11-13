@@ -6,14 +6,15 @@ import { VEHICLE_BUILDERS } from './vehicles';
 import { BUILDING_BUILDERS } from './buildings';
 import { RADICAL_BUILDERS } from './radical';
 import { PROP_BUILDERS } from './props';
+import { LANDMARK_BUILDERS } from './landmarks';
 import { AGENT_SCALE, TILE_M } from '../util';
 
 /**
  * Catálogo de todos os modelos do jogo, com orçamento de polígonos do SPEC (§5).
  * Os ids seguem a convenção de nomes do contrato Arte → Engenharia (SPEC §11.4):
- * veh_*, bld_*, rad_*, prop_*. Quando os .glb do Blender chegarem, substituem estes.
+ * veh_*, bld_*, rad_*, prop_*, lmk_* (marcos). Quando os .glb do Blender chegarem, substituem estes.
  */
-export type Category = 'veiculo' | 'predio' | 'radical' | 'prop';
+export type Category = 'veiculo' | 'predio' | 'radical' | 'prop' | 'marco';
 
 export interface ModelGeo {
   opaque: BufferGeometry;
@@ -34,7 +35,12 @@ export interface ModelDef {
   span?: number;
 }
 
-export const BUDGET: Record<Category, number> = { veiculo: 60, predio: 200, radical: 300, prop: 200 };
+/**
+ * Orçamento por categoria. `marco` (estruturas gigantes Frutiger Aero, landmarks.ts) é a
+ * exceção ao limite de prédios do SPEC: até 400 tris, porque são poucos no mapa, medem
+ * 40–120 m e precisam de silhueta própria no skyline.
+ */
+export const BUDGET: Record<Category, number> = { veiculo: 60, predio: 200, radical: 300, prop: 200, marco: 400 };
 
 const VEH_LANE: Record<string, string> = Object.fromEntries(
   Object.entries(veiculos.faixas).map(([k, v]) => [k, (v as { lane: string }).lane]),
@@ -88,11 +94,18 @@ const NOMES_PROP: Record<string, string> = {
   prop_dino_runner: 'Dino corredor', prop_dino_horns: 'Dino chifrudo',
 };
 
+const NOMES_MARCO: Record<string, string> = {
+  lmk_orb_tower: 'Torre Orbe', lmk_biodome: 'Biosfera', lmk_bubble_wheel: 'Roda-Gigante de Bolhas',
+  lmk_aqueduct: 'Aqueduto Aero', lmk_wind_turbine: 'Turbina Aero', lmk_drop_tower: 'Torre Gota',
+  lmk_leaf_pavilion: 'Pavilhão Folha', lmk_rainbow_ramp: 'Rampa Arco-Íris', lmk_lawn: 'Gramado Aero (base dos parques)',
+};
+
 export const CATALOG: ModelDef[] = [
   ...vehicleDefs,
   ...Object.keys(BUILDING_BUILDERS).map((id) => ({ id, nome: NOMES_PREDIO[id] ?? id, categoria: 'predio' as const, budget: BUDGET.predio })),
   ...radicalDefs,
   ...Object.keys(PROP_BUILDERS).map((id) => ({ id, nome: NOMES_PROP[id] ?? id, categoria: 'prop' as const, budget: BUDGET.prop })),
+  ...Object.keys(LANDMARK_BUILDERS).map((id) => ({ id, nome: NOMES_MARCO[id] ?? id, categoria: 'marco' as const, budget: BUDGET.marco })),
 ];
 
 /** Escala metros → tiles. Veículos ganham o exagero de legibilidade. */
@@ -113,6 +126,7 @@ export function buildModel(id: string, span?: number): ModelGeo {
   if (def.categoria === 'veiculo') (VEHICLE_BUILDERS[id.slice(4)] ?? sem)(o);
   else if (def.categoria === 'predio') (BUILDING_BUILDERS[id] ?? sem)(o);
   else if (def.categoria === 'radical') (RADICAL_BUILDERS[id] ?? sem)(o, g, span ?? def.span ?? 24);
+  else if (def.categoria === 'marco') (LANDMARK_BUILDERS[id] ?? sem)(o, g);
   else (PROP_BUILDERS[id] ?? sem)(o, g);
   const s = scaleOf(def);
   const geo: ModelGeo = {
