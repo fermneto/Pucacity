@@ -1,4 +1,4 @@
-import { BufferGeometry, Color, Float32BufferAttribute, Matrix3, Matrix4, Vector3 } from 'three';
+import { BufferGeometry, Color, Float32BufferAttribute, Matrix3, Matrix4, Quaternion, Vector3 } from 'three';
 import { tileOffset, type TileName } from '../textures/Atlas';
 
 /**
@@ -39,7 +39,7 @@ export class MeshBuilder {
   private stack: Matrix4[] = [new Matrix4()];
 
   get matrix(): Matrix4 {
-    return this.stack[this.stack.length - 1];
+    return this.stack[this.stack.length - 1]!; // a pilha nunca fica vazia
   }
 
   /** Empilha uma transformação (translação/rotação/escala) para as próximas peças. */
@@ -76,9 +76,10 @@ export class MeshBuilder {
     const shade = 0.58 + 0.42 * Math.max(0, n.dot(LIGHT)) - (n.y < -0.5 ? 0.12 : 0);
     const [tu, tv] = tileOffset(p.tile ?? 'white');
     for (let i = 0; i < 3; i++) {
-      this.pos.push(verts[i].x, verts[i].y, verts[i].z);
+      const vt = verts[i]!, uvt = uvs[i]!;
+      this.pos.push(vt.x, vt.y, vt.z);
       this.nor.push(n.x, n.y, n.z);
-      this.uv.push(uvs[i][0], uvs[i][1]);
+      this.uv.push(uvt[0]!, uvt[1]!);
       this.col.push(base.r * shade, base.g * shade, base.b * shade);
       this.tile.push(tu, tv);
       this.tint.push(p.tint ?? 0);
@@ -102,14 +103,15 @@ export class MeshBuilder {
   }
   triXYZ(a: number[], b: number[], c: number[], p: Paint, outward?: number[]) {
     const s = p.uvScale ?? 0.25;
-    this.tri(v3(a), v3(b), v3(c), [a[2] * s, a[1] * s], [b[2] * s, b[1] * s], [c[2] * s, c[1] * s], p, outward ? v3(outward) : undefined);
+    const A = v3(a), B = v3(b), C = v3(c);
+    this.tri(A, B, C, [A.z * s, A.y * s], [B.z * s, B.y * s], [C.z * s, C.y * s], p, outward ? v3(outward) : undefined);
   }
 
   /** Caixa centrada em x/z, base em y=0. Faces podem ser omitidas para economizar triângulos. */
   box(w: number, h: number, d: number, p: BoxPaint): this {
     const x = w / 2, z = d / 2;
     const v = (X: number, Y: number, Z: number) => new Vector3(X, Y, Z);
-    const faces: [Face, Vector3[], Vector3][] = [
+    const faces: [Face, [Vector3, Vector3, Vector3, Vector3], Vector3][] = [
       ['top', [v(-x, h, z), v(x, h, z), v(x, h, -z), v(-x, h, -z)], v(0, 1, 0)],
       ['bottom', [v(-x, 0, -z), v(x, 0, -z), v(x, 0, z), v(-x, 0, z)], v(0, -1, 0)],
       ['pz', [v(-x, 0, z), v(x, 0, z), v(x, h, z), v(-x, h, z)], v(0, 0, 1)],
@@ -135,13 +137,15 @@ export class MeshBuilder {
     const lo = ring(radius, 0), hi = ring(rt, h);
     for (let i = 0; i < sides; i++) {
       const j = (i + 1) % sides;
-      const mid = lo[i].clone().add(lo[j]).setY(0);
-      if (rt === 0) this.tri(lo[i], lo[j], hi[i], [0, 0], [1, 0], [0.5, 1], p, mid);
-      else this.quad(lo[i], lo[j], hi[j], hi[i], p, mid);
+      const li = lo[i]!, lj = lo[j]!, hi_ = hi[i]!, hj = hi[j]!;
+      const mid = li.clone().add(lj).setY(0);
+      if (rt === 0) this.tri(li, lj, hi_, [0, 0], [1, 0], [0.5, 1], p, mid);
+      else this.quad(li, lj, hj, hi_, p, mid);
     }
     const cap = (pts: Vector3[], out: Vector3, pp: Paint) => {
       for (let i = 1; i < sides - 1; i++) {
-        this.tri(pts[0], pts[i], pts[i + 1], [pts[0].x * 0.25, pts[0].z * 0.25], [pts[i].x * 0.25, pts[i].z * 0.25], [pts[i + 1].x * 0.25, pts[i + 1].z * 0.25], pp, out);
+        const a = pts[0]!, b = pts[i]!, c = pts[i + 1]!;
+        this.tri(a, b, c, [a.x * 0.25, a.z * 0.25], [b.x * 0.25, b.z * 0.25], [c.x * 0.25, c.z * 0.25], pp, out);
       }
     };
     if (p.top !== false && rt > 0) cap(hi, new Vector3(0, 1, 0), p.topPaint ?? p);
@@ -156,7 +160,7 @@ export class MeshBuilder {
       return new Vector3(0, Math.sin(a) * radius + radius, Math.cos(a) * radius);
     });
     for (const out of [new Vector3(1, 0, 0), new Vector3(-1, 0, 0)]) {
-      for (let i = 1; i < sides - 1; i++) this.tri(pts[0], pts[i], pts[i + 1], [0, 0], [1, 0], [1, 1], p, out);
+      for (let i = 1; i < sides - 1; i++) this.tri(pts[0]!, pts[i]!, pts[i + 1]!, [0, 0], [1, 0], [1, 1], p, out);
     }
     return this;
   }
@@ -189,6 +193,25 @@ export class MeshBuilder {
       else this.quad(a, b, c, d, p, out);
     }
     return this;
+  }
+
+  /** Elipsoide low-poly centrado em (x, y, z) com semi-eixos (sx, sy, sz). Corpos orgânicos (dinos, gotas). */
+  ellipsoid(c: [number, number, number], s: [number, number, number], lon: number, lat: number, p: Paint): this {
+    this.push(new Matrix4().makeTranslation(c[0], c[1], c[2])
+      .multiply(new Matrix4().makeScale(s[0], s[1], s[2]))
+      .multiply(new Matrix4().makeTranslation(0, -1, 0)));
+    this.sphere(1, lon, lat, p);
+    return this.pop();
+  }
+
+  /** Tronco de N lados ligando dois pontos (pernas, pescoços, caudas). r1 = 0 vira cone. */
+  limb(from: [number, number, number], to: [number, number, number], r0: number, r1: number, sides: number, p: Paint & { top?: boolean }): this {
+    const a = v3(from), dir = v3(to).sub(a);
+    const len = dir.length();
+    const q = new Quaternion().setFromUnitVectors(new Vector3(0, 1, 0), dir.normalize());
+    this.push(new Matrix4().makeTranslation(a.x, a.y, a.z).multiply(new Matrix4().makeRotationFromQuaternion(q)));
+    this.prism(r0, len, sides, { ...p, radiusTop: r1, top: p.top ?? false });
+    return this.pop();
   }
 
   /** Copia uma geometria já construída (mesmo layout de atributos) com a matriz atual. */
