@@ -1,0 +1,1802 @@
+{
+    "name":  "Puca Demo",
+    "size":  {
+                 "w":  48,
+                 "h":  48
+             },
+    "nodes":  [
+                  {
+                      "id":  1,
+                      "x":  4,
+                      "y":  4
+                  },
+                  {
+                      "id":  2,
+                      "x":  12,
+                      "y":  4
+                  },
+                  {
+                      "id":  3,
+                      "x":  20,
+                      "y":  4
+                  },
+                  {
+                      "id":  4,
+                      "x":  28,
+                      "y":  4
+                  },
+                  {
+                      "id":  5,
+                      "x":  36,
+                      "y":  4
+                  },
+                  {
+                      "id":  6,
+                      "x":  44,
+                      "y":  4
+                  },
+                  {
+                      "id":  7,
+                      "x":  4,
+                      "y":  12
+                  },
+                  {
+                      "id":  8,
+                      "x":  12,
+                      "y":  12
+                  },
+                  {
+                      "id":  9,
+                      "x":  20,
+                      "y":  12
+                  },
+                  {
+                      "id":  10,
+                      "x":  28,
+                      "y":  12
+                  },
+                  {
+                      "id":  11,
+                      "x":  36,
+                      "y":  12
+                  },
+                  {
+                      "id":  12,
+                      "x":  44,
+                      "y":  12
+                  },
+                  {
+                      "id":  13,
+                      "x":  4,
+                      "y":  20
+                  },
+                  {
+                      "id":  14,
+                      "x":  12,
+                      "y":  20
+                  },
+                  {
+                      "id":  15,
+                      "x":  20,
+                      "y":  20
+                  },
+                  {
+                      "id":  16,
+                      "x":  28,
+                      "y":  20,
+                      "signal":  {
+                                     "cycle":  90,
+                                     "phases":  [
+                                                    {
+                                                        "edges":  [
+                                                                      13,
+                                                                      14
+                                                                  ],
+                                                        "green":  40
+                                                    },
+                                                    {
+                                                        "edges":  [
+                                                                      47,
+                                                                      48
+                                                                  ],
+                                                        "green":  40
+                                                    }
+                                                ]
+                                 }
+                  },
+                  {
+                      "id":  17,
+                      "x":  36,
+                      "y":  20
+                  },
+                  {
+                      "id":  18,
+                      "x":  44,
+                      "y":  20
+                  },
+                  {
+                      "id":  19,
+                      "x":  4,
+                      "y":  28
+                  },
+                  {
+                      "id":  20,
+                      "x":  12,
+                      "y":  28
+                  },
+                  {
+                      "id":  21,
+                      "x":  20,
+                      "y":  28
+                  },
+                  {
+                      "id":  22,
+                      "x":  28,
+                      "y":  28
+                  },
+                  {
+                      "id":  23,
+                      "x":  36,
+                      "y":  28
+                  },
+                  {
+                      "id":  24,
+                      "x":  44,
+                      "y":  28
+                  },
+                  {
+                      "id":  25,
+                      "x":  4,
+                      "y":  36
+                  },
+                  {
+                      "id":  26,
+                      "x":  12,
+                      "y":  36
+                  },
+                  {
+                      "id":  27,
+                      "x":  20,
+                      "y":  36
+                  },
+                  {
+                      "id":  28,
+                      "x":  28,
+                      "y":  36
+                  },
+                  {
+                      "id":  29,
+                      "x":  36,
+                      "y":  36
+                  },
+                  {
+                      "id":  30,
+                      "x":  44,
+                      "y":  36
+                  },
+                  {
+                      "id":  31,
+                      "x":  4,
+                      "y":  44
+                  },
+                  {
+                      "id":  32,
+                      "x":  12,
+                      "y":  44
+                  },
+                  {
+                      "id":  33,
+                      "x":  20,
+                      "y":  44
+                  },
+                  {
+                      "id":  34,
+                      "x":  28,
+                      "y":  44
+                  },
+                  {
+                      "id":  35,
+                      "x":  36,
+                      "y":  44
+                  },
+                  {
+                      "id":  36,
+                      "x":  44,
+                      "y":  44
+                  }
+              ],
+    "edges":  [
+                  {
+                      "id":  1,
+                      "from":  1,
+                      "to":  2,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  2,
+                      "from":  2,
+                      "to":  3,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  3,
+                      "from":  3,
+                      "to":  4,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  4,
+                      "from":  4,
+                      "to":  5,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  5,
+                      "from":  5,
+                      "to":  6,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  6,
+                      "from":  7,
+                      "to":  8,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  true,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  7,
+                      "from":  8,
+                      "to":  9,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  true,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  8,
+                      "from":  9,
+                      "to":  10,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  true,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  9,
+                      "from":  10,
+                      "to":  11,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  true,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  10,
+                      "from":  11,
+                      "to":  12,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  true,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  11,
+                      "from":  13,
+                      "to":  14,
+                      "lanes":  2,
+                      "speed":  50,
+                      "oneWay":  false,
+                      "kind":  "avenue"
+                  },
+                  {
+                      "id":  12,
+                      "from":  14,
+                      "to":  15,
+                      "lanes":  2,
+                      "speed":  50,
+                      "oneWay":  false,
+                      "kind":  "avenue"
+                  },
+                  {
+                      "id":  13,
+                      "from":  15,
+                      "to":  16,
+                      "lanes":  2,
+                      "speed":  50,
+                      "oneWay":  false,
+                      "kind":  "avenue"
+                  },
+                  {
+                      "id":  14,
+                      "from":  16,
+                      "to":  17,
+                      "lanes":  2,
+                      "speed":  50,
+                      "oneWay":  false,
+                      "kind":  "avenue"
+                  },
+                  {
+                      "id":  15,
+                      "from":  17,
+                      "to":  18,
+                      "lanes":  2,
+                      "speed":  50,
+                      "oneWay":  false,
+                      "kind":  "avenue"
+                  },
+                  {
+                      "id":  16,
+                      "from":  19,
+                      "to":  20,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  17,
+                      "from":  20,
+                      "to":  21,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  18,
+                      "from":  21,
+                      "to":  22,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  19,
+                      "from":  22,
+                      "to":  23,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  20,
+                      "from":  23,
+                      "to":  24,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  21,
+                      "from":  26,
+                      "to":  25,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  true,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  22,
+                      "from":  27,
+                      "to":  26,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  true,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  23,
+                      "from":  28,
+                      "to":  27,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  true,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  24,
+                      "from":  29,
+                      "to":  28,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  true,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  25,
+                      "from":  30,
+                      "to":  29,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  true,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  26,
+                      "from":  31,
+                      "to":  32,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  27,
+                      "from":  32,
+                      "to":  33,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  28,
+                      "from":  33,
+                      "to":  34,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  29,
+                      "from":  34,
+                      "to":  35,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  30,
+                      "from":  35,
+                      "to":  36,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  31,
+                      "from":  1,
+                      "to":  7,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  32,
+                      "from":  7,
+                      "to":  13,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  33,
+                      "from":  13,
+                      "to":  19,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  34,
+                      "from":  19,
+                      "to":  25,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  35,
+                      "from":  25,
+                      "to":  31,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  36,
+                      "from":  2,
+                      "to":  8,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  37,
+                      "from":  8,
+                      "to":  14,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  38,
+                      "from":  14,
+                      "to":  20,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  39,
+                      "from":  20,
+                      "to":  26,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  40,
+                      "from":  26,
+                      "to":  32,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  41,
+                      "from":  3,
+                      "to":  9,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  42,
+                      "from":  9,
+                      "to":  15,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  43,
+                      "from":  15,
+                      "to":  21,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  44,
+                      "from":  21,
+                      "to":  27,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  45,
+                      "from":  27,
+                      "to":  33,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  46,
+                      "from":  4,
+                      "to":  10,
+                      "lanes":  2,
+                      "speed":  50,
+                      "oneWay":  false,
+                      "kind":  "avenue"
+                  },
+                  {
+                      "id":  47,
+                      "from":  10,
+                      "to":  16,
+                      "lanes":  2,
+                      "speed":  50,
+                      "oneWay":  false,
+                      "kind":  "avenue"
+                  },
+                  {
+                      "id":  48,
+                      "from":  16,
+                      "to":  22,
+                      "lanes":  2,
+                      "speed":  50,
+                      "oneWay":  false,
+                      "kind":  "avenue"
+                  },
+                  {
+                      "id":  49,
+                      "from":  22,
+                      "to":  28,
+                      "lanes":  2,
+                      "speed":  50,
+                      "oneWay":  false,
+                      "kind":  "avenue"
+                  },
+                  {
+                      "id":  50,
+                      "from":  28,
+                      "to":  34,
+                      "lanes":  2,
+                      "speed":  50,
+                      "oneWay":  false,
+                      "kind":  "avenue"
+                  },
+                  {
+                      "id":  51,
+                      "from":  5,
+                      "to":  11,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  52,
+                      "from":  11,
+                      "to":  17,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  53,
+                      "from":  17,
+                      "to":  23,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  54,
+                      "from":  23,
+                      "to":  29,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  55,
+                      "from":  29,
+                      "to":  35,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  56,
+                      "from":  6,
+                      "to":  12,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  57,
+                      "from":  12,
+                      "to":  18,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  58,
+                      "from":  18,
+                      "to":  24,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  59,
+                      "from":  24,
+                      "to":  30,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  },
+                  {
+                      "id":  60,
+                      "from":  30,
+                      "to":  36,
+                      "lanes":  1,
+                      "speed":  30,
+                      "oneWay":  false,
+                      "kind":  "street"
+                  }
+              ],
+    "buildings":  [
+                      {
+                          "id":  1,
+                          "x":  6.5,
+                          "y":  6.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  1,
+                          "district":  1
+                      },
+                      {
+                          "id":  2,
+                          "x":  9.5,
+                          "y":  6.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  2,
+                          "district":  1
+                      },
+                      {
+                          "id":  3,
+                          "x":  6.5,
+                          "y":  9.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  3,
+                          "district":  1
+                      },
+                      {
+                          "id":  4,
+                          "x":  9.5,
+                          "y":  9.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  0,
+                          "district":  1
+                      },
+                      {
+                          "id":  5,
+                          "x":  14.5,
+                          "y":  6.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  1,
+                          "district":  1
+                      },
+                      {
+                          "id":  6,
+                          "x":  17.5,
+                          "y":  6.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  2,
+                          "district":  1
+                      },
+                      {
+                          "id":  7,
+                          "x":  14.5,
+                          "y":  9.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  3,
+                          "district":  1
+                      },
+                      {
+                          "id":  8,
+                          "x":  17.5,
+                          "y":  9.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  0,
+                          "district":  1
+                      },
+                      {
+                          "id":  9,
+                          "x":  22.5,
+                          "y":  6.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  1,
+                          "district":  2
+                      },
+                      {
+                          "id":  10,
+                          "x":  25.5,
+                          "y":  6.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  2,
+                          "district":  2
+                      },
+                      {
+                          "id":  11,
+                          "x":  22.5,
+                          "y":  9.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  3,
+                          "district":  2
+                      },
+                      {
+                          "id":  12,
+                          "x":  25.5,
+                          "y":  9.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  0,
+                          "district":  2
+                      },
+                      {
+                          "id":  13,
+                          "x":  30.5,
+                          "y":  6.5,
+                          "kind":  "hospital",
+                          "capacity":  200,
+                          "model":  "bld_hospital_1",
+                          "rotation":  1,
+                          "district":  3
+                      },
+                      {
+                          "id":  14,
+                          "x":  33.5,
+                          "y":  6.5,
+                          "kind":  "hospital",
+                          "capacity":  200,
+                          "model":  "bld_hospital_1",
+                          "rotation":  2,
+                          "district":  3
+                      },
+                      {
+                          "id":  15,
+                          "x":  30.5,
+                          "y":  9.5,
+                          "kind":  "hospital",
+                          "capacity":  200,
+                          "model":  "bld_hospital_1",
+                          "rotation":  3,
+                          "district":  3
+                      },
+                      {
+                          "id":  16,
+                          "x":  33.5,
+                          "y":  9.5,
+                          "kind":  "hospital",
+                          "capacity":  200,
+                          "model":  "bld_hospital_1",
+                          "rotation":  0,
+                          "district":  3
+                      },
+                      {
+                          "id":  17,
+                          "x":  38.5,
+                          "y":  6.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  1,
+                          "district":  3
+                      },
+                      {
+                          "id":  18,
+                          "x":  41.5,
+                          "y":  6.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  2,
+                          "district":  3
+                      },
+                      {
+                          "id":  19,
+                          "x":  38.5,
+                          "y":  9.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  3,
+                          "district":  3
+                      },
+                      {
+                          "id":  20,
+                          "x":  41.5,
+                          "y":  9.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  0,
+                          "district":  3
+                      },
+                      {
+                          "id":  21,
+                          "x":  6.5,
+                          "y":  14.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  1,
+                          "district":  1
+                      },
+                      {
+                          "id":  22,
+                          "x":  9.5,
+                          "y":  14.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  2,
+                          "district":  1
+                      },
+                      {
+                          "id":  23,
+                          "x":  6.5,
+                          "y":  17.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  3,
+                          "district":  1
+                      },
+                      {
+                          "id":  24,
+                          "x":  9.5,
+                          "y":  17.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  0,
+                          "district":  1
+                      },
+                      {
+                          "id":  25,
+                          "x":  14.5,
+                          "y":  14.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  1,
+                          "district":  1
+                      },
+                      {
+                          "id":  26,
+                          "x":  17.5,
+                          "y":  14.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  2,
+                          "district":  1
+                      },
+                      {
+                          "id":  27,
+                          "x":  14.5,
+                          "y":  17.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  3,
+                          "district":  1
+                      },
+                      {
+                          "id":  28,
+                          "x":  17.5,
+                          "y":  17.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  0,
+                          "district":  1
+                      },
+                      {
+                          "id":  29,
+                          "x":  22.5,
+                          "y":  14.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  1,
+                          "district":  2
+                      },
+                      {
+                          "id":  30,
+                          "x":  25.5,
+                          "y":  14.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  2,
+                          "district":  2
+                      },
+                      {
+                          "id":  31,
+                          "x":  22.5,
+                          "y":  17.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  3,
+                          "district":  2
+                      },
+                      {
+                          "id":  32,
+                          "x":  25.5,
+                          "y":  17.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  0,
+                          "district":  2
+                      },
+                      {
+                          "id":  33,
+                          "x":  30.5,
+                          "y":  14.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  1,
+                          "district":  3
+                      },
+                      {
+                          "id":  34,
+                          "x":  33.5,
+                          "y":  14.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  2,
+                          "district":  3
+                      },
+                      {
+                          "id":  35,
+                          "x":  30.5,
+                          "y":  17.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  3,
+                          "district":  3
+                      },
+                      {
+                          "id":  36,
+                          "x":  33.5,
+                          "y":  17.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  0,
+                          "district":  3
+                      },
+                      {
+                          "id":  37,
+                          "x":  38.5,
+                          "y":  14.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  1,
+                          "district":  3
+                      },
+                      {
+                          "id":  38,
+                          "x":  41.5,
+                          "y":  14.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  2,
+                          "district":  3
+                      },
+                      {
+                          "id":  39,
+                          "x":  38.5,
+                          "y":  17.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  3,
+                          "district":  3
+                      },
+                      {
+                          "id":  40,
+                          "x":  41.5,
+                          "y":  17.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  0,
+                          "district":  3
+                      },
+                      {
+                          "id":  41,
+                          "x":  6.5,
+                          "y":  22.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  1,
+                          "district":  1
+                      },
+                      {
+                          "id":  42,
+                          "x":  9.5,
+                          "y":  22.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  2,
+                          "district":  1
+                      },
+                      {
+                          "id":  43,
+                          "x":  6.5,
+                          "y":  25.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  3,
+                          "district":  1
+                      },
+                      {
+                          "id":  44,
+                          "x":  9.5,
+                          "y":  25.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  0,
+                          "district":  1
+                      },
+                      {
+                          "id":  45,
+                          "x":  14.5,
+                          "y":  22.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  1,
+                          "district":  1
+                      },
+                      {
+                          "id":  46,
+                          "x":  17.5,
+                          "y":  22.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  2,
+                          "district":  1
+                      },
+                      {
+                          "id":  47,
+                          "x":  14.5,
+                          "y":  25.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  3,
+                          "district":  1
+                      },
+                      {
+                          "id":  48,
+                          "x":  17.5,
+                          "y":  25.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  0,
+                          "district":  1
+                      },
+                      {
+                          "id":  49,
+                          "x":  22.5,
+                          "y":  22.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  1,
+                          "district":  2
+                      },
+                      {
+                          "id":  50,
+                          "x":  25.5,
+                          "y":  22.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  2,
+                          "district":  2
+                      },
+                      {
+                          "id":  51,
+                          "x":  22.5,
+                          "y":  25.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  3,
+                          "district":  2
+                      },
+                      {
+                          "id":  52,
+                          "x":  25.5,
+                          "y":  25.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  0,
+                          "district":  2
+                      },
+                      {
+                          "id":  53,
+                          "x":  30.5,
+                          "y":  22.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  1,
+                          "district":  3
+                      },
+                      {
+                          "id":  54,
+                          "x":  33.5,
+                          "y":  22.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  2,
+                          "district":  3
+                      },
+                      {
+                          "id":  55,
+                          "x":  30.5,
+                          "y":  25.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  3,
+                          "district":  3
+                      },
+                      {
+                          "id":  56,
+                          "x":  33.5,
+                          "y":  25.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  0,
+                          "district":  3
+                      },
+                      {
+                          "id":  57,
+                          "x":  38.5,
+                          "y":  22.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  1,
+                          "district":  3
+                      },
+                      {
+                          "id":  58,
+                          "x":  41.5,
+                          "y":  22.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  2,
+                          "district":  3
+                      },
+                      {
+                          "id":  59,
+                          "x":  38.5,
+                          "y":  25.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  3,
+                          "district":  3
+                      },
+                      {
+                          "id":  60,
+                          "x":  41.5,
+                          "y":  25.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  0,
+                          "district":  3
+                      },
+                      {
+                          "id":  61,
+                          "x":  6.5,
+                          "y":  30.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  1,
+                          "district":  1
+                      },
+                      {
+                          "id":  62,
+                          "x":  9.5,
+                          "y":  30.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  2,
+                          "district":  1
+                      },
+                      {
+                          "id":  63,
+                          "x":  6.5,
+                          "y":  33.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  3,
+                          "district":  1
+                      },
+                      {
+                          "id":  64,
+                          "x":  9.5,
+                          "y":  33.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  0,
+                          "district":  1
+                      },
+                      {
+                          "id":  65,
+                          "x":  14.5,
+                          "y":  30.5,
+                          "kind":  "school",
+                          "capacity":  300,
+                          "model":  "bld_school_1",
+                          "rotation":  1,
+                          "district":  1
+                      },
+                      {
+                          "id":  66,
+                          "x":  17.5,
+                          "y":  30.5,
+                          "kind":  "school",
+                          "capacity":  300,
+                          "model":  "bld_school_1",
+                          "rotation":  2,
+                          "district":  1
+                      },
+                      {
+                          "id":  67,
+                          "x":  14.5,
+                          "y":  33.5,
+                          "kind":  "school",
+                          "capacity":  300,
+                          "model":  "bld_school_1",
+                          "rotation":  3,
+                          "district":  1
+                      },
+                      {
+                          "id":  68,
+                          "x":  17.5,
+                          "y":  33.5,
+                          "kind":  "school",
+                          "capacity":  300,
+                          "model":  "bld_school_1",
+                          "rotation":  0,
+                          "district":  1
+                      },
+                      {
+                          "id":  69,
+                          "x":  22.5,
+                          "y":  30.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  1,
+                          "district":  2
+                      },
+                      {
+                          "id":  70,
+                          "x":  25.5,
+                          "y":  30.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  2,
+                          "district":  2
+                      },
+                      {
+                          "id":  71,
+                          "x":  22.5,
+                          "y":  33.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  3,
+                          "district":  2
+                      },
+                      {
+                          "id":  72,
+                          "x":  25.5,
+                          "y":  33.5,
+                          "kind":  "com",
+                          "capacity":  80,
+                          "model":  "bld_com_1",
+                          "rotation":  0,
+                          "district":  2
+                      },
+                      {
+                          "id":  73,
+                          "x":  30.5,
+                          "y":  30.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  1,
+                          "district":  4
+                      },
+                      {
+                          "id":  74,
+                          "x":  33.5,
+                          "y":  30.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  2,
+                          "district":  4
+                      },
+                      {
+                          "id":  75,
+                          "x":  30.5,
+                          "y":  33.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  3,
+                          "district":  4
+                      },
+                      {
+                          "id":  76,
+                          "x":  33.5,
+                          "y":  33.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  0,
+                          "district":  4
+                      },
+                      {
+                          "id":  77,
+                          "x":  38.5,
+                          "y":  30.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  1,
+                          "district":  4
+                      },
+                      {
+                          "id":  78,
+                          "x":  41.5,
+                          "y":  30.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  2,
+                          "district":  4
+                      },
+                      {
+                          "id":  79,
+                          "x":  38.5,
+                          "y":  33.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  3,
+                          "district":  4
+                      },
+                      {
+                          "id":  80,
+                          "x":  41.5,
+                          "y":  33.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  0,
+                          "district":  4
+                      },
+                      {
+                          "id":  81,
+                          "x":  6.5,
+                          "y":  38.5,
+                          "kind":  "park",
+                          "capacity":  0,
+                          "model":  "bld_park_1",
+                          "rotation":  1,
+                          "district":  1
+                      },
+                      {
+                          "id":  82,
+                          "x":  9.5,
+                          "y":  38.5,
+                          "kind":  "park",
+                          "capacity":  0,
+                          "model":  "bld_park_1",
+                          "rotation":  2,
+                          "district":  1
+                      },
+                      {
+                          "id":  83,
+                          "x":  6.5,
+                          "y":  41.5,
+                          "kind":  "park",
+                          "capacity":  0,
+                          "model":  "bld_park_1",
+                          "rotation":  3,
+                          "district":  1
+                      },
+                      {
+                          "id":  84,
+                          "x":  9.5,
+                          "y":  41.5,
+                          "kind":  "park",
+                          "capacity":  0,
+                          "model":  "bld_park_1",
+                          "rotation":  0,
+                          "district":  1
+                      },
+                      {
+                          "id":  85,
+                          "x":  14.5,
+                          "y":  38.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  1,
+                          "district":  1
+                      },
+                      {
+                          "id":  86,
+                          "x":  17.5,
+                          "y":  38.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  2,
+                          "district":  1
+                      },
+                      {
+                          "id":  87,
+                          "x":  14.5,
+                          "y":  41.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  3,
+                          "district":  1
+                      },
+                      {
+                          "id":  88,
+                          "x":  17.5,
+                          "y":  41.5,
+                          "kind":  "res",
+                          "capacity":  40,
+                          "model":  "bld_res_1",
+                          "rotation":  0,
+                          "district":  1
+                      },
+                      {
+                          "id":  89,
+                          "x":  22.5,
+                          "y":  38.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  1,
+                          "district":  2
+                      },
+                      {
+                          "id":  90,
+                          "x":  25.5,
+                          "y":  38.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  2,
+                          "district":  2
+                      },
+                      {
+                          "id":  91,
+                          "x":  22.5,
+                          "y":  41.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  3,
+                          "district":  2
+                      },
+                      {
+                          "id":  92,
+                          "x":  25.5,
+                          "y":  41.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  0,
+                          "district":  2
+                      },
+                      {
+                          "id":  93,
+                          "x":  30.5,
+                          "y":  38.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  1,
+                          "district":  4
+                      },
+                      {
+                          "id":  94,
+                          "x":  33.5,
+                          "y":  38.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  2,
+                          "district":  4
+                      },
+                      {
+                          "id":  95,
+                          "x":  30.5,
+                          "y":  41.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  3,
+                          "district":  4
+                      },
+                      {
+                          "id":  96,
+                          "x":  33.5,
+                          "y":  41.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  0,
+                          "district":  4
+                      },
+                      {
+                          "id":  97,
+                          "x":  38.5,
+                          "y":  38.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  1,
+                          "district":  4
+                      },
+                      {
+                          "id":  98,
+                          "x":  41.5,
+                          "y":  38.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  2,
+                          "district":  4
+                      },
+                      {
+                          "id":  99,
+                          "x":  38.5,
+                          "y":  41.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  3,
+                          "district":  4
+                      },
+                      {
+                          "id":  100,
+                          "x":  41.5,
+                          "y":  41.5,
+                          "kind":  "ind",
+                          "capacity":  120,
+                          "model":  "bld_ind_1",
+                          "rotation":  0,
+                          "district":  4
+                      }
+                  ],
+    "districts":  [
+                      {
+                          "id":  1,
+                          "name":  "Vila Puca",
+                          "income":  "low",
+                          "population":  2400
+                      },
+                      {
+                          "id":  2,
+                          "name":  "Centro",
+                          "income":  "mid",
+                          "population":  600
+                      },
+                      {
+                          "id":  3,
+                          "name":  "Jardim Alto",
+                          "income":  "high",
+                          "population":  900
+                      },
+                      {
+                          "id":  4,
+                          "name":  "Distrito Fabril",
+                          "income":  "low",
+                          "population":  300
+                      }
+                  ],
+    "scenario":  {
+                     "budget":  500000,
+                     "durationDays":  30,
+                     "goals":  [
+                                   {
+                                       "kpi":  "avgTripMinutes",
+                                       "op":  "\u003c=",
+                                       "value":  25,
+                                       "stars":  1
+                                   },
+                                   {
+                                       "kpi":  "congestionPct",
+                                       "op":  "\u003c=",
+                                       "value":  15,
+                                       "stars":  2
+                                   },
+                                   {
+                                       "kpi":  "carSharePct",
+                                       "op":  "\u003c=",
+                                       "value":  50,
+                                       "stars":  3
+                                   }
+                               ]
+                 }
+}
