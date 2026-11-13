@@ -16,7 +16,11 @@ A `main` junta o trabalho dos três workers até agora:
 
 **Decisões do merge** (antigas D1–D7): venceu a cidade radical, sem carros. Faixas `sidewalk/slow/fast/transit`, tandem e tuk-tuk no coletivo e travessias radicais com rota acessível. Os 8 problemas da Luciana viraram a estrutura de design, e os KPIs são as métricas de cada problema. Os overboards saíram do escopo.
 
-**Ainda falta:** toda a simulação (`src/core/` tem só o contrato) e o cenário Vila Nova em dados (`src/assets/cities/vila-nova.json`).
+**Fora da `main`:** `origin/eng/fundacao` (PC3, corre): core com testes (`CityLoader`, `RoadGraph`, `Pathfinding`, `Crossings`, `Rng`, `Spatial`, `Vehicles`, `types.ts`), cidade-demo e `PLANEJAMENTO.md`. A branch saiu de um ponto anterior à camada visual e tem **13 arquivos em conflito** com a `main`: é a **Onda 0** (§4.0).
+
+**Ainda falta:** a simulação de agentes e as regras de jogo, e o cenário Vila Nova em dados (`src/assets/cities/vila-nova.json`).
+
+**Próxima sessão:** cada PC segue `docs/sessoes/pcN-*.md`. Os sub-agentes estão definidos em `.claude/agents/`, e as regras gerais em `CLAUDE.md`.
 
 ---
 
@@ -24,7 +28,7 @@ A `main` junta o trabalho dos três workers até agora:
 
 | | **PC1 — Arte & Render** | **PC2 — Design & Conteúdo** | **PC3 — Engenharia & Simulação** |
 |---|---|---|---|
-| Responsável | fermneto | Luciana Lima | *a definir* |
+| Responsável | fermneto | Luciana Lima | corre |
 | É dono de | `src/render/**`, `src/ui/**`, `src/lab.*`, `data/arte/**`, `docs/style-guide.md`, `docs/referencias.md`, `docs/validacao-visual.md`, `scripts/screenshots.mjs`, `scripts/gen-vitrine.mjs`, `assets/models|textures` | `docs/design/**`, `config/balance.json`, `src/assets/cities/*.json` (exceto `vitrine.json`), textos (`src/assets/text/**`), `docs/playtests/**` | `src/core/**`, `tests/**`, `src/game/**` (loop do jogo), `package.json`, `tsconfig.json`, `vite.config.ts`, CI (`.github/**`), `docs/engineering.md` |
 | Entrega para os outros | Views que leem o estado do `core` (sem lógica de jogo), HUD e painéis, modelos/ícones pedidos pelo cenário | Cenários em JSON válidos, números de equilíbrio, eventos, dilemas e textos | API do `core` (`Simulation`, `Commands`, `Kpis`, eventos), validação dos JSON, testes e build |
 
@@ -41,31 +45,31 @@ A `main` junta o trabalho dos três workers até agora:
 
 ## 3. Sub-agentes por computador
 
-Cada PC abre **uma sessão principal** (a coordenadora) e dispara sub-agentes em **worktrees isolados** (`isolation: "worktree"`), cada um com escopo de arquivos fechado. A coordenadora revisa, roda as verificações e abre o PR.
+Os sub-agentes já estão definidos em **`.claude/agents/pcN-*.md`** (escopo, leituras, tarefa padrão e critério de pronto). Cada PC abre **uma sessão principal** (a coordenadora) e dispara sub-agentes em **worktrees isolados** (`isolation: "worktree"`), cada um com escopo de arquivos fechado. A coordenadora revisa, roda as verificações e abre o PR.
 
 ### PC1 — Arte & Render
 | Sub-agente | Escopo (arquivos) | Primeira tarefa |
 |---|---|---|
-| `arte-modelos` | `src/render/models/**` | Assets do cenário Vila Nova que faltam: mercado, estação de carga, casa simples; retratos dos 4 personagens |
-| `arte-views` | `src/render/*View.ts`, `src/render/Overlays.ts` | `SimView`: desenhar os agentes **a partir do estado do core** (substitui o `DemoTraffic` no jogo) |
-| `arte-ui` | `src/ui/**` | Painéis de ferramenta, balões de fala, rádio de eventos, balanço do dia, cartas de dilema |
-| `arte-mundo` | `scripts/gen-vitrine.mjs`, `src/render/Atmosphere.ts` | Pendências: cidade maior, bolhas gigantes, vulcões de gel, dinossauros Aero |
+| `pc1-arte-modelos` | `src/render/models/**` | Assets do cenário Vila Nova que faltam: mercado, estação de carga, casa simples; retratos dos 4 personagens |
+| `pc1-arte-views` | `src/render/*View.ts`, `src/render/Overlays.ts` | `SimView`: desenhar os agentes **a partir do estado do core** (substitui o `DemoTraffic` no jogo) |
+| `pc1-arte-ui` | `src/ui/**` | Painéis de ferramenta, balões de fala, rádio de eventos, balanço do dia, cartas de dilema |
+| `pc1-arte-mundo` | `scripts/gen-vitrine.mjs`, `src/render/Atmosphere.ts` | Pendências: cidade maior, bolhas gigantes, vulcões de gel, dinossauros Aero |
 
 ### PC2 — Design & Conteúdo
 | Sub-agente | Escopo | Primeira tarefa |
 |---|---|---|
-| `design-cenarios` | `src/assets/cities/*.json` | `vila-nova.json` completo no contrato `CityFile` (ruas, faixas, travessias, personagens, cenário) |
-| `design-balance` | `config/balance.json` | Números de escolha modal, BPR, quedas e paciência, com tabela de casos esperados para os testes do PC3 |
-| `design-conteudo` | `docs/design/**`, `src/assets/text/**` | Eventos, dilemas e falas do cenário 1 em JSON; roteiro do tutorial |
-| `design-cenarios-2-4` | `docs/design/**` | Desenho dos cenários 2–4 (Centro Gel, Orla Bolha, Morro Alto) |
+| `pc2-design-cenarios` | `src/assets/cities/*.json` | `vila-nova.json` completo no contrato `CityFile` (ruas, faixas, travessias, personagens, cenário) |
+| `pc2-design-balance` | `config/balance.json` | Números de escolha modal, BPR, quedas e paciência, com tabela de casos esperados para os testes do PC3 |
+| `pc2-design-conteudo` | `docs/design/**`, `src/assets/text/**` | Eventos, dilemas e falas do cenário 1 em JSON; roteiro do tutorial |
+| `pc2-design-progressao` | `docs/design/**` | Desenho dos cenários 2–4 (Centro Gel, Orla Bolha, Morro Alto) |
 
 ### PC3 — Engenharia & Simulação
 | Sub-agente | Escopo | Primeira tarefa |
 |---|---|---|
-| `eng-core-rede` | `src/core/RoadGraph.ts`, `Crossings.ts`, `Pathfinding.ts` + testes | Grafo com faixas, travessias (regra de acessibilidade), A\* por modo |
-| `eng-core-agentes` | `src/core/Agents.ts`, `Transit.ts`, `Simulation.ts` + testes | Rotinas, escolha modal (logit), BPR, linhas de tuk-tuk; passo fixo e *seed* |
-| `eng-core-jogo` | `src/core/Commands.ts`, `Kpis.ts`, `Events.ts`, `Save.ts` + testes | Ferramentas com undo, KPIs dos 8 problemas, eventos e dilemas lidos do JSON |
-| `eng-infra` | `package.json`, CI, `src/game/**`, validador de JSON | Vitest + CI (tsc, build, testes, `npm run shots`), loader e validador de `city.json`/`balance.json` |
+| `pc3-eng-rede` | `src/core/RoadGraph.ts`, `Crossings.ts`, `Pathfinding.ts` + testes | Grafo com faixas, travessias (regra de acessibilidade), A\* por modo |
+| `pc3-eng-agentes` | `src/core/Agents.ts`, `Transit.ts`, `Simulation.ts` + testes | Rotinas, escolha modal (logit), BPR, linhas de tuk-tuk; passo fixo e *seed* |
+| `pc3-eng-jogo` | `src/core/Commands.ts`, `Kpis.ts`, `Events.ts`, `Save.ts` + testes | Ferramentas com undo, KPIs dos 8 problemas, eventos e dilemas lidos do JSON |
+| `pc3-eng-infra` | `package.json`, CI, `src/game/**`, validador de JSON | Vitest + CI (tsc, build, testes, `npm run shots`), loader e validador de `city.json`/`balance.json` |
 
 **Modelo de prompt para um sub-agente** (cole na sessão coordenadora):
 > Você é `<nome>` do PC`<n>`. Escopo: só pode alterar `<arquivos>`. Leia `SPEC.md` §`<x>`, `docs/planning.md` e `<docs da área>`. Tarefa: `<tarefa>`. Pronto quando: `npx tsc --noEmit`, `npm test` e `npm run build` passam e `<critério da tarefa>`. Não mexa em arquivos fora do escopo; se precisar mudar um contrato, pare e descreva a mudança no relatório.
@@ -73,6 +77,23 @@ Cada PC abre **uma sessão principal** (a coordenadora) e dispara sub-agentes em
 ---
 
 ## 4. Ondas de trabalho (caminho crítico para o MVP)
+
+### 4.0 Onda 0 — integrar `eng/fundacao` (PC3 lidera, PC1 revisa o render)
+
+Branch `pc3/integracao-fundacao` a partir da `main`, depois `git merge origin/eng/fundacao`, resolvendo assim:
+
+| Caminho | Fica com | Como |
+|---|---|---|
+| `src/core/*` da engenharia, `tests/**`, `scripts/gen-demo-city.ts`, `public/cities/demo.json` | eng | Entram como estão (sem conflito) |
+| Contrato: `src/core/types.ts` (eng) × `src/core/CityFile.ts` (main) | **eng (`types.ts`)** | `CityFile.ts` vira re-export de `types.ts`. Acrescentar em `types.ts` o que o render usa e não existe lá: `canals[]`, `features[]`, `characters`, `scenario.dilemmas` |
+| `src/render/Renderer.ts`, `ps1/*`, `CityView.ts`, `CameraRig.ts`, `palette.ts` | **main (PC1)** | Versões da engenharia descartadas. O PC1 porta o que for útil |
+| `src/render/RadicalView.ts`, `Picking.ts`, `QuadBuilder.ts`, `shading.ts`, `textures.ts` (só na eng) | PC1 decide | Portar `screenToTile` para o `Picking` do PC1; apagar o que duplicar |
+| `src/main.ts` | os dois | Vitrine da `main` → `src/vitrine.ts` + `vitrine.html`. Protótipo da eng → `src/game/main.ts` + `index.html`, usando o render do PC1 |
+| `package.json` / lock | união | Versões da `main` (three 0.187, vite 8, TS 7) + `vitest` compatível com vite 8, `eslint`. Scripts: `test`, `lint`, `check`, `gen:demo`, `shots` |
+| `tsconfig.json`, `vite.config.ts`, `.gitignore`, `index.html` | união | Multi-página (jogo, vitrine, lab) + config do vitest |
+| `PLANEJAMENTO.md` (eng) | `docs/planning.md` | Absorver as questões abertas e apagar o arquivo |
+
+Pronto quando `npx tsc --noEmit`, `npm test`, `npm run build` e `npm run shots` passam. Depois, merge na `main` e aviso aos três.
 
 As três colunas de cada onda andam **em paralelo**. Cada onda termina com a `main` verde e uma build jogável.
 
@@ -112,10 +133,19 @@ As três colunas de cada onda andam **em paralelo**. Cada onda termina com a `ma
 2. `design/cidade-radical` (fermneto) entrou na `main` sem conflito.
 3. `CityFile.ts` passou a ter `characters`, `scenario` e `Goal`. O formato de `Goal` é uma **proposta** do PC1: o PC3 confirma na onda 1.
 4. Verificado: typecheck, build e capturas sem erro de console.
-5. Branches que podem ser apagadas: `arte/cidade-radical-aero`, `design/mobilidade-overboards`, `design/cidade-radical`.
+5. Branches antigas apagadas: `arte/cidade-radical-aero`, `design/mobilidade-overboards`, `design/cidade-radical`.
 
-**Pendências herdadas, já distribuídas acima:**
-- PC1 (`arte-mundo`): cidade maior, bolhas gigantes, vulcões de gel, dinossauros Aero.
-- PC1 (`arte-modelos`): assets do Vila Nova.
-- PC2: vila-nova.json.
-- PC3: todo o core.
+## 7. Bloqueios entre PCs
+
+| Quem espera | De quem | O quê | Quando |
+|---|---|---|---|
+| PC1 (`SimView`) | PC3 | `Simulation.getState()` | Onda 1 |
+| PC2 (`vila-nova.json`) | PC3 | `CityLoader` na `main` | Onda 0 |
+| PC3 (testes de balance) | PC2 | Tabela de casos esperados | Onda 2 |
+
+## 8. Pendências herdadas (já distribuídas aos sub-agentes)
+
+- `pc1-arte-mundo`: cidade maior, bolhas gigantes, vulcões de gel, dinossauros Aero.
+- `pc1-arte-modelos`: assets do Vila Nova.
+- `pc2-design-cenarios`: `vila-nova.json`.
+- `pc3-*`: Onda 0 e todo o restante do core.
