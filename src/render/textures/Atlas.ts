@@ -176,7 +176,7 @@ const DRAW: Record<TileName, (ctx: Ctx, rng: Rng) => void> = {
     noise(ctx, rng, '#B5AEA2', 0.15, 0.5);
     const spray = ['#FF5FA8', '#00E5FF', '#B8F02A', '#FF7A1A', '#7B4FD6', '#FFE23A'];
     for (let tag = 0; tag < 3; tag++) {
-      const c = spray[Math.floor(rng() * spray.length)];
+      const c = spray[Math.floor(rng() * spray.length)]!;
       let x = 6 + rng() * 40, y = 10 + tag * 18;
       for (let i = 0; i < 26; i++) { // letras "bolha" originais, sem copiar arte de ninguém
         const r = 2 + rng() * 3;

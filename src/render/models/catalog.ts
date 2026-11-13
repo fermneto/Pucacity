@@ -59,6 +59,8 @@ const NOMES_PREDIO: Record<string, string> = {
   bld_hospital: 'Clínica',
   bld_park: 'Parque Aero',
   bld_skatepark: 'Skatepark de bairro',
+  bld_market: 'Mercado de bairro (Vila Nova)',
+  bld_house: 'Casa simples (Vila Nova)',
 };
 
 const RAD_ID: Record<string, string> = {
@@ -66,10 +68,15 @@ const RAD_ID: Record<string, string> = {
   rail_passarela: 'rad_rail_walkway', wallride_tubular: 'rad_wallride', quarter_esquina: 'rad_quarter',
   funil_bowl: 'rad_bowl', elevador_bolha: 'rad_bubble_lift',
   torre_espiral: 'rad_spiral_tower', mega_halfpipe: 'rad_megapipe',
+  vulcao_gel: 'rad_volcano',
 };
 
 const radicalDefs: ModelDef[] = [
-  ...elementos.elementos.map((e) => ({ id: RAD_ID[e.id], nome: e.nome })),
+  // Elemento do JSON ainda sem modelo procedural fica fora do catálogo (não quebra o jogo).
+  ...elementos.elementos.flatMap((e) => {
+    const id = RAD_ID[e.id];
+    return id ? [{ id, nome: e.nome }] : [];
+  }),
   { id: 'rad_bubble_cabin', nome: 'Cápsula do Elevador' },
 ].map((d) => ({ ...d, categoria: 'radical' as const, budget: BUDGET.radical, span: 24 }));
 
@@ -77,6 +84,8 @@ const NOMES_PROP: Record<string, string> = {
   prop_tree_aero: 'Árvore Aero', prop_lamp: 'Poste gel', prop_bench: 'Banco grindável',
   prop_stop_shelter: 'Parada Aero', prop_share_station: 'Estação de compartilhamento',
   prop_crt_billboard: 'Telão CRT', prop_cloud: 'Nuvem',
+  prop_charge_station: 'Estação de carga', prop_dino_neck: 'Dino pescoçudo',
+  prop_dino_runner: 'Dino corredor', prop_dino_horns: 'Dino chifrudo',
 };
 
 export const CATALOG: ModelDef[] = [
@@ -100,10 +109,11 @@ export function buildModel(id: string, span?: number): ModelGeo {
   const def = CATALOG.find((d) => d.id === id);
   if (!def) throw new Error(`Modelo desconhecido: ${id}`);
   const o = new MeshBuilder(), g = new MeshBuilder();
-  if (def.categoria === 'veiculo') VEHICLE_BUILDERS[id.slice(4)](o);
-  else if (def.categoria === 'predio') BUILDING_BUILDERS[id](o);
-  else if (def.categoria === 'radical') RADICAL_BUILDERS[id](o, g, span ?? def.span ?? 24);
-  else PROP_BUILDERS[id](o, g);
+  const sem = (): never => { throw new Error(`Modelo sem construtor: ${id}`); };
+  if (def.categoria === 'veiculo') (VEHICLE_BUILDERS[id.slice(4)] ?? sem)(o);
+  else if (def.categoria === 'predio') (BUILDING_BUILDERS[id] ?? sem)(o);
+  else if (def.categoria === 'radical') (RADICAL_BUILDERS[id] ?? sem)(o, g, span ?? def.span ?? 24);
+  else (PROP_BUILDERS[id] ?? sem)(o, g);
   const s = scaleOf(def);
   const geo: ModelGeo = {
     opaque: o.build(s),

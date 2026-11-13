@@ -98,7 +98,7 @@ export const BUILDING_BUILDERS: Record<string, (b: B) => void> = {
   /** Parque Aero: gramado, árvores lustrosas e fonte. */
   bld_park: (b) => {
     b.box(7.8, 0.12, 7.8, { tile: 'grass', omit: ['bottom'] });
-    for (const [x, z] of [[-2.4, -2.2], [2.5, -1.8], [-1.8, 2.6]]) b.at(x, 0.12, z, 0, tree);
+    for (const [x, z] of [[-2.4, -2.2], [2.5, -1.8], [-1.8, 2.6]] as const) b.at(x, 0.12, z, 0, tree);
     b.at(1.6, 0.12, 1.8, 0, (b) => b.prism(1.5, 0.5, 8, { tile: 'azulejo', topPaint: { tile: 'water', gloss: 0.5 } }));
   },
 
@@ -113,6 +113,59 @@ export const BUILDING_BUILDERS: Record<string, (b: B) => void> = {
     });
     b.at(-3, 0.15, 2.4, 0, (b) => b.box(0.1, 0.5, 3.2, { color: WORLD.cromo, gloss: 1, omit: ['bottom'] }));
   },
+
+  /** Mercado de bairro (Vila Nova, Seu Osvaldo): vitrine de vidro, toldo listrado em gel e banca de frutas na calçada. */
+  bld_market: (b) => {
+    b.at(0, 0, -0.9, 0, (b) => {
+      b.box(7, 4.2, 5.6, { tile: 'brick', faces: { pz: { tile: 'glass', gloss: 0.7 }, top: { tile: 'concrete' } }, omit: ['bottom'] });
+      // letreiro em gel em cima da porta e caixa de ar-condicionado no telhado
+      b.at(0, 4.2, 2.65, 0, (b) => b.box(4.6, 1.1, 0.3, { color: '#FF9F1C', gloss: 1, faces: { pz: { color: '#FFE23A', gloss: 1 } }, omit: ['bottom'] }));
+      b.at(2.2, 4.2, -1.4, 0, (b) => b.box(1.4, 0.8, 1.1, { color: '#C9D3DC', gloss: 0.5, omit: ['bottom'] }));
+    });
+    // toldo inclinado em faixas de gel (sai da fachada em z = 1.9 e desce até z = 3.4)
+    const stripes = ['#FF5FA8', '#F2F8FC', '#3FD0E8', '#F2F8FC', '#FF5FA8', '#F2F8FC', '#3FD0E8'];
+    const w = 7 / stripes.length;
+    stripes.forEach((c, i) => {
+      const x0 = -3.5 + i * w, x1 = x0 + w;
+      const paint = { color: c, gloss: 0.9 };
+      b.quadXYZ([x0, 3.3, 1.9], [x1, 3.3, 1.9], [x1, 2.55, 3.4], [x0, 2.55, 3.4], paint, [0, 1, 0.5]);
+      b.quadXYZ([x0, 3.3, 1.9], [x1, 3.3, 1.9], [x1, 2.55, 3.4], [x0, 2.55, 3.4], paint, [0, -1, -0.5]);
+    });
+    b.at(0, 2.3, 3.4, 0, (b) => b.box(7, 0.25, 0.08, { color: '#FF5FA8', gloss: 0.9, omit: ['bottom', 'top', 'nz'] }));
+    // banca: bancada de madeira com caixas de fruta coloridas
+    b.at(-1.2, 0, 2.9, 0, (b) => {
+      b.box(3, 0.8, 0.9, { tile: 'maple', omit: ['bottom'] });
+      for (const [x, c] of [[-0.95, '#FF7A1A'], [0, '#6CCB3F'], [0.95, '#E8322C']] as const) {
+        b.at(x, 0.8, 0, 0, (b) => b.box(0.8, 0.25, 0.7, { color: c, gloss: 0.6, omit: ['bottom'] }));
+      }
+    });
+  },
+
+  /** Casa simples da Vila Nova: térreo pastel, puxadinho no andar de cima, caixa-d'água em gel e rampa na porta. */
+  bld_house: (b) => {
+    b.at(0, 0, -0.6, 0, (b) => {
+      b.box(6.4, 3, 6, { tile: 'facade', color: '#FFB98A', faces: { top: { tile: 'concrete' } }, omit: ['bottom'] });
+      // andar de cima recuado, com telhado de duas águas
+      b.at(-0.9, 3, -0.6, 0, (b) => {
+        b.box(4.2, 2.6, 4.4, { tile: 'facade', color: '#F2F8FC', omit: ['bottom', 'top'] });
+        const x = 2.3, z = 2.4, y = 2.6, r = 1.4;
+        const telha = { color: '#B8653A' };
+        b.quadXYZ([-x, y, z], [x, y, z], [x, y + r, 0], [-x, y + r, 0], telha, [0, 1, 1]);
+        b.quadXYZ([x, y, -z], [-x, y, -z], [-x, y + r, 0], [x, y + r, 0], telha, [0, 1, -1]);
+        for (const sx of [-2.1, 2.1]) b.triXYZ([sx, y, -2.2], [sx, y, 2.2], [sx, y + r - 0.1, 0], { color: '#F2F8FC' }, [Math.sign(sx), 0, 0]);
+      });
+      // caixa-d'água azul gel na laje
+      b.at(2.1, 3, -1.6, 0, (b) => b.prism(0.7, 0.9, 6, { color: '#2E8BEA', gloss: 1, topPaint: { color: '#9FD4FF', gloss: 1 } }));
+      // porta em gel e rampa de acesso (ninguém fica preso)
+      b.at(1.6, 0, 3.02, 0, (b) => b.box(1.1, 2.1, 0.08, { color: '#1FB5A6', gloss: 0.9, omit: ['bottom', 'nz'] }));
+    });
+    b.at(1.6, 0, 3.0, Math.PI, (b) => b.wedge(1.4, 0.3, 1.2, { tile: 'concrete', omit: ['pz'] }));
+    // muretinha grindável na frente, com coping cromado
+    b.at(-1.6, 0, 3.4, 0, (b) => {
+      b.box(3, 0.6, 0.25, { tile: 'graffiti', omit: ['bottom'] });
+      b.at(0, 0.6, 0, 0, (b) => b.box(3, 0.05, 0.08, { color: CHROME, gloss: 1, omit: ['bottom'] }));
+    });
+  },
 };
 
 /** Quarter-pipe: curva côncava subindo em +z (reaproveitado em esquinas e skateparks). */
@@ -124,7 +177,7 @@ export function quarterPipe(b: B, w: number, r: number, segs = 4) {
   }
   const x = w / 2;
   for (let i = 0; i < segs; i++) {
-    const [z0, y0] = pts[i], [z1, y1] = pts[i + 1];
+    const [z0, y0] = pts[i]!, [z1, y1] = pts[i + 1]!;
     b.quadXYZ([-x, y0, z0], [x, y0, z0], [x, y1, z1], [-x, y1, z1], { tile: 'concrete' }, [0, r - (y0 + y1) / 2, -r - (z0 + z1) / 2]);
     for (const sx of [-x, x]) b.triXYZ([sx, 0, 0], [sx, y0, z0], [sx, y1, z1], { tile: 'concrete' }, [Math.sign(sx), 0, 0]);
   }
