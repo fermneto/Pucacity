@@ -1,0 +1,1106 @@
+{
+ "name": "Vitrine Pucacity (teste visual)",
+ "size": {
+  "w": 18,
+  "h": 17
+ },
+ "canal": {
+  "y0": 6.8,
+  "y1": 9.2
+ },
+ "nodes": [
+  {
+   "id": 0,
+   "x": 1,
+   "y": 1
+  },
+  {
+   "id": 1,
+   "x": 6,
+   "y": 1,
+   "signal": {
+    "cycle": 60,
+    "phases": 2
+   }
+  },
+  {
+   "id": 2,
+   "x": 11,
+   "y": 1,
+   "signal": {
+    "cycle": 60,
+    "phases": 2
+   }
+  },
+  {
+   "id": 3,
+   "x": 16,
+   "y": 1
+  },
+  {
+   "id": 4,
+   "x": 1,
+   "y": 5
+  },
+  {
+   "id": 5,
+   "x": 6,
+   "y": 5,
+   "signal": {
+    "cycle": 60,
+    "phases": 2
+   }
+  },
+  {
+   "id": 6,
+   "x": 11,
+   "y": 5,
+   "signal": {
+    "cycle": 60,
+    "phases": 2
+   }
+  },
+  {
+   "id": 7,
+   "x": 16,
+   "y": 5
+  },
+  {
+   "id": 8,
+   "x": 1,
+   "y": 11
+  },
+  {
+   "id": 9,
+   "x": 6,
+   "y": 11,
+   "signal": {
+    "cycle": 60,
+    "phases": 2
+   }
+  },
+  {
+   "id": 10,
+   "x": 11,
+   "y": 11,
+   "signal": {
+    "cycle": 60,
+    "phases": 2
+   }
+  },
+  {
+   "id": 11,
+   "x": 16,
+   "y": 11
+  },
+  {
+   "id": 12,
+   "x": 1,
+   "y": 15
+  },
+  {
+   "id": 13,
+   "x": 6,
+   "y": 15,
+   "signal": {
+    "cycle": 60,
+    "phases": 2
+   }
+  },
+  {
+   "id": 14,
+   "x": 11,
+   "y": 15,
+   "signal": {
+    "cycle": 60,
+    "phases": 2
+   }
+  },
+  {
+   "id": 15,
+   "x": 16,
+   "y": 15
+  }
+ ],
+ "edges": [
+  {
+   "id": 0,
+   "from": 0,
+   "to": 1,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "avenue",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 1,
+   "from": 1,
+   "to": 2,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "avenue",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 2,
+   "from": 2,
+   "to": 3,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "avenue",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 3,
+   "from": 4,
+   "to": 5,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "boulevard",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 4,
+   "from": 5,
+   "to": 6,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "boulevard",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 5,
+   "from": 6,
+   "to": 7,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "boulevard",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 6,
+   "from": 0,
+   "to": 4,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "street",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 7,
+   "from": 1,
+   "to": 5,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "street",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 8,
+   "from": 2,
+   "to": 6,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "street",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 9,
+   "from": 3,
+   "to": 7,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "street",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 10,
+   "from": 8,
+   "to": 9,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "boulevard",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 11,
+   "from": 9,
+   "to": 10,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "boulevard",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 12,
+   "from": 10,
+   "to": 11,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "boulevard",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 13,
+   "from": 12,
+   "to": 13,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "street",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 14,
+   "from": 13,
+   "to": 14,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "street",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 15,
+   "from": 14,
+   "to": 15,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "street",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2
+   }
+  },
+  {
+   "id": 16,
+   "from": 8,
+   "to": 12,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "street",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 17,
+   "from": 9,
+   "to": 13,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "street",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 18,
+   "from": 10,
+   "to": 14,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "street",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "fast": 2,
+    "transit": 1
+   }
+  },
+  {
+   "id": 19,
+   "from": 11,
+   "to": 15,
+   "width": 1,
+   "speed": 6,
+   "oneWay": false,
+   "kind": "street",
+   "lanes": {
+    "sidewalk": 2,
+    "slow": 2,
+    "transit": 1
+   }
+  }
+ ],
+ "crossings": [
+  {
+   "id": 0,
+   "from": 4,
+   "to": 8,
+   "over": "canal",
+   "radical": "ramp_bridge",
+   "access": "bubble_lift"
+  },
+  {
+   "id": 1,
+   "from": 5,
+   "to": 9,
+   "over": "canal",
+   "radical": "rail_walkway",
+   "access": "glass_walkway"
+  },
+  {
+   "id": 2,
+   "from": 6,
+   "to": 10,
+   "over": "canal",
+   "radical": "death_jump",
+   "access": "bubble_lift"
+  },
+  {
+   "id": 3,
+   "from": 7,
+   "to": 11,
+   "over": "canal",
+   "radical": "ramp_bridge"
+  }
+ ],
+ "buildings": [
+  {
+   "id": 0,
+   "x": 2,
+   "y": 2,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_1",
+   "rotation": 2
+  },
+  {
+   "id": 1,
+   "x": 3,
+   "y": 2,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_2",
+   "rotation": 2
+  },
+  {
+   "id": 2,
+   "x": 4,
+   "y": 2,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_1",
+   "rotation": 2
+  },
+  {
+   "id": 3,
+   "x": 5,
+   "y": 2,
+   "kind": "com",
+   "capacity": 40,
+   "model": "bld_com_2",
+   "rotation": 2
+  },
+  {
+   "id": 4,
+   "x": 2,
+   "y": 4,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_2",
+   "rotation": 0
+  },
+  {
+   "id": 5,
+   "x": 3,
+   "y": 3.5,
+   "kind": "skatepark",
+   "capacity": 40,
+   "model": "bld_skatepark",
+   "rotation": 0
+  },
+  {
+   "id": 6,
+   "x": 5,
+   "y": 4,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_1",
+   "rotation": 0
+  },
+  {
+   "id": 7,
+   "x": 7,
+   "y": 2,
+   "kind": "com",
+   "capacity": 200,
+   "model": "bld_com_1",
+   "rotation": 2
+  },
+  {
+   "id": 8,
+   "x": 8,
+   "y": 2,
+   "kind": "com",
+   "capacity": 150,
+   "model": "bld_com_2",
+   "rotation": 2
+  },
+  {
+   "id": 9,
+   "x": 9,
+   "y": 2,
+   "kind": "com",
+   "capacity": 200,
+   "model": "bld_com_1",
+   "rotation": 2
+  },
+  {
+   "id": 10,
+   "x": 10,
+   "y": 2,
+   "kind": "com",
+   "capacity": 200,
+   "model": "bld_com_1",
+   "rotation": 2
+  },
+  {
+   "id": 11,
+   "x": 7,
+   "y": 4,
+   "kind": "com",
+   "capacity": 200,
+   "model": "bld_com_1",
+   "rotation": 0
+  },
+  {
+   "id": 12,
+   "x": 8.5,
+   "y": 3.5,
+   "kind": "park",
+   "capacity": 0,
+   "model": "bld_park",
+   "rotation": 0
+  },
+  {
+   "id": 13,
+   "x": 10,
+   "y": 4,
+   "kind": "com",
+   "capacity": 150,
+   "model": "bld_com_2",
+   "rotation": 0
+  },
+  {
+   "id": 14,
+   "x": 12,
+   "y": 2,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_1",
+   "rotation": 2
+  },
+  {
+   "id": 15,
+   "x": 13,
+   "y": 2,
+   "kind": "school",
+   "capacity": 300,
+   "model": "bld_school",
+   "rotation": 2
+  },
+  {
+   "id": 16,
+   "x": 14,
+   "y": 2,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_2",
+   "rotation": 2
+  },
+  {
+   "id": 17,
+   "x": 15,
+   "y": 2,
+   "kind": "com",
+   "capacity": 40,
+   "model": "bld_com_1",
+   "rotation": 2
+  },
+  {
+   "id": 18,
+   "x": 12,
+   "y": 4,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_1",
+   "rotation": 0
+  },
+  {
+   "id": 19,
+   "x": 13.5,
+   "y": 4,
+   "kind": "park",
+   "capacity": 0,
+   "model": "bld_park",
+   "rotation": 0
+  },
+  {
+   "id": 20,
+   "x": 15,
+   "y": 4,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_2",
+   "rotation": 0
+  },
+  {
+   "id": 21,
+   "x": 2,
+   "y": 12,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_1",
+   "rotation": 2
+  },
+  {
+   "id": 22,
+   "x": 3,
+   "y": 12,
+   "kind": "hospital",
+   "capacity": 120,
+   "model": "bld_hospital",
+   "rotation": 2
+  },
+  {
+   "id": 23,
+   "x": 4,
+   "y": 12,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_2",
+   "rotation": 2
+  },
+  {
+   "id": 24,
+   "x": 5,
+   "y": 12,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_1",
+   "rotation": 2
+  },
+  {
+   "id": 25,
+   "x": 2,
+   "y": 14,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_2",
+   "rotation": 0
+  },
+  {
+   "id": 26,
+   "x": 3.5,
+   "y": 13.5,
+   "kind": "park",
+   "capacity": 0,
+   "model": "bld_park",
+   "rotation": 0
+  },
+  {
+   "id": 27,
+   "x": 5,
+   "y": 14,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_1",
+   "rotation": 0
+  },
+  {
+   "id": 28,
+   "x": 7,
+   "y": 12,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_1",
+   "rotation": 2
+  },
+  {
+   "id": 29,
+   "x": 10,
+   "y": 12,
+   "kind": "skatepark",
+   "capacity": 40,
+   "model": "bld_skatepark",
+   "rotation": 2
+  },
+  {
+   "id": 30,
+   "x": 7,
+   "y": 14,
+   "kind": "com",
+   "capacity": 40,
+   "model": "bld_com_2",
+   "rotation": 0
+  },
+  {
+   "id": 31,
+   "x": 10,
+   "y": 14,
+   "kind": "res",
+   "capacity": 40,
+   "model": "bld_res_2",
+   "rotation": 0
+  },
+  {
+   "id": 32,
+   "x": 12,
+   "y": 12,
+   "kind": "ind",
+   "capacity": 80,
+   "model": "bld_ind_1",
+   "rotation": 2
+  },
+  {
+   "id": 33,
+   "x": 13,
+   "y": 12,
+   "kind": "ind",
+   "capacity": 80,
+   "model": "bld_ind_1",
+   "rotation": 2
+  },
+  {
+   "id": 34,
+   "x": 14,
+   "y": 12,
+   "kind": "ind",
+   "capacity": 80,
+   "model": "bld_ind_1",
+   "rotation": 2
+  },
+  {
+   "id": 35,
+   "x": 15,
+   "y": 12,
+   "kind": "ind",
+   "capacity": 80,
+   "model": "bld_ind_1",
+   "rotation": 2
+  },
+  {
+   "id": 36,
+   "x": 12,
+   "y": 14,
+   "kind": "ind",
+   "capacity": 80,
+   "model": "bld_ind_1",
+   "rotation": 0
+  },
+  {
+   "id": 37,
+   "x": 13.5,
+   "y": 14,
+   "kind": "skatepark",
+   "capacity": 40,
+   "model": "bld_skatepark",
+   "rotation": 0
+  },
+  {
+   "id": 38,
+   "x": 15,
+   "y": 14,
+   "kind": "ind",
+   "capacity": 80,
+   "model": "bld_ind_1",
+   "rotation": 0
+  }
+ ],
+ "districts": [
+  {
+   "id": 0,
+   "name": "Vila Concreto",
+   "income": "low",
+   "population": 2400,
+   "wheelchairShare": 0.04,
+   "ownership": {
+    "skate": 0.45,
+    "kick_scooter": 0.3,
+    "bmx": 0.2,
+    "skates": 0.15,
+    "e_scooter": 0.05
+   }
+  },
+  {
+   "id": 1,
+   "name": "Centro Gel",
+   "income": "high",
+   "population": 1800,
+   "wheelchairShare": 0.03,
+   "ownership": {
+    "e_scooter": 0.4,
+    "hoverboard": 0.3,
+    "e_unicycle": 0.15,
+    "longboard": 0.2
+   }
+  },
+  {
+   "id": 2,
+   "name": "Orla Bolha",
+   "income": "mid",
+   "population": 1500,
+   "wheelchairShare": 0.05,
+   "ownership": {
+    "longboard": 0.35,
+    "skates": 0.3,
+    "skate": 0.3,
+    "kick_scooter": 0.2
+   }
+  },
+  {
+   "id": 3,
+   "name": "Pátio Industrial",
+   "income": "low",
+   "population": 900,
+   "wheelchairShare": 0.04,
+   "ownership": {
+    "bmx": 0.35,
+    "skate": 0.3,
+    "e_scooter": 0.1
+   }
+  }
+ ],
+ "features": [
+  {
+   "kind": "air_loop",
+   "x": 8.5,
+   "y": 1,
+   "rot": 1
+  },
+  {
+   "kind": "wallride",
+   "x": 3.5,
+   "y": 15,
+   "rot": 1
+  },
+  {
+   "kind": "bowl",
+   "x": 8.5,
+   "y": 13,
+   "rot": 0
+  },
+  {
+   "kind": "stop_shelter",
+   "x": 8.5,
+   "y": 5.72,
+   "rot": 2
+  },
+  {
+   "kind": "stop_shelter",
+   "x": 13.5,
+   "y": 10.28,
+   "rot": 0
+  },
+  {
+   "kind": "share_station",
+   "x": 3.5,
+   "y": 5.75,
+   "rot": 2
+  },
+  {
+   "kind": "crt_billboard",
+   "x": 13.5,
+   "y": 0.25,
+   "rot": 0
+  },
+  {
+   "kind": "crt_billboard",
+   "x": 3.5,
+   "y": 0.25,
+   "rot": 0
+  },
+  {
+   "kind": "quarter",
+   "x": 5.22,
+   "y": 4.22,
+   "rot": -1.5
+  },
+  {
+   "kind": "quarter",
+   "x": 6.78,
+   "y": 4.22,
+   "rot": 1.5
+  },
+  {
+   "kind": "quarter",
+   "x": 5.22,
+   "y": 11.78,
+   "rot": -0.5
+  },
+  {
+   "kind": "quarter",
+   "x": 6.78,
+   "y": 11.78,
+   "rot": 0.5
+  },
+  {
+   "kind": "quarter",
+   "x": 10.22,
+   "y": 4.22,
+   "rot": -1.5
+  },
+  {
+   "kind": "quarter",
+   "x": 11.78,
+   "y": 4.22,
+   "rot": 1.5
+  },
+  {
+   "kind": "quarter",
+   "x": 10.22,
+   "y": 11.78,
+   "rot": -0.5
+  },
+  {
+   "kind": "quarter",
+   "x": 11.78,
+   "y": 11.78,
+   "rot": 0.5
+  },
+  {
+   "kind": "tree",
+   "x": 1.5,
+   "y": 6.15,
+   "rot": 0
+  },
+  {
+   "kind": "tree",
+   "x": 2.5,
+   "y": 9.85,
+   "rot": 0
+  },
+  {
+   "kind": "lamp",
+   "x": 2,
+   "y": 5.62,
+   "rot": 0
+  },
+  {
+   "kind": "bench",
+   "x": 2.7,
+   "y": 6.3,
+   "rot": 2
+  },
+  {
+   "kind": "tree",
+   "x": 4,
+   "y": 6.15,
+   "rot": 0
+  },
+  {
+   "kind": "tree",
+   "x": 5,
+   "y": 9.85,
+   "rot": 0
+  },
+  {
+   "kind": "lamp",
+   "x": 4.5,
+   "y": 5.62,
+   "rot": 0
+  },
+  {
+   "kind": "bench",
+   "x": 5.2,
+   "y": 6.3,
+   "rot": 2
+  },
+  {
+   "kind": "tree",
+   "x": 6.5,
+   "y": 6.15,
+   "rot": 0
+  },
+  {
+   "kind": "tree",
+   "x": 7.5,
+   "y": 9.85,
+   "rot": 0
+  },
+  {
+   "kind": "lamp",
+   "x": 7,
+   "y": 5.62,
+   "rot": 0
+  },
+  {
+   "kind": "bench",
+   "x": 7.7,
+   "y": 6.3,
+   "rot": 2
+  },
+  {
+   "kind": "tree",
+   "x": 9,
+   "y": 6.15,
+   "rot": 0
+  },
+  {
+   "kind": "tree",
+   "x": 10,
+   "y": 9.85,
+   "rot": 0
+  },
+  {
+   "kind": "lamp",
+   "x": 9.5,
+   "y": 5.62,
+   "rot": 0
+  },
+  {
+   "kind": "bench",
+   "x": 10.2,
+   "y": 6.3,
+   "rot": 2
+  },
+  {
+   "kind": "tree",
+   "x": 11.5,
+   "y": 6.15,
+   "rot": 0
+  },
+  {
+   "kind": "tree",
+   "x": 12.5,
+   "y": 9.85,
+   "rot": 0
+  },
+  {
+   "kind": "lamp",
+   "x": 12,
+   "y": 5.62,
+   "rot": 0
+  },
+  {
+   "kind": "bench",
+   "x": 12.7,
+   "y": 6.3,
+   "rot": 2
+  },
+  {
+   "kind": "tree",
+   "x": 14,
+   "y": 6.15,
+   "rot": 0
+  },
+  {
+   "kind": "tree",
+   "x": 15,
+   "y": 9.85,
+   "rot": 0
+  },
+  {
+   "kind": "lamp",
+   "x": 14.5,
+   "y": 5.62,
+   "rot": 0
+  },
+  {
+   "kind": "bench",
+   "x": 15.2,
+   "y": 6.3,
+   "rot": 2
+  }
+ ]
+}

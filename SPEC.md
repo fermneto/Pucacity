@@ -287,6 +287,10 @@ interface CityFile {
 
 Qualquer pessoa da equipe pode editar `city.json`; a engenharia valida o esquema.
 
+**Extensões propostas pela Direção de Arte** (usadas na vitrine `src/assets/cities/vitrine.json`; tipos em `src/core/CityFile.ts`):
+- `canal?: { y0, y1 }`: faixa de água a ser atravessada pelas travessias.
+- `features?: { kind, x, y, rot }[]`: elementos radicais urbanos (`air_loop`, `wallride`, `quarter`, `bowl`) e props (`stop_shelter`, `share_station`, `crt_billboard`, `tree`, `lamp`, `bench`), com `rot` em quartos de volta.
+
 ---
 
 ## 7. Como usar o Three.js

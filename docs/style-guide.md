@@ -147,7 +147,18 @@ A trilha é parte da identidade, mas **sem faixas licenciadas de jogos comerciai
 
 ---
 
-## 10. Próximos passos
+## 10. Implementação e validação
+
+A camada visual já está implementada em Three.js (`src/render/`, `src/ui/`). Toda a arte atual é **procedural**: atlas desenhado em código, modelos low poly gerados por `MeshBuilder` e fontes OFL. Por isso ainda não há assets de terceiros.
+
+Como validar: **`docs/validacao-visual.md`** (vitrine, laboratório e capturas automáticas).
+
+**Achados da primeira validação:**
+- Na resolução 240 e no zoom de visão geral, os veículos viram poucos pixels e os tipos não se distinguem; a leitura por silhueta só funciona no zoom próximo. Caminhos: limitar o zoom máximo de afastamento, usar 360 linhas como padrão ou mostrar ícones por tipo no overlay.
+- Pisos grandes precisam ser subdivididos (≈1 tile), senão o affine warping vira arcos enormes.
+- Torres muito altas escondem os elementos radicais; mantenha a altura ≤ ~22 m perto de loops e travessias.
+
+## 11. Próximos passos
 
 1. Fechar o mood board com as referências pesquisadas (Sprint 0).
 2. Fazer um *greybox* de um quarteirão com uma Rampa-Ponte e um Loop Aéreo, já no `Ps1Material` em Three.js.

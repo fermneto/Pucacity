@@ -1,5 +1,5 @@
 {
-  "$descricao": "Cidadãos-veículo de Pucacity: substituem os carros no trânsito. Velocidades em m/s. 'faixa' indica onde circulam. 'cores' referencia as famílias de data/arte/paleta.json. 'tris' segue o orçamento do SPEC (20–60, cidadão + veículo juntos). 'kind' e 'lane' são os identificadores usados no city.json (SPEC §6).",
+  "$descricao": "Cidadãos-veículo de Pucacity: substituem os carros no trânsito. Velocidades em m/s. 'faixa' indica onde circulam. 'cores' referencia as famílias de data/arte/paleta.json. Orçamento de polígonos (SPEC: 20–60 tris) é verificado automaticamente no laboratório (lab.html). 'kind' e 'lane' são os identificadores usados no city.json (SPEC §6).",
   "faixas": {
     "calcada": {
       "lane": "sidewalk",
@@ -29,8 +29,7 @@
         1.6
       ],
       "frequencia": 0.2,
-      "manobras": false,
-      "tris": 24
+      "manobras": false
     },
     {
       "id": "skate",
@@ -42,8 +41,7 @@
         7.0
       ],
       "frequencia": 0.18,
-      "manobras": true,
-      "tris": 28
+      "manobras": true
     },
     {
       "id": "longboard",
@@ -55,8 +53,7 @@
         8.0
       ],
       "frequencia": 0.07,
-      "manobras": false,
-      "tris": 28
+      "manobras": false
     },
     {
       "id": "patinete",
@@ -68,8 +65,7 @@
         5.0
       ],
       "frequencia": 0.1,
-      "manobras": true,
-      "tris": 32
+      "manobras": true
     },
     {
       "id": "patinete_eletrico",
@@ -81,8 +77,7 @@
         7.5
       ],
       "frequencia": 0.08,
-      "manobras": false,
-      "tris": 34
+      "manobras": false
     },
     {
       "id": "patins",
@@ -94,8 +89,7 @@
         6.0
       ],
       "frequencia": 0.08,
-      "manobras": true,
-      "tris": 26
+      "manobras": true
     },
     {
       "id": "cadeira_rodas",
@@ -107,8 +101,7 @@
         3.0
       ],
       "frequencia": 0.06,
-      "manobras": true,
-      "tris": 44
+      "manobras": true
     },
     {
       "id": "cadeira_motorizada",
@@ -120,8 +113,7 @@
         4.0
       ],
       "frequencia": 0.04,
-      "manobras": false,
-      "tris": 48
+      "manobras": false
     },
     {
       "id": "hoverboard",
@@ -133,8 +125,7 @@
         5.0
       ],
       "frequencia": 0.08,
-      "manobras": false,
-      "tris": 24
+      "manobras": false
     },
     {
       "id": "monociclo_eletrico",
@@ -146,8 +137,7 @@
         7.0
       ],
       "frequencia": 0.04,
-      "manobras": false,
-      "tris": 26
+      "manobras": false
     },
     {
       "id": "bmx",
@@ -159,8 +149,7 @@
         8.5
       ],
       "frequencia": 0.07,
-      "manobras": true,
-      "tris": 52
+      "manobras": true
     }
   ],
   "transporte_publico": [
@@ -188,8 +177,7 @@
         6.0
       ],
       "linhas": "bairro",
-      "visual": "Quadro cromado, assentos em gel coloridos por linha, cestinha na frente e placa da linha em pílula Aero.",
-      "tris": 60
+      "visual": "Quadro cromado, assentos em gel coloridos por linha, cestinha na frente e placa da linha em pílula Aero."
     },
     {
       "id": "tuktuk",
@@ -202,8 +190,7 @@
         9.0
       ],
       "linhas": "principais",
-      "visual": "Capota de vidro arredondada estilo bolha, carenagem lustrosa na cor da linha, adesivos de skate e letreiro LED de destino.",
-      "tris": 60
+      "visual": "Capota de vidro arredondada estilo bolha, carenagem lustrosa na cor da linha, adesivos de skate e letreiro LED de destino."
     }
   ],
   "paradas": {
