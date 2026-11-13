@@ -27,6 +27,7 @@ export const MOCK_SECONDS_PER_TICK = 1.5;
 const MIN_AGENTS = 40;
 const MAX_AGENTS = 1500;
 const MINUTES_PER_DAY = 1440;
+const MOCK_LIFT_SPEED_MPS = 1;
 
 interface MockAgent {
   id: number;
@@ -255,7 +256,8 @@ export class MockSimulation implements SimulationPort {
   /** Elevador e passarela são mais lentos que o veículo; o resto anda na velocidade do perfil. */
   private edgeSpeedFactor(edge: number, profile: VehicleProfile): number {
     const e = this.graph.edge(edge);
-    if (e.link === 'lift') return Math.min(1, this.graph.params.liftSpeedMps / profile.speedMps);
+    // Valor só do mock (não lê graph.params: o formato de TrafficParams muda com o pc3-eng-rede).
+    if (e.link === 'lift') return Math.min(1, MOCK_LIFT_SPEED_MPS / profile.speedMps);
     if (e.link === 'road' && e.speedLimitMps < profile.speedMps) return e.speedLimitMps / profile.speedMps;
     return 1;
   }
