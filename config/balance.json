@@ -1,108 +1,347 @@
 {
-  "_nota": "Valores PROVISÓRIOS de game design. Ajustar em playtest. Velocidades base vêm de data/arte/veiculos.json (ids iguais); aqui ficam só os números de equilíbrio.",
-  "version": "0.2.0",
-
+  "_nota": "Valores PROVISÓRIOS de game design (v0.3: casos esperados em docs/design/balance-casos.md). Velocidades base vêm de data/arte/veiculos.json (ids iguais); aqui ficam só os números de equilíbrio. Chaves antigas mantidas; chaves novas são aditivas.",
+  "version": "0.3.0",
   "time": {
     "tickMinutes": 1,
     "minutesPerDay": 1440,
     "peaks": [
-      { "name": "manha", "startHour": 7, "endHour": 9, "intensity": 1.0 },
-      { "name": "tarde", "startHour": 17, "endHour": 19, "intensity": 1.0 }
+      {
+        "name": "manha",
+        "startHour": 7,
+        "endHour": 9,
+        "intensity": 1.0
+      },
+      {
+        "name": "tarde",
+        "startHour": 17,
+        "endHour": 19,
+        "intensity": 1.0
+      }
     ]
   },
-
   "vehicles": {
-    "_nota": "fallRisk = chance base de queda por viagem. battery só para elétricos. modeCost = custo por viagem (0 = próprio). 'mvp' marca o que entra na v0.1.",
-    "pedestre": { "mvp": true, "fallRisk": 0.0005, "modeCost": 0 },
-    "cadeira_rodas": { "mvp": true, "fallRisk": 0.001, "modeCost": 0 },
-    "skate": { "mvp": true, "fallRisk": 0.008, "modeCost": 0 },
-    "patinete": { "mvp": true, "fallRisk": 0.004, "modeCost": 0 },
-    "longboard": { "mvp": false, "fallRisk": 0.006, "modeCost": 0 },
-    "patins": { "mvp": false, "fallRisk": 0.007, "modeCost": 0 },
-    "bmx": { "mvp": false, "fallRisk": 0.01, "modeCost": 0 },
-    "patinete_eletrico": { "mvp": false, "fallRisk": 0.012, "battery": 100, "drainPerTile": 1.4, "modeCost": 0 },
-    "hoverboard": { "mvp": false, "fallRisk": 0.01, "battery": 80, "drainPerTile": 1.2, "modeCost": 0 },
-    "monociclo_eletrico": { "mvp": false, "fallRisk": 0.014, "battery": 90, "drainPerTile": 1.3, "modeCost": 0 },
-    "cadeira_motorizada": { "mvp": false, "fallRisk": 0.002, "battery": 120, "drainPerTile": 1.0, "modeCost": 0 },
+    "_nota": "fallRisk = chance base de queda por viagem de 1 km numa faixa de multiplicador 1,0. battery só para elétricos. modeCost = custo por viagem em moedas (0 = próprio). comfort (0..1) e baseFun (>= 0) alimentam a escolha modal. 'mvp' marca o que entra na v0.1. Risco da viagem = fallRisk * fallRiskMultiplier da faixa usada * (faixa não preferida ? _sharedLanePenalty.fallRiskMultiplier : 1) * km * fallPenalty do grupo.",
+    "pedestre": {
+      "mvp": true,
+      "fallRisk": 0.0005,
+      "modeCost": 0,
+      "comfort": 0.6
+    },
+    "cadeira_rodas": {
+      "mvp": true,
+      "fallRisk": 0.001,
+      "modeCost": 0,
+      "comfort": 0.5
+    },
+    "skate": {
+      "mvp": true,
+      "fallRisk": 0.008,
+      "modeCost": 0,
+      "comfort": 0.5,
+      "baseFun": 0.3
+    },
+    "patinete": {
+      "mvp": true,
+      "fallRisk": 0.004,
+      "modeCost": 0,
+      "comfort": 0.6
+    },
+    "longboard": {
+      "mvp": false,
+      "fallRisk": 0.006,
+      "modeCost": 0,
+      "comfort": 0.55,
+      "baseFun": 0.3
+    },
+    "patins": {
+      "mvp": false,
+      "fallRisk": 0.007,
+      "modeCost": 0,
+      "comfort": 0.5,
+      "baseFun": 0.2
+    },
+    "bmx": {
+      "mvp": false,
+      "fallRisk": 0.01,
+      "modeCost": 0,
+      "comfort": 0.5,
+      "baseFun": 0.4
+    },
+    "patinete_eletrico": {
+      "mvp": false,
+      "fallRisk": 0.012,
+      "battery": 100,
+      "drainPerTile": 1.4,
+      "modeCost": 0,
+      "comfort": 0.65,
+      "baseFun": 0.2
+    },
+    "hoverboard": {
+      "mvp": false,
+      "fallRisk": 0.01,
+      "battery": 80,
+      "drainPerTile": 1.2,
+      "modeCost": 0,
+      "comfort": 0.6,
+      "baseFun": 0.2
+    },
+    "monociclo_eletrico": {
+      "mvp": false,
+      "fallRisk": 0.014,
+      "battery": 90,
+      "drainPerTile": 1.3,
+      "modeCost": 0,
+      "comfort": 0.45,
+      "baseFun": 0.3
+    },
+    "cadeira_motorizada": {
+      "mvp": false,
+      "fallRisk": 0.002,
+      "battery": 120,
+      "drainPerTile": 1.0,
+      "modeCost": 0,
+      "comfort": 0.8
+    },
+    "tandem": {
+      "mvp": false,
+      "fallRisk": 0.0008,
+      "modeCost": 1,
+      "comfort": 0.7
+    },
+    "tuktuk": {
+      "mvp": false,
+      "fallRisk": 0.0005,
+      "modeCost": 2,
+      "comfort": 0.85
+    },
     "lowBatteryThreshold": 15
   },
-
   "lanes": {
-    "sidewalk": { "capacityPerWidth": 60, "fallRiskMultiplier": 0.2, "noiseMultiplier": 0.1 },
-    "slow": { "capacityPerWidth": 40, "fallRiskMultiplier": 0.6, "noiseMultiplier": 0.7 },
-    "fast": { "capacityPerWidth": 55, "fallRiskMultiplier": 1.6, "noiseMultiplier": 1.4 },
-    "transit": { "capacityPerWidth": 45, "fallRiskMultiplier": 0.4, "noiseMultiplier": 0.5 },
-    "_sharedLanePenalty": { "speedFactor": 0.6, "fallRiskMultiplier": 2.0 }
+    "sidewalk": {
+      "capacityPerWidth": 60,
+      "fallRiskMultiplier": 0.2,
+      "noiseMultiplier": 0.1
+    },
+    "slow": {
+      "capacityPerWidth": 40,
+      "fallRiskMultiplier": 0.6,
+      "noiseMultiplier": 0.7
+    },
+    "fast": {
+      "capacityPerWidth": 55,
+      "fallRiskMultiplier": 1.6,
+      "noiseMultiplier": 1.4
+    },
+    "transit": {
+      "capacityPerWidth": 45,
+      "fallRiskMultiplier": 0.4,
+      "noiseMultiplier": 0.5
+    },
+    "_sharedLanePenalty": {
+      "speedFactor": 0.6,
+      "fallRiskMultiplier": 3.0
+    },
+    "_nota": "capacityPerWidth = usuários/hora por metro de largura da faixa, por sentido. Capacidade da faixa = largura(m) * capacityPerWidth."
   },
-
   "congestion": {
     "formula": "bpr",
     "alpha": 0.15,
     "beta": 4,
     "saturatedThreshold": 1.0,
-    "gridlockThreshold": 1.5
+    "gridlockThreshold": 1.5,
+    "byLane": {
+      "_nota": "t = t0*(1+alpha*(fluxo/capacidade)^beta). alpha/beta globais valem para travessias e como padrão; byLane sobrescreve por faixa.",
+      "sidewalk": {
+        "alpha": 0.1,
+        "beta": 3
+      },
+      "slow": {
+        "alpha": 0.15,
+        "beta": 4
+      },
+      "fast": {
+        "alpha": 0.2,
+        "beta": 4
+      },
+      "transit": {
+        "alpha": 0.15,
+        "beta": 4
+      }
+    }
   },
-
   "tools": {
-    "sentidoVia": { "cost": 100, "buildDays": 0 },
-    "divisaoFaixas": { "cost": 120, "buildDays": 0 },
-    "limiteVelocidade": { "cost": 50, "buildDays": 0 },
-    "semaforo": { "cost": 300, "buildDays": 1 },
-    "travessiaPedestre": { "cost": 400, "buildDays": 2 },
-    "rampaPonte": { "cost": 1200, "buildDays": 4, "blocksTrafficWhileBuilding": true },
-    "elevadorBolha": { "cost": 900, "buildDays": 3, "capacityPerMinute": 6 },
-    "linhaTukTuk": { "cost": 1500, "operationPerDay": 80, "capacityPerVehicle": 3, "headwayMinutes": 10 },
-    "linhaTandem": { "cost": 800, "operationPerDay": 35, "capacityPerVehicle": 3, "headwayMinutes": 12 },
-    "quarterPipeEsquina": { "cost": 700, "buildDays": 3 },
-    "estacaoCarga": { "cost": 700, "buildDays": 2, "slots": 8 },
-    "painelSolar": { "cost": 900, "energyPerDay": 40 },
-    "arvore": { "cost": 60, "heatReduction": 0.5, "noiseReduction": 0.3 },
-    "rackSkate": { "cost": 150, "buildDays": 1 }
+    "sentidoVia": {
+      "cost": 100,
+      "buildDays": 0
+    },
+    "divisaoFaixas": {
+      "cost": 120,
+      "buildDays": 0
+    },
+    "limiteVelocidade": {
+      "cost": 50,
+      "buildDays": 0
+    },
+    "semaforo": {
+      "cost": 300,
+      "buildDays": 1
+    },
+    "travessiaPedestre": {
+      "cost": 400,
+      "buildDays": 2
+    },
+    "rampaPonte": {
+      "cost": 1200,
+      "buildDays": 4,
+      "blocksTrafficWhileBuilding": true
+    },
+    "elevadorBolha": {
+      "cost": 900,
+      "buildDays": 3,
+      "capacityPerMinute": 3
+    },
+    "linhaTukTuk": {
+      "cost": 1500,
+      "operationPerDay": 120,
+      "capacityPerVehicle": 3,
+      "headwayMinutes": 10
+    },
+    "linhaTandem": {
+      "cost": 800,
+      "operationPerDay": 35,
+      "capacityPerVehicle": 3,
+      "headwayMinutes": 12
+    },
+    "quarterPipeEsquina": {
+      "cost": 700,
+      "buildDays": 3
+    },
+    "estacaoCarga": {
+      "cost": 700,
+      "buildDays": 2,
+      "slots": 8
+    },
+    "painelSolar": {
+      "cost": 900,
+      "energyPerDay": 40
+    },
+    "arvore": {
+      "cost": 60,
+      "heatReduction": 0.5,
+      "noiseReduction": 0.3
+    },
+    "rackSkate": {
+      "cost": 150,
+      "buildDays": 1
+    }
   },
-
   "radical": {
     "_nota": "Detalhes visuais e vãos em data/arte/elementos-radicais.json. Aqui ficam só efeitos de jogo.",
-    "rampa_ponte": { "crossSeconds": 6, "fallRisk": 0.006, "funBonus": 0.5, "requiresManeuvers": true, "accessRoute": "elevador_bolha" },
-    "loop_aereo": { "crossSeconds": 4, "fallRisk": 0.02, "funBonus": 1.2, "minSpeed": 7.0, "accessRoute": "tuktuk" },
-    "salto_mortal": { "crossSeconds": 5, "fallRisk": 0.025, "funBonus": 1.5, "requiresManeuvers": true, "accessRoute": "elevador_bolha" },
-    "rail_passarela": { "crossSeconds": 5, "fallRisk": 0.015, "funBonus": 1.0, "accessRoute": "passarela_vidro" },
-    "elevador_bolha": { "crossSeconds": 40, "fallRisk": 0.0, "funBonus": 0.1, "queue": true }
+    "rampa_ponte": {
+      "crossSeconds": 6,
+      "fallRisk": 0.006,
+      "funBonus": 0.5,
+      "requiresManeuvers": true,
+      "accessRoute": "elevador_bolha"
+    },
+    "loop_aereo": {
+      "crossSeconds": 4,
+      "fallRisk": 0.02,
+      "funBonus": 1.2,
+      "minSpeed": 7.0,
+      "accessRoute": "tuktuk"
+    },
+    "salto_mortal": {
+      "crossSeconds": 5,
+      "fallRisk": 0.025,
+      "funBonus": 1.5,
+      "requiresManeuvers": true,
+      "accessRoute": "elevador_bolha"
+    },
+    "rail_passarela": {
+      "crossSeconds": 5,
+      "fallRisk": 0.015,
+      "funBonus": 1.0,
+      "accessRoute": "passarela_vidro"
+    },
+    "elevador_bolha": {
+      "crossSeconds": 40,
+      "fallRisk": 0.0,
+      "funBonus": 0.1,
+      "queue": true
+    }
   },
-
   "modalChoice": {
-    "_nota": "Desutilidade = tempo*wt + custo*wc + risco*wr + (1-conforto)*wf - diversao*wd. Menor vence, com ruído. Cadeirantes nunca trocam de modo.",
-    "weights": { "tempo": 1.0, "custo": 0.6, "risco": 0.8, "conforto": 0.5, "diversao": 0.4 },
-    "noise": 0.15
+    "_nota": "Desutilidade D = tempo_min*wt + custo*costToMin*wc + risco*riskScale*wr + (1-conforto)*comfortScale*wf - diversao*funScale*wd. tempo = distância/velocidade (+ espera de headway/2 no coletivo), com BPR. risco = probabilidade de queda da viagem. Menor D vence. Ruído: D_final = D*(1+N(0,noise)). Cadeirantes nunca trocam de modo. speedFactor do grupo vale só para veículos próprios.",
+    "weights": {
+      "tempo": 1.0,
+      "custo": 0.6,
+      "risco": 0.8,
+      "conforto": 0.5,
+      "diversao": 0.4
+    },
+    "noise": 0.15,
+    "scales": {
+      "costToMin": 3,
+      "riskScale": 250,
+      "comfortScale": 10,
+      "funScale": 5
+    }
   },
-
   "citizens": {
     "groups": {
-      "adulto": { "share": 0.5, "speedFactor": 1.0 },
-      "idoso": { "share": 0.15, "speedFactor": 0.7, "fallPenalty": 2.0 },
-      "estudante": { "share": 0.2, "speedFactor": 1.15 },
-      "entregador": { "share": 0.08, "speedFactor": 1.25 },
-      "cadeirante": { "share": 0.07, "speedFactor": 1.0 }
+      "adulto": {
+        "share": 0.5,
+        "speedFactor": 1.0,
+        "patienceFactor": 1.0
+      },
+      "idoso": {
+        "share": 0.15,
+        "speedFactor": 0.7,
+        "fallPenalty": 2.0,
+        "patienceFactor": 1.25
+      },
+      "estudante": {
+        "share": 0.2,
+        "speedFactor": 1.15,
+        "patienceFactor": 0.8
+      },
+      "entregador": {
+        "share": 0.08,
+        "speedFactor": 1.25,
+        "patienceFactor": 1.5
+      },
+      "cadeirante": {
+        "share": 0.07,
+        "speedFactor": 1.0,
+        "patienceFactor": 1.5
+      }
     },
-    "patience": { "start": 70, "dropPerBadDay": 6, "protestThreshold": 20 }
+    "patience": {
+      "start": 70,
+      "dropPerBadDay": 6,
+      "protestThreshold": 20,
+      "_nota": "Paciência 0..100. Dia ruim = tempo médio do grupo > badDayTimeRatio * linha de base, ou viagem sem rota acessível (cadeirante). Perde dropPerBadDay*patienceFactor; recupera recoverPerGoodDay. Se <= protestThreshold: protesto.",
+      "recoverPerGoodDay": 3,
+      "badDayTimeRatio": 1.3
+    }
   },
-
   "kpiWeights": {
     "tempoMedioViagem": 0.25,
     "quedasPor1000Viagens": 0.15,
-    "acessibilidade": 0.20,
-    "saldoOrcamento": 0.10,
-    "satisfacao": 0.10,
-    "energiaAtendida": 0.10,
-    "radicalidade": 0.10
+    "acessibilidade": 0.2,
+    "saldoOrcamento": 0.1,
+    "satisfacao": 0.1,
+    "energiaAtendida": 0.1,
+    "radicalidade": 0.1
   },
-
   "economy": {
     "monthlyIncomePerResident": 1.5,
     "tukTukFare": 2,
     "tandemFare": 1,
-    "sharingFare": 1
+    "sharingFare": 1,
+    "daysPerMonth": 30
   },
-
   "events": {
     "campeonato_bowl": {
       "scenario": "vila-nova",
@@ -111,28 +350,77 @@
       "endHour": 22,
       "extraTrips": 1500,
       "warningHoursBefore": 24,
-      "fail": { "occupationOver": 1.5, "forMinutes": 30, "satisfactionPenalty": 10, "extraFalls": 3 }
+      "fail": {
+        "occupationOver": 1.5,
+        "forMinutes": 30,
+        "satisfactionPenalty": 10,
+        "extraFalls": 3
+      }
     },
-    "chuva_forte": { "durationHours": 6, "slipperyFallMultiplier": 2.0, "floodedLaneShare": 0.2 },
-    "vento_loop": { "durationDays": 1, "closes": ["loop_aereo"] },
-    "apagao_parcial": { "durationHours": 4, "affectedShare": 0.35, "severity": "alta" },
-    "onda_de_calor": { "durationDays": 2, "heatBonus": 8, "flowPenalty": 0.25 },
-    "greve_tuktuk": { "durationDays": 2, "lineShutdown": "principais" },
-    "elevador_quebrado": { "durationHours": 8, "closes": ["elevador_bolha"] },
-    "bairro_novo": { "populationGrowth": 0.10 }
+    "chuva_forte": {
+      "durationHours": 6,
+      "slipperyFallMultiplier": 2.0,
+      "floodedLaneShare": 0.2
+    },
+    "vento_loop": {
+      "durationDays": 1,
+      "closes": [
+        "loop_aereo"
+      ]
+    },
+    "apagao_parcial": {
+      "durationHours": 4,
+      "affectedShare": 0.35,
+      "severity": "alta"
+    },
+    "onda_de_calor": {
+      "durationDays": 2,
+      "heatBonus": 8,
+      "flowPenalty": 0.25
+    },
+    "greve_tuktuk": {
+      "durationDays": 2,
+      "lineShutdown": "principais"
+    },
+    "elevador_quebrado": {
+      "durationHours": 8,
+      "closes": [
+        "elevador_bolha"
+      ]
+    },
+    "bairro_novo": {
+      "populationGrowth": 0.1
+    }
   },
-
   "scenarios": {
     "vila-nova": {
       "budget": 5000,
       "durationDays": 14,
       "goals": {
-        "principal": { "metric": "tempoMedioViagem", "improvement": 0.20 },
-        "equilibrio1": { "metric": "acessibilidade", "min": 0.95 },
-        "equilibrio2": { "metrics": { "quedasPor1000Viagens": "naoAumenta", "saldo": { "min": 0 } } }
+        "principal": {
+          "metric": "tempoMedioViagem",
+          "improvement": 0.2
+        },
+        "equilibrio1": {
+          "metric": "acessibilidade",
+          "min": 0.95
+        },
+        "equilibrio2": {
+          "metrics": {
+            "quedasPor1000Viagens": "naoAumenta",
+            "saldo": {
+              "min": 0
+            }
+          }
+        }
       },
-      "threeStars": { "satisfacao_osvaldo_min": 0.6 },
-      "dilemmas": ["entregas_mercado", "elemento_travessia"],
+      "threeStars": {
+        "satisfacao_osvaldo_min": 0.6
+      },
+      "dilemmas": [
+        "entregas_mercado",
+        "elemento_travessia"
+      ],
       "unlocks": {
         "linhaTukTuk": "sobreviver_campeonato_sem_multidao",
         "cenario02": "meta_principal"
