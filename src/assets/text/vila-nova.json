@@ -208,22 +208,21 @@
     },
     "tuco": {
       "reclamacao": [
-        "Fila no ponto, e eu atrasado.",
-        "Cadê a linha de tuk-tuk?",
-        "Rua travada, passageiro esperando."
+        "Entrega atrasada na Rua do Mercado!",
+        "Sem doca, eu perco a entrega.",
+        "Faixa rápida lotada, não passo."
       ],
       "agradecimento": [
-        "Linha nova! Vamos nessa, gente!",
-        "Pé no pedal e sorriso no rosto.",
-        "Todo mundo cabe, é só chegar."
+        "Entrega no horário! Valeu!",
+        "Rack novo: manobro e entrego."
       ],
       "protesto": [
-        "Sem ponto bom, sem passageiro.",
-        "Tuk-tuk também é transporte!"
+        "Entregador também precisa de rua!",
+        "Sem janela de entrega, falta pão."
       ],
       "evento": [
-        "Dia de campeonato: tuk-tuk lotado!",
-        "Vou fazer uma viagem extra pro bowl."
+        "Dia de campeonato: pedido triplicou!",
+        "Bowl lotado, vou de BMX pelo atalho."
       ]
     }
   },
