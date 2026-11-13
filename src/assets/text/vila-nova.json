@@ -1,0 +1,275 @@
+{
+  "_nota": "Conteúdo textual do cenário 1 (Vila Nova). Falas de balão: até ~80 caracteres. Chaves de efeito usam só ids de KpiId (src/core/types.ts) e de config/balance.json (tools, events). Valores de delta são PROVISÓRIOS, ajustar em playtest.",
+  "scenario": "vila-nova",
+  "lang": "pt-BR",
+
+  "events": {
+    "campeonato_bowl": {
+      "title": "Campeonato de skate no Bowl",
+      "day": 7,
+      "startHour": 17,
+      "endHour": 22,
+      "radio": [
+        { "id": "aviso_24h", "hoursBefore": 24, "station": "Rádio Rodinha FM", "text": "Atenção, Vila Nova! Amanhã, 17h, tem campeonato de skate na Praça do Bowl. Vem muita gente de fora!" },
+        { "id": "aviso_6h", "hoursBefore": 6, "station": "Rádio Rodinha FM", "text": "Faltam 6 horas pro campeonato. A Rua do Mercado vai ferver. Já arrumou a rua?" },
+        { "id": "aviso_1h", "hoursBefore": 1, "station": "Rádio Rodinha FM", "text": "Última hora! A galera já está chegando na Praça do Bowl." },
+        { "id": "inicio", "hoursBefore": 0, "station": "Rádio Rodinha FM", "text": "Começou! 1.500 pessoas na praça e o bowl está lotado de manobra." }
+      ],
+      "countdownLabel": "Campeonato em {tempo}",
+      "success": {
+        "radio": "Que festa! O campeonato rolou e ninguém ficou preso na rua. Vila Nova mandou bem!",
+        "unlocks": ["linhaTukTuk"]
+      },
+      "failure": {
+        "radio": "Multidão parada na Rua do Mercado! Muita gente presa e alguns tombos. Dá pra melhorar.",
+        "effects": [
+          { "kind": "kpi", "id": "satisfaction", "delta": -10 },
+          { "kind": "falls", "amount": 3 }
+        ]
+      },
+      "hints": [
+        "Dica: amplie a faixa rápida só durante o evento.",
+        "Dica: abra a zona de pedestres na praça.",
+        "Dica: reduza o limite de velocidade perto do bowl."
+      ]
+    },
+    "bairro_novo": {
+      "title": "Bairro novo chegando",
+      "radio": [
+        { "id": "chegada", "station": "Rádio Rodinha FM", "text": "Vila Nova cresceu 10%! Novos moradores chegaram e todo mundo quer chegar ao Centro." }
+      ]
+    },
+    "pos_campeonato": {
+      "title": "Ressaca do campeonato",
+      "radio": [
+        { "id": "balanco", "station": "Rádio Rodinha FM", "text": "O bowl ficou lindo, a rua nem tanto. Hora de consertar o que o campeonato bagunçou." }
+      ]
+    }
+  },
+
+  "dilemmas": {
+    "entregas_mercado": {
+      "day": 11,
+      "title": "Entregas na Rua do Mercado",
+      "text": "Seu Osvaldo quer manter as entregas de manhã na rua. Dona Rita quer a rua livre.",
+      "voices": [
+        { "who": "seu_osvaldo", "line": "Sem entrega de manhã, a loja vazia!" },
+        { "who": "dona_rita", "line": "Eu só quero passar de cadeira, gente." }
+      ],
+      "options": [
+        {
+          "id": "A",
+          "label": "Janela de entrega 6h–7h",
+          "text": "Entregas só cedo. Comércio mantido, fluxo melhora.",
+          "effects": [
+            { "kind": "kpi", "id": "avgTripMinutes", "delta": -0.5 },
+            { "kind": "kpi", "id": "balance", "delta": -150 },
+            { "kind": "satisfaction", "who": "seu_osvaldo", "delta": 5 },
+            { "kind": "satisfaction", "who": "dona_rita", "delta": 5 }
+          ],
+          "tradeoff": "Custa fiscalização."
+        },
+        {
+          "id": "B",
+          "label": "Rack de entrega na Zona Leste",
+          "text": "Rua livre. Osvaldo perde clientes por um tempo.",
+          "effects": [
+            { "kind": "tool", "id": "rackSkate" },
+            { "kind": "kpi", "id": "congestionPct", "delta": -8 },
+            { "kind": "kpi", "id": "accessibilityPct", "delta": 2 },
+            { "kind": "satisfaction", "who": "seu_osvaldo", "delta": -15 },
+            { "kind": "satisfaction", "who": "dona_rita", "delta": 10 }
+          ],
+          "tradeoff": "Comércio sofre no curto prazo."
+        },
+        {
+          "id": "C",
+          "label": "Não decidir",
+          "text": "Nada muda. Os dois ficam chateados.",
+          "effects": [
+            { "kind": "satisfaction", "who": "seu_osvaldo", "delta": -8 },
+            { "kind": "satisfaction", "who": "dona_rita", "delta": -8 }
+          ],
+          "tradeoff": "Sem custo, sem solução."
+        }
+      ]
+    },
+    "elemento_travessia": {
+      "day": 9,
+      "title": "Que elemento no canal?",
+      "text": "A galera do skate quer um Salto Mortal. A Associação de Cadeirantes quer outro Elevador de Bolha.",
+      "voices": [
+        { "who": "bia", "line": "Um Salto Mortal ia ser insano!" },
+        { "who": "dona_rita", "line": "Outro elevador e a fila some." }
+      ],
+      "options": [
+        {
+          "id": "A",
+          "label": "Trocar por Salto Mortal",
+          "text": "Mais radical e mais gap. Sem outra rota, a acessibilidade cai.",
+          "effects": [
+            { "kind": "tool", "id": "rampaPonte" },
+            { "kind": "kpi", "id": "radicalityPct", "delta": 15 },
+            { "kind": "kpi", "id": "accessibilityPct", "delta": -10 },
+            { "kind": "satisfaction", "who": "bia", "delta": 15 },
+            { "kind": "satisfaction", "who": "dona_rita", "delta": -10 }
+          ],
+          "tradeoff": "Quedas sobem e cadeirantes ficam de fora."
+        },
+        {
+          "id": "B",
+          "label": "2º Elevador de Bolha",
+          "text": "A fila diminui. Acessibilidade sobe, radicalidade fica parada.",
+          "effects": [
+            { "kind": "tool", "id": "elevadorBolha" },
+            { "kind": "kpi", "id": "accessibilityPct", "delta": 8 },
+            { "kind": "kpi", "id": "radicalityPct", "delta": 0 },
+            { "kind": "satisfaction", "who": "dona_rita", "delta": 15 },
+            { "kind": "satisfaction", "who": "bia", "delta": -5 }
+          ],
+          "tradeoff": "Custa verba e a galera do skate reclama."
+        },
+        {
+          "id": "C",
+          "label": "Manter e economizar",
+          "text": "Fica tudo como está e o saldo sobe.",
+          "effects": [
+            { "kind": "kpi", "id": "balance", "delta": 400 },
+            { "kind": "satisfaction", "who": "bia", "delta": -5 },
+            { "kind": "satisfaction", "who": "dona_rita", "delta": -5 }
+          ],
+          "tradeoff": "Ninguém fica feliz."
+        }
+      ],
+      "note": "O resultado influencia o ponto de partida do cenário 2 (Centro Gel)."
+    }
+  },
+
+  "barks": {
+    "dona_rita": {
+      "reclamacao": [
+        "O elevador está com fila de novo!",
+        "Esperei 35 minutos pra atravessar o canal.",
+        "Essa rampa não é pra mim, né?"
+      ],
+      "agradecimento": [
+        "Que beleza! Atravessei rapidinho.",
+        "Obrigada, prefeito(a)! O elevador voou.",
+        "Agora dá pra ir ao Centro sem drama."
+      ],
+      "protesto": [
+        "Chega! Quero uma rota acessível já!",
+        "Cidade boa é pra todo mundo passar."
+      ],
+      "evento": [
+        "Campeonato? Só se o elevador aguentar.",
+        "Tanta gente! Cadê meu espaço na rua?"
+      ]
+    },
+    "bia": {
+      "reclamacao": [
+        "Tomei um tombo na faixa rápida!",
+        "Tá devagar demais, assim não dá onda.",
+        "Quem pôs esse limite de velocidade?"
+      ],
+      "agradecimento": [
+        "Faixa nova, manobra nova. Valeu!",
+        "Show! Agora dá pra deslizar.",
+        "Melhor rolê da Vila Nova!"
+      ],
+      "protesto": [
+        "A galera do skate quer mais espaço!",
+        "Sem rampa, sem rolê. Pensa nisso!"
+      ],
+      "evento": [
+        "Campeonato! Já tô com o skate pronto!",
+        "Vou treinar no bowl o dia todo."
+      ]
+    },
+    "seu_osvaldo": {
+      "reclamacao": [
+        "Sem entrega, minha loja esvazia!",
+        "Mudou a rua e sumiu freguês.",
+        "Quem vai levar caixa até aqui?"
+      ],
+      "agradecimento": [
+        "Movimento bom hoje! Obrigado.",
+        "A rua ficou boa pra vender.",
+        "Freguês feliz, caixa feliz."
+      ],
+      "protesto": [
+        "Assim eu fecho as portas!",
+        "O comércio também faz a cidade."
+      ],
+      "evento": [
+        "Campeonato é gente nova na loja!",
+        "Muita gente vindo, vou abastecer."
+      ]
+    },
+    "tuco": {
+      "reclamacao": [
+        "Fila no ponto, e eu atrasado.",
+        "Cadê a linha de tuk-tuk?",
+        "Rua travada, passageiro esperando."
+      ],
+      "agradecimento": [
+        "Linha nova! Vamos nessa, gente!",
+        "Pé no pedal e sorriso no rosto.",
+        "Todo mundo cabe, é só chegar."
+      ],
+      "protesto": [
+        "Sem ponto bom, sem passageiro.",
+        "Tuk-tuk também é transporte!"
+      ],
+      "evento": [
+        "Dia de campeonato: tuk-tuk lotado!",
+        "Vou fazer uma viagem extra pro bowl."
+      ]
+    }
+  },
+
+  "radio": {
+    "abertura": [
+      "Bom dia, Vila Nova! A Rua do Mercado já está lotada de rodinhas.",
+      "Tem fila no elevador e skate parado. Hoje o dia promete."
+    ],
+    "gerais": [
+      "Quedas em alta na faixa rápida. Vá com calma, galera!",
+      "Rua do Mercado fluindo bem hoje. Continue assim!",
+      "Dona Rita atravessou o canal em 5 minutos. Recorde!",
+      "A Associação de Cadeirantes pede mais rotas acessíveis.",
+      "Notícia boa: acessibilidade subiu na cidade."
+    ],
+    "final": [
+      "Balanço de Vila Nova: a cidade mudou e todo mundo percebeu."
+    ]
+  },
+
+  "tutorial": {
+    "steps": [
+      {
+        "id": "boas_vindas",
+        "text": "Bem-vindo(a) a Vila Nova! Toda manhã a Rua do Mercado vira um engarrafamento de rodinhas.",
+        "speaker": "dona_rita",
+        "trigger": { "type": "scenarioStart" }
+      },
+      {
+        "id": "raiox",
+        "text": "Abra o raio-x. O vermelho mostra onde as faixas travam.",
+        "trigger": { "type": "overlayOpened", "overlay": "traffic" }
+      },
+      {
+        "id": "redistribuir",
+        "text": "Redistribua a largura da Rua do Mercado entre calçada, lenta e rápida.",
+        "trigger": { "type": "toolUsed", "tool": "divisaoFaixas" }
+      },
+      {
+        "id": "efeito_e_travessia",
+        "text": "Veja o efeito em 1 dia. Mais rápido nem sempre é melhor: olhe as quedas. E o canal precisa de rota acessível!",
+        "speaker": "dona_rita",
+        "trigger": { "type": "dayAdvanced", "days": 1 }
+      }
+    ],
+    "closing": "Um campeonato vem aí. Prepare a cidade!"
+  }
+}
