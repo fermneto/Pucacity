@@ -138,6 +138,22 @@ Os sub-agentes já estão definidos em **`.claude/agents/pcN-*.md`** (escopo, le
 5. Branches antigas apagadas: `arte/cidade-radical-aero`, `design/mobilidade-overboards`, `design/cidade-radical`.
 6. `eng/fundacao` (corre) integrada na Onda 0, via `pc3/integracao-fundacao` (detalhes em §4.0). O `Goal` adotado foi o da engenharia (`kpi: KpiId`, `op`, `value`, `stars`).
 
+## 6.1 Sessão 1 do PC1 (13/11/2026): integrada na `main`
+
+| Sub-agente | Entrega |
+|---|---|
+| `pc1-arte-modelos` | `bld_market`, `bld_house`, `prop_charge_station`, **`rad_volcano`** (Vulcão de Gel), **`prop_dino_neck/runner/horns`** (dinossauros Aero originais), `MeshBuilder.ellipsoid/limb` |
+| `pc1-arte-views` | **`src/render/SimState.ts`** (proposta de `Simulation.getState()` + mock determinístico `createMockSim`), `SimView`, `Overlays`, teste `tests/render/simstate.test.ts` |
+| `pc1-arte-ui` | `SpeechQueue`/balões com retrato pixelado, `DilemmaCard`, `RadioTicker`, `DayReport` e a página de demonstração `/ui.html?show=…` |
+| `pc1-arte-mundo` | Vitrine cerca de 3× maior (2 canais, ilha, 14 travessias, espirais, megapipes, 11 bolhas gigantes), presets de câmera, névoa automática |
+| Coordenadora | `noUncheckedIndexedAccess` em **todo** o projeto; `ui.html` no build e nas capturas; lint ignora `.claude/` (worktrees); `.gitignore` cobre o symlink `node_modules` |
+
+Em andamento: **metrópole Aero** (cidade cerca de 1,8× maior, Parque Aero e Distrito Eólico com 8 estruturas gigantes, categoria `marco` ≤ 400 tris).
+
+**Lições para as próximas sessões:**
+- Os sub-agentes em worktree usam um symlink para o `node_modules`; o `npm run shots` precisa de `server.fs.strict: false` nesse caso.
+- Os agentes de `.claude/agents/` só são carregados quando o Claude Code inicia.
+
 ## 7. Bloqueios entre PCs
 
 | Quem espera | De quem | O quê | Quando |
@@ -145,6 +161,9 @@ Os sub-agentes já estão definidos em **`.claude/agents/pcN-*.md`** (escopo, le
 | PC1 (`SimView`) | PC3 | `Simulation.getState()` | Onda 1 |
 | PC2 (`vila-nova.json`) | PC3 | `CityLoader` na `main` | ✅ disponível |
 | PC3 (testes de balance) | PC2 | Tabela de casos esperados | Onda 2 |
+| PC1 (`SimView` com dados reais) | PC3 | Implementar `Simulation.getState()` no formato de `src/render/SimState.ts` (ou superconjunto); decidir se o arquivo vai para `src/core/`; definir a interpolação entre ticks (1 tick = 1 min) e o render (por quadro) | Onda 1 |
+| PC1 (vulcões e dinossauros como features) | PC3 | Novos `FeatureKind` em `types.ts` (ex.: `volcano`, `dino` com espécie). Por enquanto eles entram como `buildings` com `kind: 'park'` | quando der |
+| PC1 (UI no jogo) | PC3 | Mapear `KPI_IDS` do core para os ids de KPI da UI (`src/ui/kpis.ts`) | Onda 3 |
 
 ## 8. Pendências herdadas (já distribuídas aos sub-agentes)
 
@@ -153,4 +172,5 @@ Os sub-agentes já estão definidos em **`.claude/agents/pcN-*.md`** (escopo, le
 - `pc2-design-cenarios`: `vila-nova.json`.
 - `pc3-eng-infra`: `src/game/` (loop do jogo usando o render do PC1 e o protótipo `59979c1` como referência).
 - `pc3-*`: agentes, coletivo, Commands, KPIs, eventos e save.
-- `pc1-arte-views`: migrar o render para `noUncheckedIndexedAccess` e usar `Picking.screenToTile`.
+- `pc1-arte-views`: usar `Picking.screenToTile` no lugar do raycast do `main.ts`; trocar o mock pelo `getState()` real quando sair.
+- `pc1-arte-ui`: botões de velocidade sem gel no `hud.css` (`.speed button { background: none }`); integrar balões, rádio, dilema e balanço no jogo (`src/game/`, com o PC3).
