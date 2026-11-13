@@ -88,8 +88,9 @@ async function main(): Promise<void> {
   const view = new CityView(city);
   scene.add(view.group);
   const center = new Vector3(city.size.w / 2 - 0.5, 0, city.size.h / 2 - 0.5);
-  const firstCanal = waterBands(city)[0];
-  const atmo = new Atmosphere(center, firstCanal ? { ...firstCanal, x0: -25, x1: city.size.w + 25 } : undefined);
+  // Atmosphere (PC1) agora aceita todos os canais: bolhas sobre cada faixa de água.
+  const canals = waterBands(city).map((b) => ({ ...b, x0: -25, x1: city.size.w + 25 }));
+  const atmo = new Atmosphere(center, canals);
   scene.add(atmo.group);
   const rig = new CameraRig(canvas);
   rig.set(center, Math.max(city.size.w, city.size.h) * 1.3, 0, 0.95);
