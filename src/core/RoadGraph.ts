@@ -1,41 +1,92 @@
-import type { CityFile, EdgeKind } from './types';
+import { RADICALS } from './Crossings';
+import type { AccessKind, CityFile, EdgeKind, LaneCounts, LaneKind, RadicalKind } from './types';
+import { LANE_KINDS } from './types';
+import type { VehicleProfile } from './Vehicles';
 
 /** 1 tile = 10 metros (ver PLANEJAMENTO.md §0). */
 export const METERS_PER_TILE = 10;
 
+/** Velocidade máxima típica de cada faixa, m/s (SPEC §4.2). */
+export const LANE_MAX_SPEED_MPS: Record<LaneKind, number> = {
+  sidewalk: 3,
+  slow: 6,
+  fast: 8.5,
+  transit: 9,
+};
+
+/**
+ * Sem a faixa própria, o veículo usa a vizinha mais lenta (SPEC §4.2).
+ * Ordem de tentativa por faixa preferida.
+ */
+export const LANE_FALLBACK: Record<LaneKind, readonly LaneKind[]> = {
+  sidewalk: ['sidewalk', 'slow', 'fast'],
+  slow: ['slow', 'sidewalk'],
+  fast: ['fast', 'slow', 'sidewalk'],
+  transit: ['transit', 'slow'],
+};
+
+/** Números de balanceamento (placeholders até o config/balance.json do Design). */
 export interface TrafficParams {
-  /** Capacidade por faixa de carro, veículos/hora. */
-  laneCapacityVph: number;
+  /** Capacidade de UMA faixa de cada tipo, usuários/hora. */
+  laneCapacityVph: Record<LaneKind, number>;
+  /** Capacidade das ligações de travessia, usuários/hora. */
+  linkCapacityVph: Record<Exclude<LinkKind, 'road'>, number>;
+  /** Multiplicador de velocidade ao usar faixa que não é a sua. */
+  fallbackSpeedFactor: number;
+  /** Espera fixa média no Elevador de Bolha, minutos. */
+  liftWaitMin: number;
+  /** Velocidade de travessia do Elevador de Bolha, m/s. */
+  liftSpeedMps: number;
   bprAlpha: number;
   bprBeta: number;
 }
 
 export const DEFAULT_TRAFFIC: TrafficParams = {
-  laneCapacityVph: 1800,
+  laneCapacityVph: { sidewalk: 2400, slow: 1800, fast: 1500, transit: 600 },
+  linkCapacityVph: { radical: 900, lift: 120, walkway: 2400, transit_only: 600 },
+  fallbackSpeedFactor: 0.7,
+  liftWaitMin: 1.5,
+  liftSpeedMps: 1,
   bprAlpha: 0.15,
   bprBeta: 4,
 };
 
-/** Aresta dirigida. Uma aresta de mão dupla do city.json vira duas destas. */
+/**
+ * Tipo de ligação de uma aresta dirigida:
+ * - road: trecho de via com faixas;
+ * - radical / lift / walkway / transit_only: as duas metades de uma travessia (elemento radical + rota acessível).
+ */
+export type LinkKind = 'road' | 'radical' | 'lift' | 'walkway' | 'transit_only';
+
+const ACCESS_LINK: Record<AccessKind, LinkKind> = {
+  bubble_lift: 'lift',
+  glass_walkway: 'walkway',
+  transit_only: 'transit_only',
+};
+
 export interface DirectedEdge {
   /** Índice nesta lista (estável enquanto o grafo não for reconstruído). */
   index: number;
-  /** id da aresta original no city.json. */
-  cityEdgeId: number;
-  /** true se é o sentido to→from de uma via de mão dupla. */
+  link: LinkKind;
+  /** id da aresta (road) ou da travessia (demais) no city.json. */
+  sourceId: number;
+  /** true se é o sentido to→from. */
   reversed: boolean;
   from: number; // índice de nó
   to: number; // índice de nó
-  kind: EdgeKind;
   lengthM: number;
-  speedKmh: number;
-  carLanes: number;
-  busLane: boolean;
-  capacityVph: number;
-  /** Tempo em fluxo livre, minutos. */
-  freeFlowMin: number;
-  /** Fluxo atual atribuído, veículos/hora. Atualizado pela simulação. */
-  flowVph: number;
+  /** Só em vias. */
+  roadKind?: EdgeKind;
+  /** Só em travessias radicais. */
+  radical?: RadicalKind;
+  /** Limite da via em m/s (Infinity em travessias). */
+  speedLimitMps: number;
+  /** Faixas por sentido (só em vias). */
+  lanes: Record<LaneKind, number>;
+  /** Fluxo por faixa, usuários/hora (só em vias). Atualizado pela simulação. */
+  flowVph: Record<LaneKind, number>;
+  /** Fluxo na ligação de travessia, usuários/hora. */
+  linkFlowVph: number;
 }
 
 export interface GraphNode {
@@ -45,41 +96,54 @@ export interface GraphNode {
   y: number;
 }
 
+export interface LaneUse {
+  lane: LaneKind;
+  /** true se não é a faixa preferida do veículo (mais lento e mais arriscado). */
+  fallback: boolean;
+}
+
+const zeroLanes = (): Record<LaneKind, number> => ({ sidewalk: 0, slow: 0, fast: 0, transit: 0 });
+
 /**
- * Grafo viário dirigido derivado do city.json.
- * Nós e arestas são acessados por ÍNDICE (arrays densos) para desempenho;
- * use nodeIndexOf(id) para converter ids do arquivo.
+ * Grafo dirigido derivado do city.json: vias (com faixas por tipo) + travessias (radical + rota acessível).
+ * Nós e arestas são acessados por ÍNDICE (arrays densos); use nodeIndexOf(id) para converter ids do arquivo.
  */
 export class RoadGraph {
   readonly nodes: GraphNode[] = [];
   readonly edges: DirectedEdge[] = [];
   /** Arestas que saem de cada nó (por índice de nó). */
   readonly out: number[][] = [];
-  /** Maior velocidade da rede em m/min (para heurística admissível do A*). */
-  maxSpeedMpm = 1;
 
   private readonly idToIndex = new Map<number, number>();
 
   constructor(city: CityFile, readonly params: TrafficParams = DEFAULT_TRAFFIC) {
     // Ordena por id para determinismo independente da ordem do arquivo.
-    const nodes = [...city.nodes].sort((a, b) => a.id - b.id);
-    for (const n of nodes) {
+    for (const n of [...city.nodes].sort((a, b) => a.id - b.id)) {
       const index = this.nodes.length;
       this.nodes.push({ index, id: n.id, x: n.x, y: n.y });
       this.idToIndex.set(n.id, index);
       this.out.push([]);
     }
 
-    const edges = [...city.edges].sort((a, b) => a.id - b.id);
-    for (const e of edges) {
+    for (const e of [...city.edges].sort((a, b) => a.id - b.id)) {
+      const lanes = normalizeLanes(e.lanes);
+      const base = { link: 'road' as const, sourceId: e.id, roadKind: e.kind, speedLimitMps: e.speed / 3.6, lanes };
       const from = this.nodeIndexOf(e.from);
       const to = this.nodeIndexOf(e.to);
-      const reserved = e.lanesReserved ?? [];
-      const carLanes = Math.max(1, e.lanes - reserved.length);
-      const busLane = reserved.includes('bus');
-      // Em mão dupla, as faixas declaradas valem por sentido.
-      this.addEdge(e.id, false, from, to, e.kind, e.speed, carLanes, busLane);
-      if (!e.oneWay) this.addEdge(e.id, true, to, from, e.kind, e.speed, carLanes, busLane);
+      this.addEdge({ ...base, from, to, reversed: false });
+      if (!e.oneWay) this.addEdge({ ...base, from: to, to: from, reversed: true });
+    }
+
+    for (const c of [...city.crossings].sort((a, b) => a.id - b.id)) {
+      const from = this.nodeIndexOf(c.from);
+      const to = this.nodeIndexOf(c.to);
+      const links: { link: LinkKind; radical?: RadicalKind }[] = [{ link: 'radical', radical: c.radical }];
+      if (c.access) links.push({ link: ACCESS_LINK[c.access] });
+      for (const l of links) {
+        const base = { ...l, sourceId: c.id, speedLimitMps: Infinity, lanes: zeroLanes() };
+        this.addEdge({ ...base, from, to, reversed: false });
+        this.addEdge({ ...base, from: to, to: from, reversed: true });
+      }
     }
   }
 
@@ -108,53 +172,99 @@ export class RoadGraph {
     return Math.hypot(na.x - nb.x, na.y - nb.y) * METERS_PER_TILE;
   }
 
-  /** Tempo de percurso atual (BPR), minutos. Sempre ≥ freeFlowMin. */
-  travelTimeMin(edgeIndex: number): number {
+  /** Qual faixa o veículo usa nesta via (ou null se nenhuma serve). */
+  laneFor(edgeIndex: number, v: VehicleProfile): LaneUse | null {
     const e = this.edge(edgeIndex);
-    return bpr(e.freeFlowMin, e.flowVph, e.capacityVph, this.params.bprAlpha, this.params.bprBeta);
+    const order = LANE_FALLBACK[v.lane];
+    for (let i = 0; i < order.length; i++) {
+      const lane = order[i]!;
+      if (e.lanes[lane] > 0) return { lane, fallback: i > 0 };
+    }
+    return null;
   }
 
-  /** Razão fluxo/capacidade (para overlay de congestionamento). */
+  /** O veículo pode usar esta aresta? */
+  canUse(edgeIndex: number, v: VehicleProfile): boolean {
+    return Number.isFinite(this.travelTimeMin(edgeIndex, v));
+  }
+
+  /**
+   * Tempo de percurso atual (com congestionamento BPR) para um veículo, em minutos.
+   * Infinity = proibido para este veículo.
+   */
+  travelTimeMin(edgeIndex: number, v: VehicleProfile): number {
+    const e = this.edge(edgeIndex);
+    const p = this.params;
+    const minutes = (meters: number, mps: number) => meters / mps / 60;
+
+    switch (e.link) {
+      case 'road': {
+        const use = this.laneFor(edgeIndex, v);
+        if (!use) return Infinity;
+        let speed = Math.min(v.speedMps, LANE_MAX_SPEED_MPS[use.lane], e.speedLimitMps);
+        if (use.fallback) speed *= p.fallbackSpeedFactor;
+        const cap = e.lanes[use.lane] * p.laneCapacityVph[use.lane];
+        return bpr(minutes(e.lengthM, speed), e.flowVph[use.lane], cap, p.bprAlpha, p.bprBeta);
+      }
+      case 'radical': {
+        if (v.transit || !v.tricks) return Infinity;
+        if (v.maxSpeedMps < RADICALS[e.radical!].minSpeedMps) return Infinity;
+        return bpr(minutes(e.lengthM, v.speedMps), e.linkFlowVph, p.linkCapacityVph.radical, p.bprAlpha, p.bprBeta);
+      }
+      case 'lift': {
+        if (v.transit) return Infinity;
+        const t0 = p.liftWaitMin + minutes(e.lengthM, p.liftSpeedMps);
+        return bpr(t0, e.linkFlowVph, p.linkCapacityVph.lift, p.bprAlpha, p.bprBeta);
+      }
+      case 'walkway': {
+        if (v.transit) return Infinity;
+        const speed = Math.min(v.speedMps, LANE_MAX_SPEED_MPS.sidewalk);
+        return bpr(minutes(e.lengthM, speed), e.linkFlowVph, p.linkCapacityVph.walkway, p.bprAlpha, p.bprBeta);
+      }
+      case 'transit_only': {
+        if (!v.transit) return Infinity;
+        return bpr(minutes(e.lengthM, v.speedMps), e.linkFlowVph, p.linkCapacityVph.transit_only, p.bprAlpha, p.bprBeta);
+      }
+    }
+  }
+
+  /** Maior razão fluxo/capacidade entre as faixas (ou da ligação), para o overlay de congestionamento. */
   saturation(edgeIndex: number): number {
     const e = this.edge(edgeIndex);
-    return e.flowVph / e.capacityVph;
+    if (e.link !== 'road') return e.linkFlowVph / this.params.linkCapacityVph[e.link];
+    let max = 0;
+    for (const lane of LANE_KINDS) {
+      const cap = e.lanes[lane] * this.params.laneCapacityVph[lane];
+      if (cap > 0) max = Math.max(max, e.flowVph[lane] / cap);
+    }
+    return max;
   }
 
   resetFlows(): void {
-    for (const e of this.edges) e.flowVph = 0;
+    for (const e of this.edges) {
+      e.flowVph = zeroLanes();
+      e.linkFlowVph = 0;
+    }
   }
 
   private addEdge(
-    cityEdgeId: number,
-    reversed: boolean,
-    from: number,
-    to: number,
-    kind: EdgeKind,
-    speedKmh: number,
-    carLanes: number,
-    busLane: boolean,
+    e: Omit<DirectedEdge, 'index' | 'lengthM' | 'flowVph' | 'linkFlowVph'>,
   ): void {
-    const lengthM = this.distanceM(from, to);
-    const speedMpm = (speedKmh * 1000) / 60;
-    this.maxSpeedMpm = Math.max(this.maxSpeedMpm, speedMpm);
     const index = this.edges.length;
     this.edges.push({
+      ...e,
+      lanes: { ...e.lanes },
       index,
-      cityEdgeId,
-      reversed,
-      from,
-      to,
-      kind,
-      lengthM,
-      speedKmh,
-      carLanes,
-      busLane,
-      capacityVph: carLanes * this.params.laneCapacityVph,
-      freeFlowMin: lengthM / speedMpm,
-      flowVph: 0,
+      lengthM: this.distanceM(e.from, e.to),
+      flowVph: zeroLanes(),
+      linkFlowVph: 0,
     });
-    this.out[from]!.push(index);
+    this.out[e.from]!.push(index);
   }
+}
+
+function normalizeLanes(l: LaneCounts): Record<LaneKind, number> {
+  return { sidewalk: l.sidewalk ?? 0, slow: l.slow ?? 0, fast: l.fast ?? 0, transit: l.transit ?? 0 };
 }
 
 /** Função BPR: t = t0 · (1 + α · (v/c)^β). */

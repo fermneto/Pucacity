@@ -20,7 +20,12 @@ describe('Spatial', () => {
 
   it('nearestEdge acha a via sob o cursor', () => {
     const hit = nearestEdge(g, 5, 9.5)!; // perto de 3—4
-    expect(g.edge(hit.index).cityEdgeId).toBe(13);
+    expect(g.edge(hit.index)).toMatchObject({ link: 'road', sourceId: 11 });
     expect(hit.dist).toBeCloseTo(0.5);
+  });
+
+  it('nearestEdge também acha travessias', () => {
+    const hit = nearestEdge(g, 0.4, 5)!; // sobre o canal, na travessia 1—3
+    expect(g.edge(hit.index)).toMatchObject({ link: 'radical', sourceId: 20 });
   });
 });

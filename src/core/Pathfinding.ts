@@ -1,20 +1,21 @@
 import type { RoadGraph } from './RoadGraph';
+import type { VehicleProfile } from './Vehicles';
 
 export interface Path {
   /** Índices de nós, da origem ao destino (inclusivo). */
   nodes: number[];
   /** Índices de arestas dirigidas percorridas. */
   edges: number[];
-  /** Custo total (minutos, se usado o custo padrão). */
+  /** Custo total em minutos (se usado o custo padrão). */
   cost: number;
 }
 
 export interface PathOptions {
-  /** Custo de uma aresta. Padrão: tempo BPR atual em minutos. */
+  /** Custo de uma aresta. Padrão: tempo BPR atual do veículo, em minutos (Infinity = proibida). */
   cost?: (edgeIndex: number) => number;
   /**
-   * Heurística (limite inferior do custo restante). Padrão: distância reta / velocidade máxima,
-   * admissível para custos em minutos ≥ tempo em fluxo livre. Passe () => 0 para Dijkstra puro.
+   * Heurística (limite inferior do custo restante). Padrão: distância reta / velocidade de cruzeiro do veículo,
+   * admissível porque nenhuma aresta deixa o veículo andar acima dela. Passe () => 0 para Dijkstra puro.
    */
   heuristic?: (nodeIndex: number, goalIndex: number) => number;
   /** Arestas proibidas (ex.: obra, via bloqueada). */
@@ -78,13 +79,19 @@ class MinHeap {
 }
 
 /**
- * A* entre dois nós (por índice). Retorna null se não houver caminho.
- * Custo dinâmico: por padrão usa o tempo BPR atual de cada aresta.
+ * A* POR MODO entre dois nós (por índice): o veículo só usa as faixas e travessias permitidas para ele.
+ * Retorna null se não houver caminho (ex.: cadeira de rodas diante de travessia sem rota acessível).
  */
-export function findPath(graph: RoadGraph, start: number, goal: number, opts: PathOptions = {}): Path | null {
-  const cost = opts.cost ?? ((e: number) => graph.travelTimeMin(e));
-  const heuristic =
-    opts.heuristic ?? ((n: number, g: number) => graph.distanceM(n, g) / graph.maxSpeedMpm);
+export function findPath(
+  graph: RoadGraph,
+  vehicle: VehicleProfile,
+  start: number,
+  goal: number,
+  opts: PathOptions = {},
+): Path | null {
+  const cost = opts.cost ?? ((e: number) => graph.travelTimeMin(e, vehicle));
+  const mpm = vehicle.speedMps * 60;
+  const heuristic = opts.heuristic ?? ((n: number, g: number) => graph.distanceM(n, g) / mpm);
   const blocked = opts.blocked;
 
   const n = graph.nodes.length;

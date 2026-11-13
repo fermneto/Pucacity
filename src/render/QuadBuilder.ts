@@ -39,6 +39,17 @@ export class QuadBuilder {
     return base / 4;
   }
 
+  /**
+   * Faixa paralela ao segmento A→B, deslocada lateralmente por `offset` (positivo = à esquerda de A→B).
+   * Usada para desenhar cada faixa de uma via.
+   */
+  strip(ax: number, ay: number, bx: number, by: number, offset: number, width: number, y: number, color: THREE.Color, vScale = 2): number {
+    const len = Math.hypot(bx - ax, by - ay) || 1e-6;
+    const nx = (-(by - ay) / len) * offset;
+    const ny = ((bx - ax) / len) * offset;
+    return this.segment(ax + nx, ay + ny, bx + nx, by + ny, width, y, color, vScale);
+  }
+
   /** Quadrado centrado em (cx, cy). */
   square(cx: number, cy: number, size: number, y: number, color: THREE.Color): number {
     const h = size / 2;

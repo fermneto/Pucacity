@@ -1,22 +1,55 @@
 /**
- * Contrato do arquivo de cidade (city.json) — compartilhado entre Design, Arte e Engenharia.
- * Unidades: 1 tile = 10 m; velocidade em km/h; tempos de semáforo em segundos.
+ * Contrato do arquivo de cidade (city.json) — SPEC §6, cidade radical sem carros.
+ * Unidades: 1 tile = 10 m; edge.width em metros; edge.speed = limite em km/h;
+ * velocidades de veículos em m/s (data/arte/veiculos.json); tempos de semáforo em segundos.
  * IMPORTANTE: este módulo (e todo src/core) não pode importar three.
  */
 
-export const EDGE_KINDS = ['street', 'avenue', 'highway'] as const;
+export const LANE_KINDS = ['sidewalk', 'slow', 'fast', 'transit'] as const;
+export type LaneKind = (typeof LANE_KINDS)[number];
+
+export const VEHICLE_KINDS = [
+  'pedestrian',
+  'wheelchair',
+  'wheelchair_powered',
+  'skate',
+  'longboard',
+  'kick_scooter',
+  'e_scooter',
+  'skates',
+  'hoverboard',
+  'e_unicycle',
+  'bmx',
+  'tandem',
+  'tuktuk',
+] as const;
+export type VehicleKind = (typeof VEHICLE_KINDS)[number];
+
+export const RADICAL_KINDS = ['ramp_bridge', 'air_loop', 'death_jump', 'rail_walkway'] as const;
+export type RadicalKind = (typeof RADICAL_KINDS)[number];
+
+export const ACCESS_KINDS = ['bubble_lift', 'glass_walkway', 'transit_only'] as const;
+export type AccessKind = (typeof ACCESS_KINDS)[number];
+
+export const EDGE_KINDS = ['street', 'avenue', 'boulevard'] as const;
 export type EdgeKind = (typeof EDGE_KINDS)[number];
 
-export const RESERVED_LANES = ['bus', 'bike'] as const;
-export type ReservedLane = (typeof RESERVED_LANES)[number];
+export const CROSSING_OVER = ['river', 'canal', 'expressway'] as const;
+export type CrossingOver = (typeof CROSSING_OVER)[number];
 
-export const BUILDING_KINDS = ['res', 'com', 'ind', 'school', 'hospital', 'park'] as const;
+export const BUILDING_KINDS = ['res', 'com', 'ind', 'school', 'hospital', 'park', 'skatepark'] as const;
 export type BuildingKind = (typeof BUILDING_KINDS)[number];
 
 export const INCOMES = ['low', 'mid', 'high'] as const;
 export type Income = (typeof INCOMES)[number];
 
+export const AREA_KINDS = ['water', 'blocked'] as const;
+export type AreaKind = (typeof AREA_KINDS)[number];
+
 export type Rotation = 0 | 1 | 2 | 3;
+
+/** Faixas por tipo. Em vias de mão dupla, a contagem vale para CADA sentido. */
+export type LaneCounts = Partial<Record<LaneKind, number>>;
 
 export interface SignalPhase {
   /** IDs das arestas (do city.json) que recebem verde nesta fase. */
@@ -34,8 +67,10 @@ export interface SignalCfg {
 export const KPI_IDS = [
   'avgTripMinutes',
   'congestionPct',
-  'carSharePct',
-  'emissions',
+  'accessibilityPct',
+  'equityGapMinutes',
+  'radicalityPct',
+  'energyKwh',
   'balance',
   'satisfaction',
 ] as const;
@@ -59,11 +94,26 @@ export interface CityEdge {
   id: number;
   from: number;
   to: number;
-  lanes: number;
+  /** Largura total da via em metros (dividida entre as faixas). */
+  width: number;
+  /** Limite de velocidade em km/h. */
   speed: number;
   oneWay: boolean;
   kind: EdgeKind;
-  lanesReserved?: ReservedLane[];
+  lanes: LaneCounts;
+}
+
+/** Travessia sobre rio/canal/via expressa: só por elemento radical + rota acessível. */
+export interface CityCrossing {
+  id: number;
+  from: number;
+  to: number;
+  over: CrossingOver;
+  radical: RadicalKind;
+  /** Rota acessível. Se faltar, o KPI de Acessibilidade cai (não é erro de arquivo). */
+  access?: AccessKind;
+  /** Jogador não pode trocar o elemento (patrimônio etc.). */
+  locked?: boolean;
 }
 
 export interface CityBuilding {
@@ -83,6 +133,19 @@ export interface CityDistrict {
   name: string;
   income: Income;
   population: number;
+  /** % de moradores (0–100) que possuem cada veículo. */
+  ownership: Partial<Record<VehicleKind, number>>;
+  /** Fração (0–1) de moradores usuários de cadeira de rodas. */
+  wheelchairShare: number;
+}
+
+/** Proposta de extensão do contrato: áreas de água (canal/rio) e bloqueadas (patrimônio), em tiles. */
+export interface CityArea {
+  kind: AreaKind;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 }
 
 export interface Scenario {
@@ -96,7 +159,9 @@ export interface CityFile {
   size: { w: number; h: number };
   nodes: CityNode[];
   edges: CityEdge[];
+  crossings: CityCrossing[];
   buildings: CityBuilding[];
   districts: CityDistrict[];
+  areas?: CityArea[];
   scenario?: Scenario;
 }

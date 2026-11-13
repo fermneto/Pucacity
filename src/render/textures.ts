@@ -41,14 +41,41 @@ export function asphaltTexture(): THREE.DataTexture {
   }, 7);
 }
 
+/** Gramado verde-limão Aero (paleta.mundo.grama #7BD13A) com pontinhos mais claros. */
 export function grassTexture(): THREE.DataTexture {
   return makeTexture(32, (_x, _y, rng) => {
-    const r = rng.next();
-    if (r < 0.06) return [96, 120, 64];
-    return noise([70, 98, 56], 20, rng);
+    if (rng.next() < 0.05) return [160, 232, 96];
+    return noise([123, 209, 58], 22, rng);
   }, 3);
 }
 
+/** Piso neutro claro, tingido pela cor de vértice (faixas, cruzamentos). */
 export function plainTexture(): THREE.DataTexture {
-  return makeTexture(8, (_x, _y, rng) => noise([200, 200, 200], 24, rng), 11);
+  return makeTexture(8, (_x, _y, rng) => noise([240, 240, 240], 22, rng), 11);
+}
+
+/** Água turquesa (paleta.mundo.agua #1FB5A6) com "bolhas" claras. */
+export function waterTexture(): THREE.DataTexture {
+  return makeTexture(16, (x, y, rng) => {
+    if ((x + y * 3) % 11 === 0 && rng.next() < 0.6) return [190, 250, 245];
+    return noise([31, 181, 166], 16, rng);
+  }, 5);
+}
+
+/** Céu Frutiger Aero: gradiente vertical (paleta.mundo.ceu_topo → ceu_horizonte), usado como fundo de tela. */
+export function skyTexture(top: string, horizon: string): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1;
+  canvas.height = 64;
+  const ctx = canvas.getContext('2d')!;
+  const grad = ctx.createLinearGradient(0, 0, 0, 64);
+  grad.addColorStop(0, top);
+  grad.addColorStop(1, horizon);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1, 64);
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.magFilter = THREE.NearestFilter;
+  tex.minFilter = THREE.NearestFilter;
+  tex.generateMipmaps = false;
+  return tex;
 }
