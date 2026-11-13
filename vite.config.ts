@@ -8,6 +8,7 @@ export default defineConfig({
       input: {
         main: resolve(import.meta.dirname, 'index.html'),
         lab: resolve(import.meta.dirname, 'lab.html'),
+        ui: resolve(import.meta.dirname, 'ui.html'),
       },
     },
   },
