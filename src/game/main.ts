@@ -93,7 +93,13 @@ async function main(): Promise<void> {
   const atmo = new Atmosphere(center, canals);
   scene.add(atmo.group);
   const rig = new CameraRig(canvas);
-  rig.set(center, Math.max(city.size.w, city.size.h) * 1.3, 0, 0.95);
+  // Mesmo enquadramento da visão geral da vitrine (PC1): distância fixa, a névoa acompanha o zoom.
+  rig.set(center.clone().setZ(center.z + 1.2), Math.min(42, Math.max(city.size.w, city.size.h) * 1.3), 0, 0.95);
+  const updateFog = () => {
+    ps1Shared.uFogNear.value = Math.max(18, rig.distance * 1.05);
+    ps1Shared.uFogFar.value = Math.max(42, rig.distance * 2.4);
+  };
+  updateFog();
 
   // ---------- simulação + vista dos agentes
   const sim: SimulationPort = createSimulation(city, {
@@ -251,6 +257,7 @@ async function main(): Promise<void> {
     if (keys.has('arrowleft')) rig.pan(-panSpeed, 0); // "A" fica com o overlay de acessibilidade
     if (keys.has('d') || keys.has('arrowright')) rig.pan(panSpeed, 0);
     rig.update(dt, r.aspect);
+    updateFog();
     r.begin();
     r.draw(scene, rig.camera);
     r.end();
