@@ -16,12 +16,12 @@ Primeira tarefa: rotina casa→trabalho→casa com picos, escolha modal logit co
 
 ## Regras
 - Altere **somente** os arquivos do seu escopo. Precisa mudar algo fora? Pare e descreva no relatório.
-- Contratos (`src/core/types.ts`/`CityFile.ts`, ids de `data/arte/veiculos.json`, chaves de `config/balance.json`): não mude sem aprovação da coordenadora.
+- Contratos (`src/core/types.ts`, ids de `data/arte/veiculos.json`, chaves de `config/balance.json`): não mude sem aprovação da coordenadora.
 - Antes de começar: leia `CLAUDE.md`, `docs/planning.md` e os docs indicados abaixo.
 - Idioma: pt-BR em docs, textos e comentários.
 
 ## Pronto quando
-`npm test` verde (incluindo os casos do PC2); mesma seed → mesmo resultado; 2.000 agentes simulados a 60 FPS num Worker ou na thread principal.
+`npm run check` verde (incluindo os casos do PC2); mesma seed → mesmo resultado; 2.000 agentes simulados a 60 FPS num Worker ou na thread principal.
 
 ## Relatório final (curto)
 O que mudou (arquivos), como verificou (comandos e resultado), o que ficou pendente e qualquer mudança de contrato necessária.

@@ -12,13 +12,17 @@ A `main` junta o trabalho dos três workers até agora:
 |---|---|
 | Arte + Design (fermneto) | SPEC "cidade radical sem carros"; style guide, referências e dados de arte; camada visual completa (pipeline PS1 + Aero, 14 veículos, 11 prédios, 11 radicais, 7 props, vitrine, laboratório, HUD, capturas); canais múltiplos, Torre Espiral, Mega Half-pipe |
 | Design (Luciana Lima) | `docs/design/problemas.md` (8 problemas), `docs/design/cenario-01-vila-nova.md`, `config/balance.json` v0.2.0, já alinhados à cidade radical (mesmos ids de veículo e faixa) |
-| Integração | `src/core/CityFile.ts` com a união do contrato: faixas por via, travessias, canais, features, posse de veículos, **personagens** e **cenário** (metas, eventos, dilemas) |
+| Engenharia (corre) | **Integrada (Onda 0):** core com testes (`types.ts`, `CityLoader` com erros/avisos, `RoadGraph` com BPR por faixa, `Pathfinding` A\* por modo, `Crossings`, `Vehicles`, `Rng`, `Spatial`), cidade-demo (`public/cities/demo.json`, `scripts/gen-demo-city.ts`), ESLint com regras do core, CI no GitHub Actions, `docs/engineering.md` |
+| Integração | Contrato oficial `src/core/types.ts`, com a união: faixas por via, travessias, canais, features, posse de veículos, **personagens** e **cenário** (metas, eventos, dilemas) |
 
 **Decisões do merge** (antigas D1–D7): venceu a cidade radical, sem carros. Faixas `sidewalk/slow/fast/transit`, tandem e tuk-tuk no coletivo e travessias radicais com rota acessível. Os 8 problemas da Luciana viraram a estrutura de design, e os KPIs são as métricas de cada problema. Os overboards saíram do escopo.
 
-**Fora da `main`:** `origin/eng/fundacao` (PC3, corre): core com testes (`CityLoader`, `RoadGraph`, `Pathfinding`, `Crossings`, `Rng`, `Spatial`, `Vehicles`, `types.ts`), cidade-demo e `PLANEJAMENTO.md`. A branch saiu de um ponto anterior à camada visual e tem **13 arquivos em conflito** com a `main`: é a **Onda 0** (§4.0).
+**Verificação da `main` integrada:**
+- `npm run check` (typecheck da app + do core rígido, lint e testes): **38/38 testes**, incluindo a vitrine validada pelo `CityLoader`
+- `npm run build` ok
+- `npm run shots` sem erro de console
 
-**Ainda falta:** a simulação de agentes e as regras de jogo, e o cenário Vila Nova em dados (`src/assets/cities/vila-nova.json`).
+**Ainda falta:** o loop do jogo (`src/game/`), a simulação de agentes, as regras de jogo e o cenário Vila Nova em dados (`src/assets/cities/vila-nova.json`).
 
 **Próxima sessão:** cada PC segue `docs/sessoes/pcN-*.md`. Os sub-agentes estão definidos em `.claude/agents/`, e as regras gerais em `CLAUDE.md`.
 
@@ -40,6 +44,7 @@ A `main` junta o trabalho dos três workers até agora:
 | `src/core/CityFile.ts` (contrato) | PC3 | Mudança de campo exige aviso aos três, porque quebra JSONs e views |
 | `data/arte/veiculos.json` (ids) | PC1 | Ids são contrato com `balance.json`: não renomear sem combinar |
 | `src/main.ts` | PC1 enquanto for a vitrine; vira `vitrine.ts` quando o PC3 criar `src/game/` | — |
+| `eslint.config.js`, `tsconfig*.json`, CI | PC3 | Regras do core (sem three, DOM nem `Math.random`) valem para todos |
 
 ---
 
@@ -78,28 +83,25 @@ Os sub-agentes já estão definidos em **`.claude/agents/pcN-*.md`** (escopo, le
 
 ## 4. Ondas de trabalho (caminho crítico para o MVP)
 
-### 4.0 Onda 0 — integrar `eng/fundacao` (PC3 lidera, PC1 revisa o render)
+### 4.0 Onda 0 — integrar `eng/fundacao` ✅ concluída (13/11/2026)
 
-Branch `pc3/integracao-fundacao` a partir da `main`, depois `git merge origin/eng/fundacao`, resolvendo assim:
-
-| Caminho | Fica com | Como |
-|---|---|---|
-| `src/core/*` da engenharia, `tests/**`, `scripts/gen-demo-city.ts`, `public/cities/demo.json` | eng | Entram como estão (sem conflito) |
-| Contrato: `src/core/types.ts` (eng) × `src/core/CityFile.ts` (main) | **eng (`types.ts`)** | `CityFile.ts` vira re-export de `types.ts`. Acrescentar em `types.ts` o que o render usa e não existe lá: `canals[]`, `features[]`, `characters`, `scenario.dilemmas` |
-| `src/render/Renderer.ts`, `ps1/*`, `CityView.ts`, `CameraRig.ts`, `palette.ts` | **main (PC1)** | Versões da engenharia descartadas. O PC1 porta o que for útil |
-| `src/render/RadicalView.ts`, `Picking.ts`, `QuadBuilder.ts`, `shading.ts`, `textures.ts` (só na eng) | PC1 decide | Portar `screenToTile` para o `Picking` do PC1; apagar o que duplicar |
-| `src/main.ts` | os dois | Vitrine da `main` → `src/vitrine.ts` + `vitrine.html`. Protótipo da eng → `src/game/main.ts` + `index.html`, usando o render do PC1 |
-| `package.json` / lock | união | Versões da `main` (three 0.187, vite 8, TS 7) + `vitest` compatível com vite 8, `eslint`. Scripts: `test`, `lint`, `check`, `gen:demo`, `shots` |
-| `tsconfig.json`, `vite.config.ts`, `.gitignore`, `index.html` | união | Multi-página (jogo, vitrine, lab) + config do vitest |
-| `PLANEJAMENTO.md` (eng) | `docs/planning.md` | Absorver as questões abertas e apagar o arquivo |
-
-Pronto quando `npx tsc --noEmit`, `npm test`, `npm run build` e `npm run shots` passam. Depois, merge na `main` e aviso aos três.
-
-As três colunas de cada onda andam **em paralelo**. Cada onda termina com a `main` verde e uma build jogável.
+| Caminho | Resultado |
+|---|---|
+| `src/core/*` da engenharia, `tests/**`, `scripts/gen-demo-city.ts`, `public/cities/demo.json`, `.github/workflows/ci.yml`, `eslint.config.js` | Entraram como estavam |
+| Contrato | **`src/core/types.ts` é o oficial**, estendido com `features`, `characters` e `scenario.id/events/dilemmas`. `CityFile.ts` só reexporta e oferece `crossingIsAccessible()` e `waterBands()` |
+| Unidades | Adotadas as da engenharia: **1 tile = 10 m**, `width` em m, `speed` em km/h, `ownership` em %, água em `areas` (o render deriva os canais via `waterBands`). O render passou a `TILE_M = 10` e `AGENT_SCALE = 2.0`, e o tamanho visual se manteve |
+| Render | A versão da `main` (PC1) prevaleceu. `RadicalView`, `QuadBuilder`, `shading` e `textures` foram removidos (duplicados); `Picking.ts` foi mantido |
+| `src/main.ts` | Ficou a vitrine. O protótipo da engenharia está no histórico (`59979c1`) e serve de referência para o `src/game/` |
+| Pacotes | three 0.187, vite 8, **vitest 4**, **TypeScript 5.9** (o `typescript-eslint` não suporta o TS 7), eslint 9, `globals`, playwright. Scripts: `typecheck`, `lint`, `test`, `check`, `shots`, `gen:demo`, `gen:vitrine` |
+| Rigor de tipos | `tsconfig.core.json` aplica `noUncheckedIndexedAccess` em `src/core` + `tests`; o render ainda não (dívida do PC1, tarefa do `pc1-arte-views`) |
+| `.gitignore` | `.claude/*` ignorado, exceto `.claude/agents/` (sub-agentes versionados) |
+| `PLANEJAMENTO.md` | Movido para `docs/engineering.md`, com nota da integração no topo |
+| CI | Ganhou o passo de capturas visuais (`npm run shots` no Chromium) e o artefato `shots/` |
+| Teste novo | `tests/core/vitrine.test.ts`: a vitrine do PC1 valida no `CityLoader` do PC3 |
 
 | Onda | PC1 — Arte & Render | PC2 — Design & Conteúdo | PC3 — Engenharia & Simulação | Marco |
 |---|---|---|---|---|
-| **1. Contratos** | Assets do Vila Nova; `SimView` usando dados mock | `vila-nova.json` + `balance.json` com casos de teste | Esqueleto do `core` (carregar e validar o JSON, grafo, tick com seed), CI | Vila Nova carrega e aparece no render |
+| **1. Contratos** | Assets do Vila Nova; `SimView` usando dados mock; render com `noUncheckedIndexedAccess` | `vila-nova.json` (valida no `CityLoader`) + `balance.json` com casos de teste | `src/game/` (loop + loader), `Simulation` com tick e seed, `getState()` para o render | Vila Nova carrega e aparece no render |
 | **2. Movimento** | `SimView` lendo o core; overlays com dados reais | Rotinas e grupos de moradores; eventos em dados | Agentes, A\*, BPR, escolha modal, coletivo | Moradores vão e voltam; as faixas congestionam |
 | **3. Ferramentas** | Painéis de ferramenta, pré-visualização de impacto, balões e rádio | Custos, metas e estrelas; dilemas e textos | Commands com undo, KPIs, eventos/dilemas, paciência | Mudar uma faixa ou travessia muda o KPI |
 | **4. Vertical slice** | Polish visual, áudio, tutorial na UI | Playtest, ajuste do balance, roteiro do tutorial | Save/load, desempenho, determinismo | **MVP v0.1**: Vila Nova do início ao fim |
@@ -116,8 +118,8 @@ As três colunas de cada onda andam **em paralelo**. Cada onda termina com a `ma
 1. **Branches:** `pc1/<tarefa>`, `pc2/<tarefa>`, `pc3/<tarefa>`, uma por sub-agente, todas a partir da `main` do dia.
 2. **PRs pequenos** (≤ ~400 linhas), aprovados pelo dono da área. O merge é feito pela coordenadora do PC dono.
 3. **Integração contínua:** ao menos **2 merges por dia** em cada PC. Antes de abrir PR: `git fetch && git rebase origin/main`.
-4. **Verificação obrigatória** (vira CI na onda 1):
-   - `npx tsc --noEmit`, `npm test`, `npm run build`
+4. **Verificação obrigatória** (já está na CI do GitHub Actions):
+   - `npm run check` (typecheck app + core rígido, lint e testes), `npm run build`
    - `npm run shots` sem erro de console (render e UI)
    - laboratório com "todos dentro do orçamento ✓" (modelos)
    - JSONs validados contra o contrato (cenários e balance)
@@ -134,13 +136,14 @@ As três colunas de cada onda andam **em paralelo**. Cada onda termina com a `ma
 3. `CityFile.ts` passou a ter `characters`, `scenario` e `Goal`. O formato de `Goal` é uma **proposta** do PC1: o PC3 confirma na onda 1.
 4. Verificado: typecheck, build e capturas sem erro de console.
 5. Branches antigas apagadas: `arte/cidade-radical-aero`, `design/mobilidade-overboards`, `design/cidade-radical`.
+6. `eng/fundacao` (corre) integrada na Onda 0, via `pc3/integracao-fundacao` (detalhes em §4.0). O `Goal` adotado foi o da engenharia (`kpi: KpiId`, `op`, `value`, `stars`).
 
 ## 7. Bloqueios entre PCs
 
 | Quem espera | De quem | O quê | Quando |
 |---|---|---|---|
 | PC1 (`SimView`) | PC3 | `Simulation.getState()` | Onda 1 |
-| PC2 (`vila-nova.json`) | PC3 | `CityLoader` na `main` | Onda 0 |
+| PC2 (`vila-nova.json`) | PC3 | `CityLoader` na `main` | ✅ disponível |
 | PC3 (testes de balance) | PC2 | Tabela de casos esperados | Onda 2 |
 
 ## 8. Pendências herdadas (já distribuídas aos sub-agentes)
@@ -148,4 +151,6 @@ As três colunas de cada onda andam **em paralelo**. Cada onda termina com a `ma
 - `pc1-arte-mundo`: cidade maior, bolhas gigantes, vulcões de gel, dinossauros Aero.
 - `pc1-arte-modelos`: assets do Vila Nova.
 - `pc2-design-cenarios`: `vila-nova.json`.
-- `pc3-*`: Onda 0 e todo o restante do core.
+- `pc3-eng-infra`: `src/game/` (loop do jogo usando o render do PC1 e o protótipo `59979c1` como referência).
+- `pc3-*`: agentes, coletivo, Commands, KPIs, eventos e save.
+- `pc1-arte-views`: migrar o render para `noUncheckedIndexedAccess` e usar `Picking.screenToTile`.

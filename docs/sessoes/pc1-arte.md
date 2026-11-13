@@ -6,7 +6,7 @@ Responsável: **fermneto**. Esta sessão é a **coordenadora** do PC1: ela dispa
 ```bash
 git checkout main && git pull --ff-only
 npm install
-npx tsc --noEmit && npm run build
+npm run check && npm run build
 ```
 
 ## 2. Prompt para colar na sessão principal
@@ -21,8 +21,8 @@ npx tsc --noEmit && npm run build
 | `pc1-arte-mundo` | `.claude/agents/pc1-arte-mundo.md` |
 
 ## 4. Ordem
-- Revisar o render na Onda 0: o PC3 integra a `eng/fundacao` e o render da `main` (PC1) prevalece. Avaliar `Picking.ts`, `RadicalView.ts` e `QuadBuilder.ts` da engenharia e portar o que for útil (ex.: `screenToTile`).
-- Em paralelo, já na Onda 0: `pc1-arte-modelos` (assets do Vila Nova) e `pc1-arte-mundo` (cidade maior, bolhas, vulcões, dinossauros), que não dependem do core. `pc1-arte-views` e `pc1-arte-ui` começam com mock e passam ao core real quando o PC3 expuser `Simulation.getState()`.
+- A Onda 0 já foi concluída: o render do PC1 prevaleceu e o contrato oficial é `src/core/types.ts`, com 1 tile = 10 m e água em `areas`. Dívida herdada: o render ainda não segue `noUncheckedIndexedAccess` (tarefa do `pc1-arte-views`).
+- Em paralelo, já: `pc1-arte-modelos` (assets do Vila Nova) e `pc1-arte-mundo` (cidade maior, bolhas, vulcões, dinossauros), que não dependem do core. `pc1-arte-views` e `pc1-arte-ui` começam com mock e passam ao core real quando o PC3 expuser `Simulation.getState()`.
 
 ## 5. Fim de sessão
 - Todos os PRs do dia abertos ou mergeados, com a `main` verde.

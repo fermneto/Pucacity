@@ -1,3 +1,9 @@
 node_modules/
 dist/
+coverage/
 shots/
+*.log
+.DS_Store
+# config local da máquina (ex.: caminho absoluto do Node); os sub-agentes do projeto são versionados
+.claude/*
+!.claude/agents/

@@ -2,13 +2,28 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
-    "moduleResolution": "bundler",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "moduleResolution": "Bundler",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "strict": true,
-    "noEmit": true,
-    "resolveJsonModule": true,
+    "noUncheckedIndexedAccess": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "isolatedModules": true,
     "skipLibCheck": true,
-    "types": ["vite/client"]
+    "resolveJsonModule": true,
+    "types": [
+      "vite/client",
+      "node"
+    ]
   },
-  "include": ["src", "data"]
+  "include": [
+    "src",
+    "tests",
+    "data"
+  ]
 }

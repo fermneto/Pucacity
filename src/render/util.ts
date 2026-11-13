@@ -35,7 +35,7 @@ export function numParam(name: string, fallback: number): number {
   return v === null || v === '' || Number.isNaN(Number(v)) ? fallback : Number(v);
 }
 
-/** 1 tile = 1 unidade do mundo = 8 metros. */
-export const TILE_M = 8;
+/** 1 tile = 1 unidade do mundo = 10 metros (contrato em src/core/types.ts). */
+export const TILE_M = 10;
 /** Cidadãos e veículos são exagerados para a câmera aérea (legibilidade). */
-export const AGENT_SCALE = 1.6;
+export const AGENT_SCALE = 2.0;

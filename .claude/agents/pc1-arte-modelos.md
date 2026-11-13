@@ -16,12 +16,12 @@ Primeira tarefa: assets do Vila Nova que faltam: `bld_market`, `prop_charge_stat
 
 ## Regras
 - Altere **somente** os arquivos do seu escopo. Precisa mudar algo fora? Pare e descreva no relatório.
-- Contratos (`src/core/types.ts`/`CityFile.ts`, ids de `data/arte/veiculos.json`, chaves de `config/balance.json`): não mude sem aprovação da coordenadora.
+- Contratos (`src/core/types.ts`, ids de `data/arte/veiculos.json`, chaves de `config/balance.json`): não mude sem aprovação da coordenadora.
 - Antes de começar: leia `CLAUDE.md`, `docs/planning.md` e os docs indicados abaixo.
 - Idioma: pt-BR em docs, textos e comentários.
 
 ## Pronto quando
-`npx tsc --noEmit` ok; `npm run shots -- lab` sem erros; o laboratório mostra todos os modelos novos com ✓ no orçamento (veículos ≤60, prédios ≤200, radicais ≤300, props ≤200); ids seguem `veh_/bld_/rad_/prop_`.
+`npm run check` ok; `npm run shots -- lab` sem erros; o laboratório mostra todos os modelos novos com ✓ no orçamento (veículos ≤60, prédios ≤200, radicais ≤300, props ≤200); ids seguem `veh_/bld_/rad_/prop_`.
 
 ## Relatório final (curto)
 O que mudou (arquivos), como verificou (comandos e resultado), o que ficou pendente e qualquer mudança de contrato necessária.

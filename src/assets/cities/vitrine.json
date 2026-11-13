@@ -4,10 +4,13 @@
   "w": 18,
   "h": 17
  },
- "canals": [
+ "areas": [
   {
-   "y0": 6.8,
-   "y1": 9.2
+   "kind": "water",
+   "x": 0,
+   "y": 6.8,
+   "w": 18,
+   "h": 2.4
   }
  ],
  "nodes": [
@@ -22,7 +25,21 @@
    "y": 1,
    "signal": {
     "cycle": 60,
-    "phases": 2
+    "phases": [
+     {
+      "edges": [
+       0,
+       1
+      ],
+      "green": 30
+     },
+     {
+      "edges": [
+       7
+      ],
+      "green": 30
+     }
+    ]
    }
   },
   {
@@ -31,7 +48,21 @@
    "y": 1,
    "signal": {
     "cycle": 60,
-    "phases": 2
+    "phases": [
+     {
+      "edges": [
+       1,
+       2
+      ],
+      "green": 30
+     },
+     {
+      "edges": [
+       8
+      ],
+      "green": 30
+     }
+    ]
    }
   },
   {
@@ -50,7 +81,21 @@
    "y": 5,
    "signal": {
     "cycle": 60,
-    "phases": 2
+    "phases": [
+     {
+      "edges": [
+       3,
+       4
+      ],
+      "green": 30
+     },
+     {
+      "edges": [
+       7
+      ],
+      "green": 30
+     }
+    ]
    }
   },
   {
@@ -59,7 +104,21 @@
    "y": 5,
    "signal": {
     "cycle": 60,
-    "phases": 2
+    "phases": [
+     {
+      "edges": [
+       4,
+       5
+      ],
+      "green": 30
+     },
+     {
+      "edges": [
+       8
+      ],
+      "green": 30
+     }
+    ]
    }
   },
   {
@@ -78,7 +137,21 @@
    "y": 11,
    "signal": {
     "cycle": 60,
-    "phases": 2
+    "phases": [
+     {
+      "edges": [
+       10,
+       11
+      ],
+      "green": 30
+     },
+     {
+      "edges": [
+       17
+      ],
+      "green": 30
+     }
+    ]
    }
   },
   {
@@ -87,7 +160,21 @@
    "y": 11,
    "signal": {
     "cycle": 60,
-    "phases": 2
+    "phases": [
+     {
+      "edges": [
+       11,
+       12
+      ],
+      "green": 30
+     },
+     {
+      "edges": [
+       18
+      ],
+      "green": 30
+     }
+    ]
    }
   },
   {
@@ -106,7 +193,21 @@
    "y": 15,
    "signal": {
     "cycle": 60,
-    "phases": 2
+    "phases": [
+     {
+      "edges": [
+       13,
+       14
+      ],
+      "green": 30
+     },
+     {
+      "edges": [
+       17
+      ],
+      "green": 30
+     }
+    ]
    }
   },
   {
@@ -115,7 +216,21 @@
    "y": 15,
    "signal": {
     "cycle": 60,
-    "phases": 2
+    "phases": [
+     {
+      "edges": [
+       14,
+       15
+      ],
+      "green": 30
+     },
+     {
+      "edges": [
+       18
+      ],
+      "green": 30
+     }
+    ]
    }
   },
   {
@@ -129,8 +244,8 @@
    "id": 0,
    "from": 0,
    "to": 1,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "avenue",
    "lanes": {
@@ -144,8 +259,8 @@
    "id": 1,
    "from": 1,
    "to": 2,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "avenue",
    "lanes": {
@@ -159,8 +274,8 @@
    "id": 2,
    "from": 2,
    "to": 3,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "avenue",
    "lanes": {
@@ -174,8 +289,8 @@
    "id": 3,
    "from": 4,
    "to": 5,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "boulevard",
    "lanes": {
@@ -189,8 +304,8 @@
    "id": 4,
    "from": 5,
    "to": 6,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "boulevard",
    "lanes": {
@@ -204,8 +319,8 @@
    "id": 5,
    "from": 6,
    "to": 7,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "boulevard",
    "lanes": {
@@ -219,8 +334,8 @@
    "id": 6,
    "from": 0,
    "to": 4,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "street",
    "lanes": {
@@ -234,8 +349,8 @@
    "id": 7,
    "from": 1,
    "to": 5,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "street",
    "lanes": {
@@ -249,8 +364,8 @@
    "id": 8,
    "from": 2,
    "to": 6,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "street",
    "lanes": {
@@ -264,8 +379,8 @@
    "id": 9,
    "from": 3,
    "to": 7,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "street",
    "lanes": {
@@ -278,8 +393,8 @@
    "id": 10,
    "from": 8,
    "to": 9,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "boulevard",
    "lanes": {
@@ -293,8 +408,8 @@
    "id": 11,
    "from": 9,
    "to": 10,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "boulevard",
    "lanes": {
@@ -308,8 +423,8 @@
    "id": 12,
    "from": 10,
    "to": 11,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "boulevard",
    "lanes": {
@@ -323,8 +438,8 @@
    "id": 13,
    "from": 12,
    "to": 13,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "street",
    "lanes": {
@@ -338,8 +453,8 @@
    "id": 14,
    "from": 13,
    "to": 14,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "street",
    "lanes": {
@@ -353,8 +468,8 @@
    "id": 15,
    "from": 14,
    "to": 15,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "street",
    "lanes": {
@@ -367,8 +482,8 @@
    "id": 16,
    "from": 8,
    "to": 12,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "street",
    "lanes": {
@@ -382,8 +497,8 @@
    "id": 17,
    "from": 9,
    "to": 13,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "street",
    "lanes": {
@@ -397,8 +512,8 @@
    "id": 18,
    "from": 10,
    "to": 14,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "street",
    "lanes": {
@@ -412,8 +527,8 @@
    "id": 19,
    "from": 11,
    "to": 15,
-   "width": 1,
-   "speed": 6,
+   "width": 10,
+   "speed": 20,
    "oneWay": false,
    "kind": "street",
    "lanes": {
@@ -817,11 +932,11 @@
    "population": 2400,
    "wheelchairShare": 0.04,
    "ownership": {
-    "skate": 0.45,
-    "kick_scooter": 0.3,
-    "bmx": 0.2,
-    "skates": 0.15,
-    "e_scooter": 0.05
+    "skate": 45,
+    "kick_scooter": 30,
+    "bmx": 20,
+    "skates": 15,
+    "e_scooter": 5
    }
   },
   {
@@ -831,10 +946,10 @@
    "population": 1800,
    "wheelchairShare": 0.03,
    "ownership": {
-    "e_scooter": 0.4,
-    "hoverboard": 0.3,
-    "e_unicycle": 0.15,
-    "longboard": 0.2
+    "e_scooter": 40,
+    "hoverboard": 30,
+    "e_unicycle": 15,
+    "longboard": 20
    }
   },
   {
@@ -844,10 +959,10 @@
    "population": 1500,
    "wheelchairShare": 0.05,
    "ownership": {
-    "longboard": 0.35,
-    "skates": 0.3,
-    "skate": 0.3,
-    "kick_scooter": 0.2
+    "longboard": 35,
+    "skates": 30,
+    "skate": 30,
+    "kick_scooter": 20
    }
   },
   {
@@ -857,9 +972,9 @@
    "population": 900,
    "wheelchairShare": 0.04,
    "ownership": {
-    "bmx": 0.35,
-    "skate": 0.3,
-    "e_scooter": 0.1
+    "bmx": 35,
+    "skate": 30,
+    "e_scooter": 10
    }
   }
  ],

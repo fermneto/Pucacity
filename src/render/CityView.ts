@@ -1,6 +1,6 @@
 import { BufferAttribute, Group, Matrix4, Mesh, Vector3 } from 'three';
 import type { CityCrossing, CityEdge, CityFile, LaneKind } from '../core/CityFile';
-import { crossingIsAccessible } from '../core/CityFile';
+import { crossingIsAccessible, waterBands } from '../core/CityFile';
 import { MeshBuilder, type Paint } from './models/MeshBuilder';
 import { buildModel } from './models/catalog';
 import { createPs1Material } from './ps1/Ps1Material';
@@ -56,7 +56,7 @@ export class CityView {
     const water = new MeshBuilder();
     const over = new MeshBuilder();
     const access = new MeshBuilder();
-    const canals = city.canals ?? [];
+    const canals = waterBands(city);
     this.canalSpanM = canals.length ? (canals[0].y1 - canals[0].y0) * TILE_M : 0;
 
     this.ground(opaque, water);
@@ -106,7 +106,7 @@ export class CityView {
 
   private ground(o: MeshBuilder, water: MeshBuilder) {
     const { w, h } = this.city.size;
-    const canals = [...(this.city.canals ?? [])].sort((a, b) => a.y0 - b.y0);
+    const canals = waterBands(this.city);
     // Pisos grandes são subdivididos (como no PS1) para o affine warping não deformar demais;
     // UV em coordenadas de mundo para não haver costura entre os pedaços.
     const flat = (b: MeshBuilder, x0: number, z0: number, x1: number, z1: number, y: number, p: Paint, step = 1) => {

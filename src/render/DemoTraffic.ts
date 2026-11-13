@@ -1,8 +1,9 @@
 import {
-  Color, InstancedBufferAttribute, InstancedMesh, Matrix4, Object3D, Quaternion, Vector3,
+  Color, InstancedBufferAttribute, InstancedMesh, Matrix4, Quaternion, Vector3,
 } from 'three';
 import veiculos from '../../data/arte/veiculos.json';
 import type { CityCrossing, CityFile, LaneKind } from '../core/CityFile';
+import { waterBands } from '../core/CityFile';
 import { CityView, LANE_OFFSET, type OverlayStrip } from './CityView';
 import { buildModel } from './models/catalog';
 import { MEGAPIPE, SPIRAL } from './models/radical';
@@ -72,7 +73,6 @@ export class DemoTraffic {
   private links: Link[] = [];
   private adj = new Map<number, number[]>();
   private rng: Rng;
-  private dummy = new Object3D();
   airborneCount = 0;
   readonly cabins: InstancedMesh;
   private time = 0;
@@ -167,7 +167,7 @@ export class DemoTraffic {
       const i = this.links.push(l) - 1;
       for (const n of [l.a, l.b]) this.adj.set(n, [...(this.adj.get(n) ?? []), i]);
     };
-    const canals = this.city.canals ?? [];
+    const canals = waterBands(this.city);
     const band = (y: number) => canals.filter((c) => c.y1 < y).length;
     for (const e of this.city.edges) {
       const A = nodes[e.from], B = nodes[e.to];

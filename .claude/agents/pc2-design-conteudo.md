@@ -16,7 +16,7 @@ Primeira tarefa: eventos e dilemas do cenário 1 em JSON (`src/assets/text/vila-
 
 ## Regras
 - Altere **somente** os arquivos do seu escopo. Precisa mudar algo fora? Pare e descreva no relatório.
-- Contratos (`src/core/types.ts`/`CityFile.ts`, ids de `data/arte/veiculos.json`, chaves de `config/balance.json`): não mude sem aprovação da coordenadora.
+- Contratos (`src/core/types.ts`, ids de `data/arte/veiculos.json`, chaves de `config/balance.json`): não mude sem aprovação da coordenadora.
 - Antes de começar: leia `CLAUDE.md`, `docs/planning.md` e os docs indicados abaixo.
 - Idioma: pt-BR em docs, textos e comentários.
 

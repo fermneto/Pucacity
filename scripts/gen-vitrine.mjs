@@ -11,7 +11,7 @@ const nodes = [];
 const nodeAt = new Map();
 let nid = 0;
 for (const y of [...NORTH, ...SOUTH]) for (const x of XS) {
-  const signal = (x === 6 || x === 11) ? { cycle: 60, phases: 2 } : undefined;
+  const signal = undefined; // fases por aresta são preenchidas abaixo
   nodes.push({ id: nid, x, y, ...(signal ? { signal } : {}) });
   nodeAt.set(`${x},${y}`, nid++);
 }
@@ -23,7 +23,7 @@ const NO_FAST = { sidewalk: 2, slow: 2, transit: 1 };
 const edges = [];
 let eid = 0;
 function edge(a, b, kind, lanes) {
-  edges.push({ id: eid++, from: nodeAt.get(a), to: nodeAt.get(b), width: 1, speed: 6, oneWay: false, kind, lanes });
+  edges.push({ id: eid++, from: nodeAt.get(a), to: nodeAt.get(b), width: 10, speed: 20, oneWay: false, kind, lanes });
 }
 for (const rows of [NORTH, SOUTH]) {
   for (const y of rows) for (let i = 0; i < XS.length - 1; i++) {
@@ -65,15 +65,23 @@ bld(7, 12, 'res', 'bld_res_1', 2); bld(10, 12, 'skatepark', 'bld_skatepark', 2);
 for (const x of [12, 13, 14, 15]) bld(x, 12, 'ind', 'bld_ind_1', 2, 80);
 bld(12, 14, 'ind', 'bld_ind_1', 0, 80); bld(13.5, 14, 'skatepark', 'bld_skatepark', 0); bld(15, 14, 'ind', 'bld_ind_1', 0, 80);
 
+for (const n of nodes) {
+  if (n.x !== 6 && n.x !== 11) continue;
+  const touching = edges.filter((e) => e.from === n.id || e.to === n.id);
+  const horiz = touching.filter((e) => nodes[e.from].y === nodes[e.to].y).map((e) => e.id);
+  const vert = touching.filter((e) => nodes[e.from].x === nodes[e.to].x).map((e) => e.id);
+  n.signal = { cycle: 60, phases: [{ edges: horiz, green: 30 }, { edges: vert, green: 30 }] };
+}
+
 const districts = [
   { id: 0, name: 'Vila Concreto', income: 'low', population: 2400, wheelchairShare: 0.04,
-    ownership: { skate: 0.45, kick_scooter: 0.3, bmx: 0.2, skates: 0.15, e_scooter: 0.05 } },
+    ownership: { skate: 45, kick_scooter: 30, bmx: 20, skates: 15, e_scooter: 5 } },
   { id: 1, name: 'Centro Gel', income: 'high', population: 1800, wheelchairShare: 0.03,
-    ownership: { e_scooter: 0.4, hoverboard: 0.3, e_unicycle: 0.15, longboard: 0.2 } },
+    ownership: { e_scooter: 40, hoverboard: 30, e_unicycle: 15, longboard: 20 } },
   { id: 2, name: 'Orla Bolha', income: 'mid', population: 1500, wheelchairShare: 0.05,
-    ownership: { longboard: 0.35, skates: 0.3, skate: 0.3, kick_scooter: 0.2 } },
+    ownership: { longboard: 35, skates: 30, skate: 30, kick_scooter: 20 } },
   { id: 3, name: 'Pátio Industrial', income: 'low', population: 900, wheelchairShare: 0.04,
-    ownership: { bmx: 0.35, skate: 0.3, e_scooter: 0.1 } },
+    ownership: { bmx: 35, skate: 30, e_scooter: 10 } },
 ];
 
 // Elementos radicais urbanos e props (proposta de extensão do contrato: `features`).
@@ -104,7 +112,7 @@ for (let x = 1.5; x <= 16; x += 2.5) {
 const city = {
   name: 'Vitrine Pucacity (teste visual)',
   size: { w: 18, h: 17 },
-  canals: [{ y0: 6.8, y1: 9.2 }],
+  areas: [{ kind: 'water', x: 0, y: 6.8, w: 18, h: 2.4 }],
   nodes, edges, crossings, buildings, districts, features,
 };
 

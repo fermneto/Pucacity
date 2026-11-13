@@ -1,7 +1,8 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import { resolve } from 'node:path';
 
 export default defineConfig({
+  base: './',
   build: {
     rollupOptions: {
       input: {
@@ -9,5 +10,9 @@ export default defineConfig({
         lab: resolve(import.meta.dirname, 'lab.html'),
       },
     },
+  },
+  test: {
+    include: ['tests/**/*.test.ts'],
+    environment: 'node',
   },
 });

@@ -1,60 +1,19 @@
-/** Contrato do city.json (SPEC §6). Lógica pura: sem Three.js aqui. */
+/**
+ * Compatibilidade: o contrato oficial do city.json é src/core/types.ts (dono: PC3 Engenharia).
+ * Este módulo só reexporta os tipos e oferece utilidades usadas pelo render/vitrine.
+ */
+export * from './types';
+import type { CityCrossing, CityFile } from './types';
 
-export type LaneKind = 'sidewalk' | 'slow' | 'fast' | 'transit';
-export type VehicleKind =
-  | 'pedestrian' | 'wheelchair' | 'wheelchair_powered' | 'skate' | 'longboard'
-  | 'kick_scooter' | 'e_scooter' | 'skates' | 'hoverboard' | 'e_unicycle' | 'bmx'
-  | 'tandem' | 'tuktuk';
-export type RadicalKind = 'ramp_bridge' | 'air_loop' | 'death_jump' | 'rail_walkway';
-export type AccessKind = 'bubble_lift' | 'glass_walkway' | 'transit_only';
-export type FeatureKind =
-  | 'air_loop' | 'wallride' | 'quarter' | 'bowl' | 'spiral_tower' | 'megapipe' | 'orb'
-  | 'stop_shelter' | 'share_station' | 'crt_billboard' | 'tree' | 'lamp' | 'bench';
-
-export interface CityNode { id: number; x: number; y: number; signal?: { cycle: number; phases: number } }
-export interface CityEdge {
-  id: number; from: number; to: number; width: number; speed: number; oneWay: boolean;
-  kind: 'street' | 'avenue' | 'boulevard';
-  lanes: Partial<Record<LaneKind, number>>;
-}
-export interface CityCrossing {
-  id: number; from: number; to: number; over: 'river' | 'canal' | 'expressway';
-  radical: RadicalKind; access?: AccessKind; locked?: boolean;
-}
-export interface CityBuilding {
-  id: number; x: number; y: number;
-  kind: 'res' | 'com' | 'ind' | 'school' | 'hospital' | 'park' | 'skatepark';
-  capacity: number; model: string; rotation: 0 | 1 | 2 | 3;
-}
-export interface CityDistrict {
-  id: number; name: string; income: 'low' | 'mid' | 'high'; population: number;
-  ownership: Partial<Record<VehicleKind, number>>; wheelchairShare: number;
-}
-/** Extensão proposta: elementos radicais urbanos e props posicionados (rot em quartos de volta). */
-export interface CityFeature { kind: FeatureKind; x: number; y: number; rot: number }
-
-/** Morador com nome e balão de fala (docs/design/cenario-01-vila-nova.md). */
-export interface CityCharacter { id: string; name: string; group: string; vehicle: VehicleKind; home: number; work?: number }
-/** Meta de cenário: KPI, comparação e alvo (as fórmulas ficam em config/balance.json). */
-export interface Goal { kpi: string; op: '<=' | '>=' | 'delta<=' | 'delta>='; value: number; stars?: 1 | 2 | 3 }
-export interface CityScenario { id: string; goals: Goal[]; budget: number; durationDays: number; events: string[]; dilemmas: string[] }
-
-export interface CityFile {
-  name: string;
-  size: { w: number; h: number };
-  /** Extensão: faixas de água horizontais (canais/rios) atravessadas pelas travessias. */
-  canals?: { y0: number; y1: number }[];
-  nodes: CityNode[];
-  edges: CityEdge[];
-  crossings: CityCrossing[];
-  buildings: CityBuilding[];
-  districts: CityDistrict[];
-  features?: CityFeature[];
-  characters?: CityCharacter[];
-  scenario?: CityScenario;
-}
-
-/** Toda travessia precisa de rota acessível (SPEC §4.5). */
+/** Travessia com rota acessível declarada (mesma regra de Crossings.crossingsWithoutAccess). */
 export function crossingIsAccessible(c: CityCrossing): boolean {
-  return c.access !== undefined || c.radical === 'rail_walkway';
+  return c.access !== undefined;
+}
+
+/** Faixas de água horizontais derivadas de `areas` (kind 'water'), em tiles, ordenadas de norte a sul. */
+export function waterBands(city: CityFile): { y0: number; y1: number }[] {
+  return (city.areas ?? [])
+    .filter((a) => a.kind === 'water')
+    .map((a) => ({ y0: a.y, y1: a.y + a.h }))
+    .sort((a, b) => a.y0 - b.y0);
 }

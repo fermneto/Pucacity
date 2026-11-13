@@ -65,7 +65,7 @@ export class MeshBuilder {
   tri(a: Vector3, b: Vector3, c: Vector3, uva: number[], uvb: number[], uvc: number[], p: Paint, outward?: Vector3) {
     const m = this.matrix;
     const A = a.clone().applyMatrix4(m), B = b.clone().applyMatrix4(m), C = c.clone().applyMatrix4(m);
-    let n = new Vector3().subVectors(B, A).cross(new Vector3().subVectors(C, A)).normalize();
+    const n = new Vector3().subVectors(B, A).cross(new Vector3().subVectors(C, A)).normalize();
     let verts = [A, B, C], uvs = [uva, uvb, uvc];
     if (outward) {
       const ow = outward.clone().applyMatrix3(new Matrix3().getNormalMatrix(m));

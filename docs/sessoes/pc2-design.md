@@ -6,7 +6,7 @@ Responsável: **Luciana Lima**. Esta sessão é a **coordenadora** do PC2: ela d
 ```bash
 git checkout main && git pull --ff-only
 npm install
-npx tsc --noEmit && npm run build
+npm run check && npm run build
 ```
 
 ## 2. Prompt para colar na sessão principal
@@ -21,7 +21,7 @@ npx tsc --noEmit && npm run build
 | `pc2-design-progressao` | `.claude/agents/pc2-design-progressao.md` |
 
 ## 4. Ordem
-- Nada bloqueia o PC2: todos os sub-agentes podem começar já. O `vila-nova.json` precisa validar no `CityLoader`, que chega à `main` com a Onda 0.
+- Nada bloqueia o PC2: todos os sub-agentes podem começar já. O `vila-nova.json` precisa validar no `CityLoader` (já na `main`). Atenção às unidades do contrato: 1 tile = 10 m, `width` em metros, `speed` em km/h, `ownership` em %, água em `areas`. Exemplos: `public/cities/demo.json` e `src/assets/cities/vitrine.json`.
 - Disparar os 4 em paralelo. Prioridade: `pc2-design-cenarios` (`vila-nova.json`) e `pc2-design-balance` (casos esperados), porque o PC3 depende deles na Onda 2.
 
 ## 5. Fim de sessão

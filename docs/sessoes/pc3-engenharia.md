@@ -6,7 +6,7 @@ Responsável: **corre**. Esta sessão é a **coordenadora** do PC3: ela dispara 
 ```bash
 git checkout main && git pull --ff-only
 npm install
-npx tsc --noEmit && npm run build
+npm run check && npm run build
 ```
 
 ## 2. Prompt para colar na sessão principal
@@ -21,8 +21,8 @@ npx tsc --noEmit && npm run build
 | `pc3-eng-jogo` | `.claude/agents/pc3-eng-jogo.md` |
 
 ## 4. Ordem
-- **Onda 0 (bloqueante):** `pc3-eng-infra` integra `origin/eng/fundacao` na `main` seguindo `docs/planning.md` §4.0. Os outros sub-agentes do PC3 só começam depois desse merge.
-- Depois da Onda 0: `pc3-eng-rede`, `pc3-eng-agentes` e `pc3-eng-jogo` em paralelo, cada um em seu worktree. A primeira entrega é `Simulation.getState()`, porque o PC1 depende dela.
+- A Onda 0 (integrar `eng/fundacao`) já foi concluída: ver `docs/planning.md` §4.0 e a nota no topo de `docs/engineering.md`. Os 4 sub-agentes podem começar já.
+- Disparar os 4 em paralelo, cada um em seu worktree. A primeira entrega é `Simulation.getState()`, porque o PC1 depende dela.
 
 ## 5. Fim de sessão
 - Todos os PRs do dia abertos ou mergeados, com a `main` verde.

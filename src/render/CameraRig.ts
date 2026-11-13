@@ -12,7 +12,7 @@ export class CameraRig {
   distance = 20;
   pitch = 0.95;
 
-  constructor(private el: HTMLElement) {
+  constructor(el: HTMLElement) {
     let drag: { x: number; y: number } | null = null;
     el.addEventListener('pointerdown', (e) => { if (e.button === 0) drag = { x: e.clientX, y: e.clientY }; });
     addEventListener('pointerup', () => (drag = null));
