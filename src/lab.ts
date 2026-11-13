@@ -153,7 +153,7 @@ function silhouetteScene(): Scene {
   vehicles.forEach((d, i) => {
     const m = vehicleMesh(d.id);
     const x = (i - (vehicles.length - 1) / 2) * gap;
-    m.setMatrixAt(0, new Matrix4().makeRotationY(Math.PI / 2).setPosition(x, 0.012, OFF[d.lane ?? 'fast']));
+    m.setMatrixAt(0, new Matrix4().makeRotationY(Math.PI / 2).setPosition(x, 0.012, OFF[d.lane ?? 'fast'] ?? 0));
     scene.add(m);
   });
   return scene;
@@ -223,7 +223,7 @@ function show(tab: Tab) {
     defs.forEach((d) => card(g, d));
     const over = defs.filter((d) => buildModel(d.id).tris > d.budget);
     const tris = defs.map((d) => buildModel(d.id).tris);
-    summary.innerHTML = `<b>${defs.length}</b> modelos · orçamento SPEC <b>${defs[0].budget}</b> tris · ` +
+    summary.innerHTML = `<b>${defs.length}</b> modelos · orçamento SPEC <b>${defs[0]?.budget ?? '—'}</b> tris · ` +
       `min <b>${Math.min(...tris)}</b> / máx <b>${Math.max(...tris)}</b> · ` +
       (over.length ? `<b style="color:#e8322c">${over.length} acima do orçamento: ${over.map((d) => d.id).join(', ')}</b>` : '<b style="color:#1e8e5a">todos dentro do orçamento ✓</b>');
   } else if (tab === 'silhuetas') {
