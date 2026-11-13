@@ -4,6 +4,7 @@ import {
   BUILDING_KINDS,
   CROSSING_OVER,
   EDGE_KINDS,
+  FEATURE_KINDS,
   INCOMES,
   KPI_IDS,
   LANE_KINDS,
@@ -210,6 +211,38 @@ export function validateCity(raw: unknown): ValidationResult {
       if (!isNum(a.w) || a.w <= 0) err(`${p}.w`, 'número > 0');
       if (!isNum(a.h) || a.h <= 0) err(`${p}.h`, 'número > 0');
     });
+  }
+
+  // ---- features (opcional; extensão da Arte). Validação aproveitada do PR #2 (pc3/core-rede).
+  if (raw.features !== undefined) {
+    if (!Array.isArray(raw.features)) err('features', 'lista');
+    else raw.features.forEach((f: unknown, i: number) => {
+      const p = `features[${i}]`;
+      if (!isObj(f)) return err(p, 'objeto { kind, x, y, rot }');
+      if (!oneOf(FEATURE_KINDS, f.kind)) err(`${p}.kind`, `use um de: ${FEATURE_KINDS.join(', ')}`);
+      inBounds(p, f);
+      if (!isNum(f.rot)) err(`${p}.rot`, 'número (quartos de volta)');
+    });
+  }
+
+  // ---- characters (opcional; extensão do Design): moradores com nome
+  if (raw.characters !== undefined) {
+    if (!Array.isArray(raw.characters)) err('characters', 'lista');
+    else {
+      const seen = new Set<string>();
+      raw.characters.forEach((c: unknown, i: number) => {
+        const p = `characters[${i}]`;
+        if (!isObj(c)) return err(p, 'objeto { id, name, group, vehicle, home, work? }');
+        if (typeof c.id !== 'string' || c.id === '') err(`${p}.id`, 'texto obrigatório');
+        else if (seen.has(c.id)) err(`${p}.id`, `id repetido: ${c.id}`);
+        else seen.add(c.id);
+        if (typeof c.name !== 'string' || c.name === '') err(`${p}.name`, 'texto obrigatório');
+        if (typeof c.group !== 'string') err(`${p}.group`, 'texto obrigatório');
+        if (!oneOf(VEHICLE_KINDS, c.vehicle)) err(`${p}.vehicle`, `use um de: ${VEHICLE_KINDS.join(', ')}`);
+        if (!isInt(c.home) || !buildingIds.has(c.home)) err(`${p}.home`, `prédio ${String(c.home)} não existe`);
+        if (c.work !== undefined && (!isInt(c.work) || !buildingIds.has(c.work))) err(`${p}.work`, `prédio ${String(c.work)} não existe`);
+      });
+    }
   }
 
   // ---- scenario
