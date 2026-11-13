@@ -33,6 +33,12 @@ export interface CityDistrict {
 /** Extensão proposta: elementos radicais urbanos e props posicionados (rot em quartos de volta). */
 export interface CityFeature { kind: FeatureKind; x: number; y: number; rot: number }
 
+/** Morador com nome e balão de fala (docs/design/cenario-01-vila-nova.md). */
+export interface CityCharacter { id: string; name: string; group: string; vehicle: VehicleKind; home: number; work?: number }
+/** Meta de cenário: KPI, comparação e alvo (as fórmulas ficam em config/balance.json). */
+export interface Goal { kpi: string; op: '<=' | '>=' | 'delta<=' | 'delta>='; value: number; stars?: 1 | 2 | 3 }
+export interface CityScenario { id: string; goals: Goal[]; budget: number; durationDays: number; events: string[]; dilemmas: string[] }
+
 export interface CityFile {
   name: string;
   size: { w: number; h: number };
@@ -44,6 +50,8 @@ export interface CityFile {
   buildings: CityBuilding[];
   districts: CityDistrict[];
   features?: CityFeature[];
+  characters?: CityCharacter[];
+  scenario?: CityScenario;
 }
 
 /** Toda travessia precisa de rota acessível (SPEC §4.5). */

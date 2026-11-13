@@ -166,7 +166,7 @@ Como validar: **`docs/validacao-visual.md`** (vitrine, laboratório e capturas a
 - Radicais (11): rampa-ponte, loop aéreo, salto mortal, rail-passarela, wallride, quarter, bowl, elevador + cápsula, **torre espiral**, **mega half-pipe**.
 - Props (7): árvore, poste, banco, parada, estação de compartilhamento, telão CRT, nuvem.
 
-Merge com o design de overboards: ver `docs/merge-plan.md` (inclui os assets pedidos pelo cenário Vila Nova).
+Merge com o design de overboards: ver `docs/planning.md` (inclui os assets pedidos pelo cenário Vila Nova).
 
 ## 11. Próximos passos
 

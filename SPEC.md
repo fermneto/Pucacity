@@ -390,6 +390,8 @@ Trilha no clima da virada dos anos 2000 (skate punk, pop-punk, drum'n'bass, hip-
 
 ## 11. Divisão de trabalho — equipe de 3 pessoas
 
+> **Execução:** cada área roda num computador próprio, com sub-agentes em paralelo. A divisão de arquivos, os sub-agentes, as ondas até o MVP e o fluxo de integração estão em [`docs/planning.md`](docs/planning.md).
+
 | Papel | Responde por | Entrega principal |
 |---|---|---|
 | **Direção de Arte** | Identidade visual PS1 + Aero, modelos, texturas, UI, áudio | Kit visual legível e coerente |
