@@ -93,6 +93,8 @@ Pucacity não tem pontes convencionais: tudo que cruza um rio, canal, avenida ou
 - **Rail-Passarela:** corrimão longo que liga prédios (grind obrigatório).
 - **Wallride Tubular:** túnel em meia-cana que atravessa um prédio.
 - **Funil Bowl:** praça rebaixada, usada como rotatória.
+- **Torre Espiral:** rampa em hélice de 2 voltas em volta de um cilindro de vidro; do topo, o rider salta de volta à praça com mortal duplo.
+- **Mega Half-pipe:** U gigante de praça; riders pendulam e fazem aéreos acima do coping.
 - **Elevador de Bolha:** cápsula Aero que leva ao topo das rampas altas, para quem não é skatista e para cadeiras de roda.
 
 **Acessibilidade no mundo:** todo elemento radical tem uma **rota alternativa acessível** (rampa suave, elevador de bolha ou tandem/tuk-tuk). Os cidadãos em cadeira de rodas também fazem manobras, mas nunca ficam presos.
@@ -157,6 +159,14 @@ Como validar: **`docs/validacao-visual.md`** (vitrine, laboratório e capturas a
 - Na resolução 240 e no zoom de visão geral, os veículos viram poucos pixels e os tipos não se distinguem; a leitura por silhueta só funciona no zoom próximo. Caminhos: limitar o zoom máximo de afastamento, usar 360 linhas como padrão ou mostrar ícones por tipo no overlay.
 - Pisos grandes precisam ser subdivididos (≈1 tile), senão o affine warping vira arcos enormes.
 - Torres muito altas escondem os elementos radicais; mantenha a altura ≤ ~22 m perto de loops e travessias.
+
+**Modelos atuais** (orçamento verificado no laboratório):
+- Veículos (14): todos os `kind`s de `veiculos.json` + `veh_tandem`, `veh_tandem_4`, `veh_tuktuk`.
+- Prédios (11): `bld_res_1/2/3` (o 3 tem pista no telhado), `bld_com_1/2/3` (o 3 é a Torre Bolha de esferas), `bld_ind_1`, `bld_school`, `bld_hospital`, `bld_park`, `bld_skatepark`.
+- Radicais (11): rampa-ponte, loop aéreo, salto mortal, rail-passarela, wallride, quarter, bowl, elevador + cápsula, **torre espiral**, **mega half-pipe**.
+- Props (7): árvore, poste, banco, parada, estação de compartilhamento, telão CRT, nuvem.
+
+Merge com o design de overboards: ver `docs/merge-plan.md` (inclui os assets pedidos pelo cenário Vila Nova).
 
 ## 11. Próximos passos
 

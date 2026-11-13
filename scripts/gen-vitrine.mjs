@@ -104,7 +104,7 @@ for (let x = 1.5; x <= 16; x += 2.5) {
 const city = {
   name: 'Vitrine Pucacity (teste visual)',
   size: { w: 18, h: 17 },
-  canal: { y0: 6.8, y1: 9.2 },
+  canals: [{ y0: 6.8, y1: 9.2 }],
   nodes, edges, crossings, buildings, districts, features,
 };
 

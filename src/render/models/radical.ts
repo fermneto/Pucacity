@@ -1,6 +1,10 @@
-import { MeshBuilder } from './MeshBuilder';
+import { MeshBuilder, type Paint } from './MeshBuilder';
 import { quarterPipe } from './buildings';
 import { WORLD } from '../palette';
+
+/** Geometria compartilhada com as trajetórias dos riders (DemoTraffic). Metros. */
+export const SPIRAL = { rIn: 2.4, rOut: 5.6, turns: 2, height: 12, segs: 28 };
+export const MEGAPIPE = { R: 5, L: 16, segs: 12 };
 
 /**
  * Elementos radicais (data/arte/elementos-radicais.json). Até 300 tris cada.
@@ -143,6 +147,51 @@ export const RADICAL_BUILDERS: Record<string, (o: B, g: B, span: number) => void
       g.at(0, 0.4, z, 0, (b) => b.prism(1.1, 8.6, 6, { color: '#9FE8F8', gloss: 1, top: false }));
     }
     o.at(0, 10.4, 0, 0, (b) => b.box(0.08, 0.08, S + 4, { color: CHROME, gloss: 1, omit: ['bottom'] }));
+  },
+
+  /** Torre Espiral: rampa em hélice (2 voltas) em volta de um cilindro de vidro; salta-se do topo. */
+  rad_spiral_tower: (o, g) => {
+    const { rIn, rOut, turns, height, segs } = SPIRAL;
+    g.prism(rIn - 0.2, height + 2, 8, { color: '#7FD8E8', gloss: 1, top: false });
+    o.at(0, height + 2, 0, 0, (b) => b.prism(rIn, 0.4, 8, { color: '#3FD0E8', gloss: 1 }));
+    for (let i = 0; i < segs; i++) {
+      const a0 = (i / segs) * turns * Math.PI * 2, a1 = ((i + 1) / segs) * turns * Math.PI * 2;
+      const h0 = (i / segs) * height, h1 = ((i + 1) / segs) * height;
+      const p = (r: number, a: number, h: number) => [Math.cos(a) * r, h, Math.sin(a) * r];
+      const top: Paint = i % 4 < 2 ? { tile: 'maple' } : { tile: 'maple', color: '#FFC2E2' };
+      o.quadXYZ(p(rIn, a0, h0), p(rOut, a0, h0), p(rOut, a1, h1), p(rIn, a1, h1), top, [0, 1, 0]);
+      o.quadXYZ(p(rIn, a0, h0 - 0.3), p(rOut, a0, h0 - 0.3), p(rOut, a1, h1 - 0.3), p(rIn, a1, h1 - 0.3), { tile: 'concrete' }, [0, -1, 0]);
+      const am = (a0 + a1) / 2;
+      o.quadXYZ(p(rOut, a0, h0 - 0.3), p(rOut, a1, h1 - 0.3), p(rOut, a1, h1 + 0.35), p(rOut, a0, h0 + 0.35), { color: CHROME, gloss: 1 }, [Math.cos(am), 0, Math.sin(am)]);
+    }
+    // lábio zebrado de onde se salta no topo
+    o.at(Math.cos(0) * (rIn + rOut) / 2, height, 0, Math.PI / 2, (b) => b.wedge(rOut - rIn, 0.5, 1.2, { tile: 'maple', faces: { pz: ZEBRA } }));
+  },
+
+  /** Mega Half-pipe: U gigante de madeira com decks, coping cromado e paredes pichadas. */
+  rad_megapipe: (o) => {
+    const { R, L, segs } = MEGAPIPE;
+    const deck = 2;
+    const P = (phi: number) => [R * Math.sin(phi), R * (1 - Math.cos(phi))]; // [z, y]
+    for (let i = 0; i < segs; i++) {
+      const p0 = -Math.PI / 2 + (i / segs) * Math.PI, p1 = -Math.PI / 2 + ((i + 1) / segs) * Math.PI;
+      const [z0, y0] = P(p0), [z1, y1] = P(p1);
+      o.quadXYZ([-L / 2, y0, z0], [L / 2, y0, z0], [L / 2, y1, z1], [-L / 2, y1, z1],
+        i === segs / 2 || i === segs / 2 - 1 ? { tile: 'maple', color: '#FFE23A' } : { tile: 'maple' },
+        [0, R - (y0 + y1) / 2, -(z0 + z1) / 2]);
+      // tampas das pontas (leque a partir do canto externo inferior)
+      for (const x of [-L / 2, L / 2]) {
+        const cz = z0 + z1 >= 0 ? R + deck : -R - deck;
+        o.triXYZ([x, 0, cz], [x, y0, z0], [x, y1, z1], { tile: 'graffiti' }, [Math.sign(x), 0, 0]);
+      }
+    }
+    for (const s of [-1, 1]) {
+      for (const x of [-L / 2, L / 2]) o.triXYZ([x, 0, s * (R + deck)], [x, R, s * R], [x, R, s * (R + deck)], { tile: 'graffiti' }, [Math.sign(x), 0, 0]);
+      o.at(0, R, s * (R + deck / 2), 0, (b) => b.box(L, 0.3, deck, { tile: 'concrete', omit: ['bottom'] }));
+      o.at(0, R, s * R, 0, (b) => b.box(L, 0.18, 0.18, { color: CHROME, gloss: 1, omit: ['bottom'] }));
+      o.quadXYZ([-L / 2, 0, s * (R + deck)], [L / 2, 0, s * (R + deck)], [L / 2, R, s * (R + deck)], [-L / 2, R, s * (R + deck)], { tile: 'graffiti' }, [0, 0, s]);
+    }
+    o.at(0, R + 0.3, R + deck - 0.2, 0, (b) => b.box(6, 1.4, 0.2, { color: '#FF5FA8', gloss: 1, omit: ['bottom'] }));
   },
 
   /** Cápsula do elevador (animada à parte). */

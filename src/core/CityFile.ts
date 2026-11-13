@@ -8,7 +8,7 @@ export type VehicleKind =
 export type RadicalKind = 'ramp_bridge' | 'air_loop' | 'death_jump' | 'rail_walkway';
 export type AccessKind = 'bubble_lift' | 'glass_walkway' | 'transit_only';
 export type FeatureKind =
-  | 'air_loop' | 'wallride' | 'quarter' | 'bowl'
+  | 'air_loop' | 'wallride' | 'quarter' | 'bowl' | 'spiral_tower' | 'megapipe' | 'orb'
   | 'stop_shelter' | 'share_station' | 'crt_billboard' | 'tree' | 'lamp' | 'bench';
 
 export interface CityNode { id: number; x: number; y: number; signal?: { cycle: number; phases: number } }
@@ -36,8 +36,8 @@ export interface CityFeature { kind: FeatureKind; x: number; y: number; rot: num
 export interface CityFile {
   name: string;
   size: { w: number; h: number };
-  /** Extensão usada pela vitrine: faixa de água horizontal. */
-  canal?: { y0: number; y1: number };
+  /** Extensão: faixas de água horizontais (canais/rios) atravessadas pelas travessias. */
+  canals?: { y0: number; y1: number }[];
   nodes: CityNode[];
   edges: CityEdge[];
   crossings: CityCrossing[];

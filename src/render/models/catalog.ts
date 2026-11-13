@@ -52,6 +52,8 @@ const NOMES_PREDIO: Record<string, string> = {
   bld_res_2: 'Conjunto alto',
   bld_com_1: 'Torre de vidro (Centro Gel)',
   bld_com_2: 'Shopping bolha',
+  bld_com_3: 'Torre Bolha',
+  bld_res_3: 'Conjunto com pista no telhado',
   bld_ind_1: 'Galpão (Pátio Industrial)',
   bld_school: 'Escola',
   bld_hospital: 'Clínica',
@@ -63,6 +65,7 @@ const RAD_ID: Record<string, string> = {
   rampa_ponte: 'rad_ramp_bridge', loop_aereo: 'rad_air_loop', salto_mortal: 'rad_death_jump',
   rail_passarela: 'rad_rail_walkway', wallride_tubular: 'rad_wallride', quarter_esquina: 'rad_quarter',
   funil_bowl: 'rad_bowl', elevador_bolha: 'rad_bubble_lift',
+  torre_espiral: 'rad_spiral_tower', mega_halfpipe: 'rad_megapipe',
 };
 
 const radicalDefs: ModelDef[] = [

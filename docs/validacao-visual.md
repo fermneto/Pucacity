@@ -12,6 +12,8 @@ npm run dev          # abre em http://localhost:5173
 | **Vitrine** | `http://localhost:5173/` | A cidade inteira: faixas, prédios, travessias radicais, trânsito de demonstração, HUD e overlays |
 | **Laboratório** | `http://localhost:5173/lab.html` | Cada asset isolado e girando, com contagem de triângulos × orçamento, silhuetas, atlas e paleta |
 
+> A vitrine atual tem **1 canal e 4 travessias**. O código já aceita vários canais (`canals[]` no `city.json`) e acrobatas presos à Torre Espiral e ao Mega Half-pipe; esses dois elementos já aparecem no laboratório (aba Radicais), mas ainda não estão no mapa (ver pendências em `docs/merge-plan.md`).
+>
 > O trânsito da vitrine é **só de demonstração visual** (`src/render/DemoTraffic.ts`). A simulação de verdade (SPEC §4) ainda vai ser feita em `src/core/`.
 
 ---
@@ -105,5 +107,7 @@ Por padrão ele usa o Google Chrome instalado. Com outro navegador: `PW_CHANNEL=
 | Cores | `data/arte/paleta.json` |
 | HUD | `src/ui/hud.ts`, `src/ui/hud.css` |
 | Mapa da vitrine | `scripts/gen-vitrine.mjs` → `node scripts/gen-vitrine.mjs` |
+| Acrobatas (espiral, half-pipe) | `src/render/DemoTraffic.ts` (`placeStunt`) |
+| Plano de merge dos 3 workers | `docs/merge-plan.md` |
 
 Quando os `.glb` do Blender ficarem prontos, eles substituem os modelos procedurais com o mesmo id (`veh_skate`, `bld_res_1`, …). O laboratório continua servindo para conferir orçamento e legibilidade.
