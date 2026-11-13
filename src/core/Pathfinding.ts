@@ -1,4 +1,4 @@
-import type { RoadGraph } from './RoadGraph';
+import type { ClosableLink, RoadGraph } from './RoadGraph';
 import type { VehicleProfile } from './Vehicles';
 
 export interface Path {
@@ -14,12 +14,19 @@ export interface PathOptions {
   /** Custo de uma aresta. Padrão: tempo BPR atual do veículo, em minutos (Infinity = proibida). */
   cost?: (edgeIndex: number) => number;
   /**
-   * Heurística (limite inferior do custo restante). Padrão: distância reta / velocidade de cruzeiro do veículo,
-   * admissível porque nenhuma aresta deixa o veículo andar acima dela. Passe () => 0 para Dijkstra puro.
+   * Heurística (limite inferior do custo restante). Padrão (só com o custo padrão): distância reta ÷ maior
+   * velocidade efetiva livre do veículo no grafo (graph.maxEffectiveSpeedMps), admissível e consistente mesmo
+   * com travessias de tempo fixo, porque nenhuma aresta é percorrida mais rápido que isso e o BPR só aumenta o tempo.
+   * Com `cost` próprio e sem `heuristic`, vira Dijkstra (heurística 0). Passe () => 0 para Dijkstra puro.
    */
   heuristic?: (nodeIndex: number, goalIndex: number) => number;
   /** Arestas proibidas (ex.: obra, via bloqueada). */
   blocked?: ReadonlySet<number>;
+  /**
+   * Tipos de ligação fechados nesta busca (além de graph.closedLinks), ex.: evento `vento_loop` → ['loop_aereo'],
+   * `elevador_quebrado` → ['elevador_bolha']. Aceita LinkKind, RadicalKind/AccessKind ou ids da Arte (ver ClosableLink).
+   */
+  closedLinks?: Iterable<ClosableLink>;
 }
 
 /** Heap binário mínimo de (prioridade, valor). Desempate por valor para determinismo. */
@@ -90,14 +97,22 @@ export function findPath(
   opts: PathOptions = {},
 ): Path | null {
   const cost = opts.cost ?? ((e: number) => graph.travelTimeMin(e, vehicle));
-  const mpm = vehicle.speedMps * 60;
-  const heuristic = opts.heuristic ?? ((n: number, g: number) => graph.distanceM(n, g) / mpm);
+  let heuristic = opts.heuristic;
+  if (!heuristic) {
+    if (opts.cost) {
+      heuristic = () => 0;
+    } else {
+      const mpm = graph.maxEffectiveSpeedMps(vehicle) * 60;
+      heuristic = Number.isFinite(mpm) && mpm > 0 ? (n: number, g: number) => graph.distanceM(n, g) / mpm : () => 0;
+    }
+  }
   const blocked = opts.blocked;
+  const closed = opts.closedLinks ? new Set(opts.closedLinks) : null;
 
   const n = graph.nodes.length;
   const g = new Float64Array(n).fill(Number.POSITIVE_INFINITY);
   const cameBy = new Int32Array(n).fill(-1); // aresta que chegou no nó
-  const closed = new Uint8Array(n);
+  const done = new Uint8Array(n);
   const open = new MinHeap();
 
   g[start] = 0;
@@ -105,14 +120,15 @@ export function findPath(
 
   while (open.size > 0) {
     const cur = open.pop();
-    if (closed[cur]) continue; // entrada obsoleta (lazy deletion)
+    if (done[cur]) continue; // entrada obsoleta (lazy deletion)
     if (cur === goal) break;
-    closed[cur] = 1;
+    done[cur] = 1;
 
     for (const ei of graph.out[cur]!) {
       if (blocked?.has(ei)) continue;
+      if (closed && graph.isClosed(ei, closed)) continue;
       const e = graph.edges[ei]!;
-      if (closed[e.to]) continue;
+      if (done[e.to]) continue;
       const c = cost(ei);
       if (!Number.isFinite(c)) continue;
       const tentative = g[cur]! + c;
