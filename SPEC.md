@@ -1,28 +1,32 @@
 # PucaCity — Spec do Projeto
 
-Jogo de gestão de **mobilidade urbana** com estética **PlayStation 1 (PS1)**, rodando no navegador com **Three.js**.
+Jogo de gestão de **mobilidade urbana** numa **cidade radical sem carros**, com estética **PlayStation 1 (PS1) + Frutiger Aero + cultura skate dos anos 90/2000**, rodando no navegador com **Three.js**.
 
-O jogador **não constrói a cidade do zero**: recebe uma cidade que já existe — com ruas, prédios, moradores e problemas — e precisa **reorganizar o trânsito e o transporte** para ela funcionar melhor.
+O jogador **não constrói a cidade do zero**: recebe uma cidade que já existe, com ruas, prédios, moradores e problemas, e precisa **reorganizar o trânsito de rodinhas e o transporte coletivo** para ela funcionar melhor.
 
-> **Histórico de direção:** começou como simulador de cidade 2D (construção de zonas) → passou para estética PS1 3D → agora o foco do jogo é **mobilidade numa cidade pré-existente**. As mecânicas de zoneamento/crescimento deixam de ser o centro; a simulação de deslocamento das pessoas passa a ser.
+> **Histórico de direção:** começou como simulador de cidade 2D (construção de zonas) → passou para estética PS1 3D → foco em **mobilidade numa cidade pré-existente** → agora é a **cidade radical do Frutiger Aero**: **não existem carros**. Os moradores circulam a pé, de cadeira de rodas, skate, patinete, patins, hoverboard etc. O transporte coletivo é feito de **bicicletas tandem e tuk-tuks**, e no lugar das pontes há **rampas, loops e saltos**.
+
+Documentos relacionados: `docs/style-guide.md` (direção de arte), `docs/referencias.md` (assets livres e referências), `data/arte/*.json` (paleta, veículos, elementos radicais).
 
 ---
 
 ## 1. Visão geral
 
-**Premissa:** a cidade está engarrafada, o ônibus demora, o ciclista tem medo e o pedestre não tem calçada. Você é o(a) responsável pela mobilidade. Com orçamento limitado, mude sentidos de ruas, semáforos, linhas de ônibus/metrô, ciclovias, faixas e tarifas, e veja as pessoas reagirem.
+**Premissa:** Pucacity está um caos sobre rodinhas. A faixa dos skates está lotada, o patinete divide espaço com quem está a pé, o tuk-tuk demora, a cadeira de rodas não consegue atravessar o canal porque a única travessia é uma rampa de salto, e o Loop Aéreo da avenida tem fila. Você é o(a) responsável pela mobilidade. Com orçamento limitado, redistribua faixas, ajuste semáforos, crie linhas de tandem e tuk-tuk, escolha o elemento radical de cada travessia e garanta rotas acessíveis. Depois, veja os moradores reagirem.
 
-**Fantasia do jogador:** planejador urbano que ajusta o sistema e observa o efeito em milhares de pequenos cidadãos.
+**Fantasia do jogador:** planejador urbano de uma cidade-skatepark que ajusta o sistema e vê milhares de pequenos cidadãos rolando, pulando gaps e fazendo loops.
 
 **Plataforma:** navegador desktop (Chrome/Firefox/Safari).
 
-**Público:** fãs de jogos de gestão/puzzle de sistemas (Mini Motorways, Mini Metro, Cities: Skylines) e de estética retrô.
+**Público:** fãs de jogos de gestão e de quebra-cabeça de sistemas (Mini Motorways, Mini Metro, Cities: Skylines) e da estética retrô Y2K.
 
 **Princípios**
-- **A cidade é dado, não construção:** o mapa vem de um arquivo; o jogador muda a *mobilidade*, não o layout dos prédios.
+- **A cidade é dado, não construção:** o mapa vem de um arquivo. O jogador muda a *mobilidade*, não o layout dos prédios.
+- **Sem carros:** todo deslocamento é a pé, sobre rodinhas ou em transporte coletivo (tandem/tuk-tuk). Não existe carro em nenhum lugar do jogo.
+- **Ninguém fica preso:** toda travessia radical tem uma rota acessível. Acessibilidade é métrica e regra, não enfeite.
 - **Causa e efeito legíveis:** toda intervenção deve ter consequência visível (cores de congestionamento, filas, agentes).
 - **Simulação separada da renderização:** `core/` não conhece o Three.js.
-- **Estética PS1 a serviço da legibilidade**, nunca contra ela. Efeitos ajustáveis.
+- **Estética a serviço da legibilidade**, nunca contra ela. Efeitos PS1 ajustáveis.
 
 ---
 
@@ -34,92 +38,120 @@ O jogador **não constrói a cidade do zero**: recebe uma cidade que já existe 
 | KPI | O que mede |
 |---|---|
 | Tempo médio de viagem | Minutos por deslocamento, média dos cidadãos |
-| Congestionamento | % das vias acima da capacidade nos horários de pico |
-| Divisão modal | % a pé / bicicleta / ônibus / metrô / carro |
-| Emissões | Poluição gerada pelo tráfego |
-| Segurança | Acidentes por período |
-| Acessibilidade | % de moradores com serviço essencial a ≤ 15 min sem carro |
+| Congestionamento | % das faixas acima da capacidade nos horários de pico |
+| Divisão modal | % a pé / cadeira de rodas / rodinha lenta / rodinha rápida / coletivo |
+| Energia | Consumo dos veículos elétricos (patinete elétrico, hoverboard, monociclo, cadeira motorizada, tuk-tuk) |
+| Segurança | Quedas e colisões por período (conflitos entre faixas e velocidades diferentes) |
+| Acessibilidade | % de moradores, **incluindo os usuários de cadeira de rodas**, com serviço essencial a ≤ 15 min |
 | Equidade | Diferença de tempo de viagem entre bairros ricos e pobres |
-| Saldo | Receita (tarifas, multas, pedágios) − custos (obras, operação) |
+| Radicalidade | Uso dos elementos radicais (gaps, loops, saltos): a "vibe" da cidade |
+| Saldo | Receita (tarifas, compartilhamento, eventos) − custos (obras, operação) |
 | Satisfação | Nota geral dos cidadãos |
 
 **Modos**
-- **Cenários (principal):** cada cidade/mapa tem metas fixas (ex.: "reduzir o tempo médio em 20% sem gastar mais que X"). Estrelas de 1 a 3.
+- **Cenários (principal):** cada mapa tem metas fixas (ex.: "reduzir o tempo médio em 20% e chegar a 95% de acessibilidade sem gastar mais que X"). Estrelas de 1 a 3.
 - **Sandbox:** sem metas; experimente livremente.
-- **Eventos:** surpresas que quebram o equilíbrio — obra, chuva, jogo de futebol, greve, acidente, bairro novo.
+- **Eventos:** surpresas que quebram o equilíbrio, como obra, chuva (pista escorregadia), campeonato de skate (multidão num bowl), greve dos tuk-tuks, queda num loop, bairro novo.
 
 ---
 
 ## 3. Escopo
 
 ### MVP (v0.1)
-- 1 cidade pequena, feita à mão (~48×48 tiles), com bairros residenciais, comerciais, industriais e serviços.
-- Rede viária com ruas de 1–2 sentidos; carros e pedestres como agentes.
-- Ferramentas: **sentido da via**, **semáforo (tempos)**, **limite de velocidade**, **faixa de ônibus**.
-- Transporte público básico: **linhas de ônibus** (criar/editar paradas e frequência).
-- Cidadãos com rotina casa → trabalho → casa e escolha de modo (carro × ônibus × a pé).
+- 1 cidade pequena, feita à mão (~48×48 tiles), com bairros residenciais, comerciais, industriais e de serviços, cortada por **um canal**.
+- **Faixas:** calçada, rodinha lenta, rodinha rápida e coletiva.
+- **Agentes:** pedestre, cadeira de rodas (manual), skate e patinete. São os representantes de cada faixa.
+- **Transporte coletivo:** **linhas de tuk-tuk** (criar/editar paradas e frequência).
+- **Elementos radicais:** **Rampa-Ponte** (travessia rápida, só para quem faz manobras) e **Elevador de Bolha** (rota acessível, com capacidade limitada).
+- **Ferramentas:** sentido da via, semáforo (tempos), divisão de faixas, limite de velocidade, linha de tuk-tuk, elemento de travessia.
+- Cidadãos com rotina casa → trabalho → casa e escolha de modo entre os veículos que possuem e o coletivo.
 - Mapas de calor de tráfego; HUD com KPIs principais; pausa e velocidade.
-- Pipeline visual PS1 (baixa resolução, névoa, textura sem filtro; jitter/affine opcionais).
+- Pipeline visual PS1 (baixa resolução, névoa, textura sem filtro; jitter/affine opcionais) com camada Frutiger Aero (céu, vidro, gel).
 - Salvar/carregar; 1 cenário com 3 metas.
 
 ### v0.2
-- **Bicicleta:** ciclovias/ciclofaixas e nível de estresse do ciclista.
-- **Metrô/BRT/trem**, integração entre modos, tarifa e bilhete único.
-- **Estacionamento** (vagas, preço), **pedágio urbano**, **rodízio**.
-- **Pedestres:** calçadas, travessias, faixas elevadas.
-- Acidentes, ambulâncias e emergências; eventos dinâmicos.
+- Todos os veículos individuais: longboard, patinete elétrico, patins, cadeira motorizada, hoverboard, monociclo elétrico e BMX.
+- **Linhas de tandem** (2–4 lugares, bairro) integradas às de tuk-tuk; tarifa e bilhete único.
+- **Elementos radicais completos:** Loop Aéreo, Salto Mortal, Rail-Passarela, Wallride Tubular, Quarter-pipe de Esquina e Funil Bowl (ver `data/arte/elementos-radicais.json`).
+- **Estações de compartilhamento** (patinetes e hoverboards de aluguel) e racks de skate.
+- **Pedestres:** travessias, calçadas largas, faixas elevadas.
+- Quedas e acidentes, socorristas de patins, eventos dinâmicos (campeonatos, chuva).
 - Vários cenários e progressão; dia/noite e clima.
-- Importação de cidade real a partir de dados abertos (OpenStreetMap) por script offline.
+- Importação de cidade real a partir de dados abertos (OpenStreetMap) por script offline. As pontes reais viram elementos radicais.
 
 ### Fora de escopo (por ora)
-- Construir/zonear prédios livremente; terreno com elevação; multiplayer; simulação microscópica realista (troca de faixa, física de veículos).
+- Carros, ônibus, metrô ou qualquer veículo motorizado de grande porte.
+- Construir/zonear prédios livremente; terreno com elevação (só os elementos radicais têm altura própria); multiplayer; física real de manobras. As manobras são animações sobre o trajeto, não simulação.
 
 ---
 
 ## 4. Mecânicas e simulação
 
 ### 4.1 A cidade pré-existente
-Carregada de um arquivo `city.json` (ver §6): grafo viário, prédios com tipo e capacidade, população por bairro e pontos de interesse. O jogador pode ter áreas bloqueadas (patrimônio, rio) onde não se pode intervir.
+Carregada de um arquivo `city.json` (ver §6): grafo viário com faixas por tipo, **travessias** (sobre rios, canais e avenidas expressas) ocupadas por elementos radicais, prédios com tipo e capacidade, população por bairro e pontos de interesse. Pode haver áreas bloqueadas (patrimônio, rio) onde não se pode intervir.
 
-### 4.2 Cidadãos (agentes)
-- Cada cidadão tem **casa**, **destinos** (trabalho/escola/lazer/compras), **horário** e **renda** (afeta opções de modo).
-- Rotina diária em ticks: ida ao trabalho de manhã, volta à tarde, viagens de lazer à noite. Picos às ~8h e ~18h.
-- **Escolha modal:** para cada viagem, estima-se *tempo + custo + conforto/segurança* de cada modo disponível e escolhe-se o de menor "desutilidade" (modelo logit simples, com ruído).
-- Se a cidade melhora um modo, **mais pessoas migram para ele** → o jogador vê o efeito.
+### 4.2 Veículos e faixas
+| Faixa | Quem usa | Velocidade típica |
+|---|---|---|
+| Calçada | Pedestre, cadeira de rodas manual | 1–3 m/s |
+| Rodinha lenta | Patinete, patins, cadeira motorizada, hoverboard | 2,5–6 m/s |
+| Rodinha rápida | Skate, longboard, patinete elétrico, monociclo, BMX | 4–8,5 m/s |
+| Coletiva | Tandem, tuk-tuk | 4–9 m/s |
 
-### 4.3 Tráfego
-- Rede = grafo dirigido (nós = cruzamentos, arestas = trechos de via com capacidade, velocidade, faixas).
-- **Rota:** A\* / Dijkstra com custo = tempo de viagem atual (inclui congestionamento) → caminhos mudam conforme a rede lota.
-- **Congestionamento (versão leve para o MVP):** tempo de percurso por aresta cresce com a ocupação (função BPR: `t = t0 · (1 + 0.15 · (fluxo/capacidade)^4)`). Os veículos visíveis são amostra dos fluxos.
-- **Cruzamentos:** semáforo com ciclo e fases; prioridade e conversões geram filas.
-- Evolução futura: simulação por veículo (car-following simples) em vias críticas.
+- Cada trecho de via tem uma **largura** dividida entre as faixas. Redistribuir a largura é a principal ferramenta.
+- Sem a faixa própria, o veículo usa a vizinha mais lenta. A velocidade cai e o risco de colisão sobe, o que pesa no KPI de Segurança.
+- Parâmetros de cada veículo (velocidade, faixa, se faz manobras) ficam em `data/arte/veiculos.json`. Os números de balanceamento ficam em `config/balance.json`.
 
-### 4.4 Transporte público
-- **Linha** = sequência de paradas + frequência (headway) + frota.
-- Veículos andam pela rede (ônibus sofrem congestionamento; faixa exclusiva ou metrô não).
-- **Lotação:** acima da capacidade, passageiros esperam mais ou desistem.
+### 4.3 Cidadãos (agentes)
+- Cada cidadão tem **casa**, **destinos** (trabalho/escola/lazer/compras), **horário**, **renda** e **veículos próprios** (ex.: skate + patinete; ou só a pé).
+- **Usuários de cadeira de rodas** sempre se deslocam de cadeira (manual ou motorizada) ou de coletivo acessível. Eles nunca "trocam de modo", e cabe à cidade garantir as rotas.
+- Rotina diária em ticks: ida ao trabalho de manhã, volta à tarde, viagens de lazer à noite (inclusive *sessões* no skatepark). Picos às ~8h e ~18h.
+- **Escolha modal:** para cada viagem, estima-se *tempo + custo + conforto/segurança + diversão* de cada opção disponível (veículos próprios, compartilhados, coletivo, a pé) e escolhe-se a de menor "desutilidade" (logit simples, com ruído). A **diversão** vem dos elementos radicais na rota: um skatista aceita uma rota um pouco mais longa se ela tiver um loop.
+- Se a cidade melhora uma opção, **mais pessoas migram para ela**, e o jogador vê o efeito.
+
+### 4.4 Tráfego
+- Rede = grafo dirigido (nós = cruzamentos, arestas = trechos de via com faixas, capacidade por faixa e velocidade).
+- **Rota:** A\* / Dijkstra **por modo** (cada veículo só usa as arestas e travessias permitidas para ele), com custo = tempo atual (inclui congestionamento).
+- **Congestionamento (MVP):** o tempo de percurso por faixa cresce com a ocupação (função BPR: `t = t0 · (1 + 0.15 · (fluxo/capacidade)^4)`). Os agentes visíveis são uma amostra dos fluxos.
+- **Cruzamentos:** semáforo com ciclo e fases por faixa; os quarter-pipes de esquina aceleram as conversões das rodinhas rápidas.
+
+### 4.5 Elementos radicais e travessias
+- Rios, canais e avenidas expressas **só podem ser atravessados por elementos radicais**. Não há pontes comuns.
+- Cada elemento tem **quem pode usar** (só veículos com manobras, ou velocidade mínima), **capacidade**, **tempo de travessia**, **risco de queda** e **bônus de diversão**.
+- **Rota acessível obrigatória:** cada travessia precisa de uma alternativa para quem não faz manobras (Elevador de Bolha, passarela de vidro ou linha de coletivo). Se faltar, o KPI de Acessibilidade cai e o cenário pode travar uma meta.
+- O Elevador de Bolha tem capacidade limitada e forma fila, o que cria o dilema *velocidade radical × inclusão*.
+
+### 4.6 Transporte coletivo
+- **Linha** = sequência de paradas + frequência (headway) + frota, de **tuk-tuk** (linhas principais) ou **tandem** (linhas de bairro, v0.2).
+- Os veículos andam pela faixa coletiva. Sem ela, dividem a faixa lenta e sofrem congestionamento.
+- **Lotação:** acima da capacidade, os passageiros esperam mais ou desistem.
+- Os tuk-tuks são acessíveis (rampa para cadeira de rodas); os tandems, não.
 - Custos: operação por veículo/hora; receita por tarifa.
 
-### 4.5 Ferramentas do jogador (comandos)
+### 4.7 Ferramentas do jogador (comandos)
 | Ferramenta | Efeito |
 |---|---|
-| Sentido de via | Muda mão única/dupla |
-| Semáforo | Ajusta ciclo, fases, onda verde |
-| Limite de velocidade | Afeta tempo, segurança e emissões |
-| Faixa de ônibus / ciclovia | Reserva espaço (reduz capacidade de carros) |
-| Linha de ônibus / metrô | Cria, edita paradas, frequência, frota |
-| Estacionamento / pedágio | Muda custo e atratividade do carro |
-| Travessia / calçada | Segurança e conforto do pedestre |
-| Tarifa | Preço do transporte público |
+| Sentido de via | Muda mão única/dupla, por faixa |
+| Divisão de faixas | Redistribui a largura entre calçada / lenta / rápida / coletiva |
+| Semáforo | Ajusta ciclo, fases por faixa, onda verde |
+| Limite de velocidade | Afeta tempo, segurança e energia |
+| Linha de tuk-tuk / tandem | Cria, edita paradas, frequência, frota |
+| Elemento de travessia | Escolhe/troca o elemento radical de uma travessia e sua rota acessível |
+| Elemento radical urbano | Instala quarter-pipe de esquina, rail ou bowl em pontos permitidos |
+| Estação de compartilhamento | Patinetes e hoverboards de aluguel (v0.2) |
+| Travessia de pedestre / calçada | Segurança e conforto de quem anda a pé ou de cadeira |
+| Tarifa | Preço do coletivo e do compartilhamento |
 
 Toda ferramenta é um **Command** com custo, undo/redo e pré-visualização do impacto estimado.
 
-### 4.6 Tempo e economia
-1 tick = 1 minuto de jogo (ajustável); 1 dia = 1440 ticks (comprimível por velocidade). Orçamento mensal: receita de tarifas/multas/pedágio vs. custos de obras e operação.
+### 4.8 Tempo e economia
+1 tick = 1 minuto de jogo (ajustável); 1 dia = 1440 ticks (comprimível por velocidade). Orçamento mensal: receita de tarifas, compartilhamento e eventos vs. custos de obras e operação.
 
 ---
 
-## 5. Direção de arte (PS1)
+## 5. Direção de arte
+
+Detalhada em `docs/style-guide.md`. Resumo: **concreto cru de PS1 com vidro lustroso Frutiger Aero**, em uma cidade-skatepark cheia de atitude da virada dos anos 2000.
 
 | Característica PS1 | Como reproduzir |
 |---|---|
@@ -130,15 +162,18 @@ Toda ferramenta é um **Command** com custo, undo/redo e pré-visualização do 
 | Iluminação por vértice | Cores de vértice *baked*; sem luzes dinâmicas |
 | Dither + cor 15-bit | Pós-processo Bayer 4×4 + quantização |
 | Névoa curta | Fog no shader / `scene.fog` |
-| Modelos low-poly | Prédios 12–200 triângulos, veículos 20–60 |
+| Modelos low-poly | Prédios 12–200 triângulos, veículos/cidadãos 20–60, elementos radicais até 300 |
 
-**Prioridades específicas para um jogo de mobilidade (legibilidade):**
-- Vias, faixas, ciclovias, trilhos e paradas devem ser **imediatamente distinguíveis** (cor + textura + forma).
-- **Veículos pequenos e distintos** por tipo (carro, ônibus, caminhão, bicicleta, pedestre).
-- **Overlays de dados** claros (verde → amarelo → vermelho) por cima do visual PS1.
-- Efeitos PS1 intensos (jitter, affine) com **controle de intensidade** para não atrapalhar a leitura do mapa.
+**Camada Frutiger Aero:** céu azul saturado com nuvens, vidro e cromo com reflexo falso (env map no mesmo shader), água turquesa com bolhas, gramados verde-limão e painéis de UI em gel.
 
-**Referências de feeling:** SimCity 2000 (PS1), Driver, Ape Escape, Silent Hill (névoa), Mini Metro/Mini Motorways (clareza de rede).
+**Prioridades para um jogo de mobilidade (legibilidade):**
+- Calçada, faixa lenta, faixa rápida, faixa coletiva, travessias e paradas devem ser **imediatamente distinguíveis** (cor do piso + marcação + forma).
+- **Cada tipo de veículo é reconhecível pela silhueta** vista de cima: skate fino, cadeira com rodas grandes, tandem alongado, tuk-tuk em bolha de vidro.
+- As **35 cores de variação** (`data/arte/paleta.json`) servem só para dar variedade aos cidadãos e veículos e nunca indicam estado. Com os overlays ligados, os veículos ficam dessaturados.
+- **Overlays de dados** claros (verde → amarelo → vermelho) por cima do visual.
+- Efeitos PS1 intensos (jitter, affine) com **controle de intensidade**.
+
+**Referências de feeling (só estilo):** série de skate da era PS1 (THPS2), Jet Set Radio, SSX Tricky, Crazy Taxi, Wipeout 3, Ape Escape, UI do Windows Vista/Wii, Mini Metro/Mini Motorways (clareza de rede). Lista completa em `docs/referencias.md`. **Nenhum asset de jogo comercial é usado.**
 
 ---
 
@@ -148,29 +183,33 @@ Toda ferramenta é um **Command** com custo, undo/redo e pré-visualização do 
 src/
   core/                # Lógica pura, sem Three.js (testável)
     City.ts            # carrega city.json; prédios, bairros, POIs
-    RoadGraph.ts       # nós, arestas, capacidade, semáforos
-    Pathfinding.ts     # A*/Dijkstra com custo dinâmico
-    Agents.ts          # cidadãos, rotinas, escolha modal
-    Transit.ts         # linhas, paradas, veículos, lotação
+    RoadGraph.ts       # nós, arestas, faixas por tipo, semáforos
+    Crossings.ts       # travessias, elementos radicais, rotas acessíveis
+    Pathfinding.ts     # A*/Dijkstra por modo, com custo dinâmico
+    Agents.ts          # cidadãos, veículos próprios, rotinas, escolha modal
+    Transit.ts         # linhas de tuk-tuk/tandem, paradas, lotação
     Simulation.ts      # tick(), sistemas, eventos
     Kpis.ts            # métricas e metas do cenário
     Commands.ts        # ferramentas do jogador (undo/redo)
     Save.ts
   render/              # Tudo que toca Three.js
     Renderer.ts        # render target low-res, resize
-    ps1/Ps1Material.ts # snap + affine + vertex color + fog
+    ps1/Ps1Material.ts # snap + affine + vertex color + fog + env map Aero
     ps1/PostFx.ts      # upscale nearest + dither + 15-bit
     CityView.ts        # InstancedMesh de prédios/vias
-    VehicleView.ts     # instâncias de veículos/pedestres
-    Overlays.ts        # heatmaps de tráfego, rotas, cobertura
-    Picking.ts         # Raycaster → via/nó/parada
+    RadicalView.ts     # rampas, loops, elevadores; animação de manobras
+    VehicleView.ts     # instâncias de cidadãos/veículos por tipo
+    Overlays.ts        # heatmaps de tráfego, rotas, cobertura, acessibilidade
+    Picking.ts         # Raycaster → via/nó/parada/travessia
     CameraRig.ts
-  ui/                  # HUD em HTML/CSS (fonte bitmap)
+  ui/                  # HUD em HTML/CSS (fonte bitmap, painéis em gel)
   assets/
     models/            # .glb low-poly
     textures/          # atlas
     cities/            # city.json por cenário
   main.ts
+data/arte/             # paleta, veículos e elementos radicais (Direção de Arte)
+config/balance.json    # números de balanceamento (Game Design)
 ```
 
 **Fluxo:** `input → Command → core muda → eventos → render atualiza só o afetado`. A simulação roda em passo fixo; o render lê o estado.
@@ -180,16 +219,27 @@ src/
 **Formato da cidade (contrato entre as três áreas):**
 
 ```ts
+type LaneKind = 'sidewalk' | 'slow' | 'fast' | 'transit';
+type VehicleKind = 'pedestrian' | 'wheelchair' | 'wheelchair_powered' | 'skate' | 'longboard'
+  | 'kick_scooter' | 'e_scooter' | 'skates' | 'hoverboard' | 'e_unicycle' | 'bmx'
+  | 'tandem' | 'tuktuk';
+type RadicalKind = 'ramp_bridge' | 'air_loop' | 'death_jump' | 'rail_walkway';
+type AccessKind = 'bubble_lift' | 'glass_walkway' | 'transit_only';
+
 interface CityFile {
   name: string;
   size: { w: number; h: number };
   nodes: { id: number; x: number; y: number; signal?: SignalCfg }[];
-  edges: { id: number; from: number; to: number; lanes: number;
-           speed: number; oneWay: boolean; kind: 'street' | 'avenue' | 'highway';
-           lanesReserved?: ('bus' | 'bike')[] }[];
-  buildings: { id: number; x: number; y: number; kind: 'res' | 'com' | 'ind' | 'school' | 'hospital' | 'park';
+  edges: { id: number; from: number; to: number; width: number; speed: number;
+           oneWay: boolean; kind: 'street' | 'avenue' | 'boulevard';
+           lanes: Partial<Record<LaneKind, number>> }[];
+  crossings: { id: number; from: number; to: number; over: 'river' | 'canal' | 'expressway';
+               radical: RadicalKind; access?: AccessKind; locked?: boolean }[];
+  buildings: { id: number; x: number; y: number; kind: 'res' | 'com' | 'ind' | 'school' | 'hospital' | 'park' | 'skatepark';
                capacity: number; model: string; rotation: 0 | 1 | 2 | 3 }[];
-  districts: { id: number; name: string; income: 'low' | 'mid' | 'high'; population: number }[];
+  districts: { id: number; name: string; income: 'low' | 'mid' | 'high'; population: number;
+               ownership: Partial<Record<VehicleKind, number>>;   // % de moradores com cada veículo
+               wheelchairShare: number }[];
   scenario?: { goals: Goal[]; budget: number; durationDays: number };
 }
 ```
@@ -227,23 +277,24 @@ void main() {
 O WebGL não tem `noperspective`. O vertex envia `uv * w` e `w`; o fragment divide (`vUv / vW`), o que cancela a correção de perspectiva. O efeito aparece em polígonos grandes e próximos — em vista aérea é sutil. Use intensidade ajustável.
 
 ### 7.4 Material único
-Um `ShaderMaterial` PS1 (textura, cor de vértice, névoa, snapping, affine) para tudo. Evite `MeshStandardMaterial`.
+Um `ShaderMaterial` PS1 (textura, cor de vértice, névoa, snapping, affine) para tudo. Vidro e cromo Aero usam um *env map* falso de 64×64 (reflexo do céu) no mesmo shader, ligado por *define*. Evite `MeshStandardMaterial`.
 
 ### 7.5 Instâncias para a cidade móvel
-- **Prédios e trechos de via:** `InstancedMesh` por modelo (estático, atualiza só quando muda).
-- **Veículos e pedestres:** `InstancedMesh` por tipo, matrizes atualizadas todo frame a partir da posição interpolada ao longo da aresta (`posição = lerp(nóA, nóB, t)`). Milhares de agentes continuam sendo poucas draw calls.
-- Mostre só uma **amostra** dos agentes simulados (ex.: 1 veículo visível por N reais) para manter 60 FPS.
+- **Prédios, trechos de via e elementos radicais:** `InstancedMesh` por modelo (estático, atualiza só quando muda).
+- **Cidadãos e veículos:** `InstancedMesh` por tipo de veículo, com matrizes atualizadas todo frame a partir da posição interpolada ao longo da aresta (`posição = lerp(nóA, nóB, t)`). Nos elementos radicais, a posição segue a curva da peça (arco do salto, círculo do loop). A cor vem por `instanceColor`, sorteada da paleta de 35 cores.
+- Mostre só uma **amostra** dos agentes simulados (ex.: 1 visível por N reais) para manter 60 FPS.
 
-### 7.6 Vias, trilhos e rotas
-- Geração das vias como geometria extrudada ao longo das arestas (plano com textura de asfalto/faixas); cruzamentos como quads.
-- Linhas de transporte: `Line2`/malha fina colorida sobre a via; paradas como modelos pequenos.
+### 7.6 Vias, faixas e rotas
+- Vias geradas como geometria extrudada ao longo das arestas, com uma tira por faixa (cor e textura próprias); cruzamentos como quads.
+- Elementos radicais são `.glb` posicionados nas travessias e escalados para o vão.
+- Linhas de coletivo: `Line2`/malha fina colorida sobre a faixa coletiva; paradas como modelos pequenos.
 - Rota de um cidadão selecionado: polilinha sobre a malha.
 
 ### 7.7 Overlays de tráfego
-`DataTexture` ou *vertex colors* por aresta: ocupação → verde/amarelo/vermelho. Atualize a cada N ticks, não todo frame.
+`DataTexture` ou *vertex colors* por faixa: ocupação → verde/amarelo/vermelho. Overlay de acessibilidade destaca travessias sem rota acessível. Atualize a cada N ticks, não todo frame.
 
 ### 7.8 Câmera e seleção
-`PerspectiveCamera` com FOV baixo (35–45°) inclinada, ou ortográfica para clareza; pan, zoom e rotação em passos de 90°. Seleção por raio contra y=0 → tile; depois, vizinhos mais próximos no grafo (ponto-segmento) para escolher via/nó/parada.
+`PerspectiveCamera` com FOV baixo (35–45°) inclinada, ou ortográfica para clareza; pan, zoom e rotação em passos de 90°. Seleção por raio contra y=0 → tile; depois, vizinhos mais próximos no grafo (ponto-segmento) para escolher via/nó/parada/travessia.
 
 ### 7.9 Loop e desempenho
 - Simulação em passo fixo com acumulador; render desacoplado.
@@ -264,20 +315,21 @@ vec3 c = floor((color + d / 32.0) * 31.0 + 0.5) / 31.0;
 
 ## 8. Interface do usuário
 
+- **Linguagem visual:** painéis e pílulas de vidro em gel no estilo Frutiger Aero, com cantos pixelados e **fonte bitmap** (gerada de fontes OFL; ver `docs/referencias.md`).
 - **Barra superior:** dinheiro, data/hora, velocidade, KPIs resumidos, meta do cenário.
-- **Barra de ferramentas:** via, semáforo, ônibus, metrô, ciclovia, estacionamento, tarifa.
-- **Painel de seleção:** ao clicar numa via/parada/linha mostra fluxo, velocidade média, lotação, custo.
-- **Abas de overlay:** tráfego, transporte público, emissões, acidentes, acessibilidade.
+- **Barra de ferramentas:** faixas, sentido, semáforo, tuk-tuk/tandem, travessias radicais, compartilhamento, tarifa.
+- **Painel de seleção:** ao clicar numa via/parada/linha/travessia mostra fluxo por faixa, velocidade média, lotação, fila do elevador, custo.
+- **Abas de overlay:** tráfego, coletivo, acessibilidade, segurança, energia.
+- **Feedback "radical":** texto grande e inclinado, no estilo dos jogos de skate dos anos 2000, quando algo bom acontece ("+12% SATISFAÇÃO!", "NOVO RECORDE NO SALTO MORTAL!").
 - **Gráficos** de KPIs ao longo do tempo (série simples, estilo pixelado).
-- **Fonte bitmap** e janelas chanfradas ao estilo PS1.
-- Atalhos: `Espaço` pausa, `1/2/3` velocidade, `Q/E` gira câmera, `Esc` cancela, `Ctrl+Z` desfaz, `T` overlay de tráfego.
+- Atalhos: `Espaço` pausa, `1/2/3` velocidade, `Q/E` gira câmera, `Esc` cancela, `Ctrl+Z` desfaz, `T` overlay de tráfego, `A` overlay de acessibilidade.
 - **Tutorial** curto no primeiro cenário (3–4 passos guiados).
 
 ---
 
 ## 9. Áudio
 
-Trilha lo-fi/sintetizada; sons de buzina, ônibus, sinal e estação em baixa taxa (11–22 kHz). Intensidade do ruído de trânsito reflete o congestionamento.
+Trilha no clima da virada dos anos 2000 (skate punk, pop-punk, drum'n'bass, hip-hop) e eletrônico "Aero" calmo nos menus, só com faixas originais ou de licença livre (nada de trilhas licenciadas de jogos comerciais). Efeitos em baixa taxa (11–22 kHz): rodinhas no concreto, no metal e no vidro, *pop* do shape, *grind*, campainha do tandem, motor elétrico do tuk-tuk, bolhas do elevador. A intensidade do ruído de rodinhas reflete o congestionamento.
 
 ---
 
@@ -286,7 +338,8 @@ Trilha lo-fi/sintetizada; sons de buzina, ônibus, sinal e estação em baixa ta
 - 60 FPS com 2.000 agentes visíveis em notebook com GPU integrada.
 - Carregamento < 3 s; salvamento < 100 ms.
 - Simulação determinística por *seed* (cenários reproduzíveis e testáveis).
-- Cobertura de testes na simulação (`core/`), em especial pathfinding, escolha modal e KPIs.
+- Cobertura de testes na simulação (`core/`), em especial pathfinding por modo, travessias/acessibilidade, escolha modal e KPIs.
+- Assets de terceiros apenas com licença livre, registrados em `docs/creditos.md`.
 
 ---
 
@@ -294,28 +347,28 @@ Trilha lo-fi/sintetizada; sons de buzina, ônibus, sinal e estação em baixa ta
 
 | Papel | Responde por | Entrega principal |
 |---|---|---|
-| **Direção de Arte** | Identidade visual PS1, modelos, texturas, UI, áudio | Kit visual legível e coerente |
+| **Direção de Arte** | Identidade visual PS1 + Aero, modelos, texturas, UI, áudio | Kit visual legível e coerente |
 | **Game Design** | Regras, equilíbrio, cenários, cidade, tutorial, texto | Jogo divertido, compreensível e balanceado |
 | **Engenharia** | Three.js, simulação, ferramentas, build, desempenho | Jogo rodando, estável e testável |
 
 ### 11.1 Direção de Arte
 **Responsabilidades**
-- Definir o *style guide* PS1: paleta (≤ 32 cores base), regras de texturas, orçamento de polígonos, referências.
-- Modelar e texturizar (Blender): prédios, vias/cruzamentos, veículos, pedestres, paradas, estações, props.
+- Manter o *style guide* (`docs/style-guide.md`): paleta-base (≤ 32 cores) + 35 cores de variação, regras de texturas, orçamento de polígonos, referências.
+- Modelar e texturizar (Blender) prédios, vias/faixas, cruzamentos, **elementos radicais** (rampas, loops, elevadores), **cidadãos e veículos** (13 tipos), paradas e props. Partir dos kits livres de `docs/referencias.md`; tandem, tuk-tuk, BMX e patins precisam ser modelados.
 - Atlas de texturas; pintar cores de vértice (luz *baked*).
-- Design da **UI/HUD**: fonte bitmap, ícones, janelas, cores de overlays (testadas para daltonismo).
+- Design da **UI/HUD**: fonte bitmap, ícones, painéis em gel, cores de overlays (testadas para daltonismo).
 - Áudio: trilha e efeitos.
 - Revisar legibilidade em baixa resolução com os efeitos PS1 ligados.
 
 **Entregáveis e formato**
 - `assets/models/*.glb` (origem no centro/base, escala 1 tile = 1 unidade, nomes padronizados).
 - `assets/textures/atlas.png` + `atlas.json` (UVs).
-- Pasta `ui/` com sprites e fontes; `docs/style-guide.md`.
+- Pasta `ui/` com sprites e fontes; `docs/style-guide.md`; `data/arte/*.json`; `docs/creditos.md`.
 
 ### 11.2 Game Design
 **Responsabilidades**
-- Documentar regras e fórmulas (escolha modal, custos, tarifas, metas) em `docs/design/`.
-- Projetar a(s) **cidade(s)**: desenhar o mapa, bairros, pontos de dor do trânsito, e produzir `city.json` (com ferramenta de edição ou planilha + script).
+- Documentar regras e fórmulas (escolha modal com diversão, faixas, travessias, custos, tarifas, metas) em `docs/design/`.
+- Projetar a(s) **cidade(s)**: mapa, bairros, canais/rios, travessias, pontos de dor do trânsito, e produzir `city.json`.
 - Projetar **cenários**: metas, orçamento, prazo, eventos, curva de dificuldade, estrelas.
 - Equilibrar parâmetros em arquivos de dados (`config/balance.json`), sem depender de código.
 - Desenhar **tutorial**, textos, nomes de bairros e feedback ao jogador.
@@ -327,8 +380,8 @@ Trilha lo-fi/sintetizada; sons de buzina, ônibus, sinal e estação em baixa ta
 ### 11.3 Engenharia
 **Responsabilidades**
 - Setup do repositório (Vite + TS), CI, lint e testes.
-- Implementar `core/` (grafo, rotas, agentes, transporte, KPIs, comandos) e `render/` (shaders PS1, instâncias, overlays).
-- Carregar/validar `city.json` e `balance.json`; carregar `.glb` e atlas.
+- Implementar `core/` (grafo com faixas, travessias, rotas por modo, agentes, coletivo, KPIs, comandos) e `render/` (shaders PS1 + Aero, instâncias, elementos radicais, overlays).
+- Carregar/validar `city.json`, `balance.json` e `data/arte/*.json`; carregar `.glb` e atlas.
 - Construir a UI em HTML conforme o design da arte; integrar áudio.
 - Desempenho, *save/load*, determinismo e ferramentas de debug (inspetor de agentes, fps, toggles PS1).
 - Expor ao design **parâmetros ajustáveis** e ao art um **modo de visualização** de assets.
@@ -340,8 +393,8 @@ Trilha lo-fi/sintetizada; sons de buzina, ônibus, sinal e estação em baixa ta
 | De → Para | Contrato |
 |---|---|
 | Design → Engenharia | `city.json` + `balance.json` (esquema validado) e especificação das fórmulas |
-| Arte → Engenharia | `.glb` + atlas + convenção de nomes (`bld_res_1.glb`, `veh_bus.glb`, …) |
-| Design ↔ Arte | Lista de assets necessários por cenário; feedback de legibilidade |
+| Arte → Engenharia | `.glb` + atlas + `data/arte/*.json` + convenção de nomes (`bld_res_1.glb`, `veh_skate.glb`, `veh_tuktuk.glb`, `rad_air_loop.glb`, …) |
+| Design ↔ Arte | Lista de assets por cenário; feedback de legibilidade |
 | Engenharia → todos | Build jogável a cada fim de sprint; página de visualização de assets; log de tuning |
 
 ---
@@ -360,47 +413,47 @@ Trilha lo-fi/sintetizada; sons de buzina, ônibus, sinal e estação em baixa ta
 ### Sprint 1 — Cidade parada e visível (semanas 1–2)
 | Arte | Design | Engenharia |
 |---|---|---|
-| Kit de vias (reta, curva, T, cruzamento), 5 prédios, textura base | Primeira cidade em papel/planilha; lista de problemas de trânsito | Carregar `city.json`, desenhar vias e prédios, câmera, picking |
+| Kit de vias com faixas (reta, curva, T, cruzamento), 5 prédios, textura base, céu Aero | Primeira cidade em papel/planilha, com canal e travessias; lista de problemas de trânsito | Carregar `city.json`, desenhar vias com faixas e prédios, câmera, picking |
 
 **Marco:** cidade low-poly renderizada em PS1 com câmera funcional.
 
-### Sprint 2 — Gente e carros se movendo (semanas 3–4)
+### Sprint 2 — Gente rolando (semanas 3–4)
 | Arte | Design | Engenharia |
 |---|---|---|
-| Carro, ônibus, pedestre; ícones de ferramenta; esboço do HUD | Rotinas diárias, picos, fórmula de escolha modal v1 | Grafo, A\*, agentes com rotina, veículos instanciados, tick/velocidade |
+| Pedestre, cadeira de rodas, skate, patinete; ícones de ferramenta; esboço do HUD em gel | Rotinas diárias, picos, posse de veículos por bairro, escolha modal v1 | Grafo com faixas, A\* por modo, agentes com rotina, instâncias por tipo, tick/velocidade |
 
-**Marco:** cidadãos vão de casa ao trabalho e voltam; vias congestionam.
+**Marco:** cidadãos vão de casa ao trabalho e voltam, cada um na sua faixa; as faixas congestionam.
 
-### Sprint 3 — Primeiras ferramentas e KPIs (semanas 5–6)
+### Sprint 3 — Ferramentas, KPIs e travessias (semanas 5–6)
 | Arte | Design | Engenharia |
 |---|---|---|
-| UI de ferramentas e painéis; cores dos overlays; semáforos 3D | Metas do cenário 1, custos de ferramentas, curva de dificuldade | Comandos (sentido, semáforo, velocidade), congestionamento BPR, KPIs, overlay de tráfego |
+| Rampa-Ponte e Elevador de Bolha; UI de ferramentas e painéis; cores dos overlays; semáforos 3D | Metas do cenário 1, custos de ferramentas, regras de travessia e acessibilidade | Comandos (faixas, sentido, semáforo, travessia), BPR, KPIs, overlays de tráfego e acessibilidade, animação de salto |
 
-**Marco:** jogador muda uma rua e vê o KPI mudar.
+**Marco:** o jogador redistribui uma faixa ou troca uma travessia e vê o KPI mudar.
 
-### Sprint 4 — Transporte público (semanas 7–8)
+### Sprint 4 — Transporte coletivo (semanas 7–8)
 | Arte | Design | Engenharia |
 |---|---|---|
-| Parada, ônibus, estação; ícones de linha; áudio base | Regras de linhas, frequência, tarifa, lotação; tutorial (roteiro) | Linhas de ônibus, lotação, escolha modal com transporte, faixa de ônibus |
+| Tuk-tuk, parada Aero; ícones de linha; áudio base | Regras de linhas, frequência, tarifa, lotação; tutorial (roteiro) | Linhas de tuk-tuk, lotação, escolha modal com coletivo, faixa coletiva |
 
-**Marco:** criar uma linha de ônibus tira carros da rua.
+**Marco:** criar uma linha de tuk-tuk desafoga as faixas e leva os usuários de cadeira de rodas para o outro lado do canal.
 
 ### Sprint 5 — Vertical slice (semanas 9–10)
 | Arte | Design | Engenharia |
 |---|---|---|
-| Efeitos PS1 completos (jitter, affine, dither), polish, trilha | Cenário 1 completo com 3 estrelas; eventos; balanceamento | Save/load, desempenho, tutorial interativo, toggles PS1 |
+| Efeitos PS1 completos (jitter, affine, dither), polish Aero, feedback "radical" no HUD, trilha | Cenário 1 completo com 3 estrelas; eventos; balanceamento | Save/load, desempenho, tutorial interativo, toggles PS1 |
 
 **Marco:** **vertical slice** — um cenário jogável do início ao fim, bonito e legível.
 
 ### Sprint 6 — Polimento e conteúdo (semanas 11–12)
 | Arte | Design | Engenharia |
 |---|---|---|
-| Pacote final de assets, UI revisada, acessibilidade visual | Cenário 2 (ou sandbox), ajustes pós-playtest | Correção de bugs, otimização, build final publicado |
+| Pacote final de assets, UI revisada, acessibilidade visual, `creditos.md` | Cenário 2 (ou sandbox), ajustes pós-playtest | Correção de bugs, otimização, build final publicado |
 
 **Marco:** **MVP v0.1 lançável**.
 
 ### Depois do MVP (v0.2)
-Bicicleta, metrô, estacionamento/pedágio, acidentes, mais cenários, importação de cidade real (OSM), simulação em Web Worker.
+Demais veículos, tandem, Loop Aéreo e demais elementos radicais, compartilhamento, quedas/acidentes, mais cenários, importação de cidade real (OSM), simulação em Web Worker.
 
 ### 12.1 Rituais da equipe
 - **Daily curto** (assíncrono é suficiente): ontem / hoje / bloqueios.
@@ -412,10 +465,14 @@ Bicicleta, metrô, estacionamento/pedágio, acidentes, mais cenários, importaç
 
 ## 13. Riscos e decisões em aberto
 
-- **Escopo da simulação:** modelar fluxo (BPR) é simples e barato; simulação por veículo é mais fiel, mas cara. *Recomendação:* fluxo + amostra visual no MVP.
-- **Legibilidade × estética:** efeitos PS1 podem atrapalhar a leitura da rede. Manter toggles e testar em playtest desde o Sprint 1.
+- **Escopo da simulação:** modelar fluxo (BPR) é simples e barato; simulação por agente é mais fiel, mas cara. *Recomendação:* fluxo por faixa + amostra visual no MVP.
+- **Muitos tipos de veículo:** 13 tipos podem confundir a leitura e o balanceamento. *Mitigação:* o MVP tem só 4 tipos + tuk-tuk; os KPIs agrupam por faixa.
+- **Tensão sem carros:** sem o "vilão" carro, o conflito vem da disputa por largura de via, das travessias radicais e da acessibilidade. Validar cedo em playtest que isso gera dilemas interessantes.
+- **Acessibilidade × radical:** os elementos radicais não podem virar barreira. A regra "toda travessia tem rota acessível" é obrigatória e testada.
+- **Legibilidade × estética:** efeitos PS1 e brilho Aero podem atrapalhar a leitura da rede. Manter toggles e testar em playtest desde o Sprint 1.
 - **Cidade fictícia ou real?** Começar fictícia e feita à mão; importar cidade real só em v0.2.
 - **Carga de conteúdo:** criar `city.json` à mão é trabalhoso. Pode valer uma pequena ferramenta (editor/script) cedo — decidir no Sprint 1.
 - **Câmera:** perspectiva (mais PS1) × ortográfica (mais legível).
 - **Equipe de 3:** risco de gargalo na Engenharia. Mitigação: contratos claros, assets e dados mockados desde o dia 1, trabalho do Design/Arte sem depender de código.
+- **Licenças de assets:** usar só fontes livres verificadas; nada de assets de jogos comerciais.
 - **Monetização/distribuição:** itch.io / web grátis? (a definir)

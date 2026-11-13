@@ -1,0 +1,213 @@
+{
+  "$descricao": "Cidadãos-veículo de Pucacity: substituem os carros no trânsito. Velocidades em m/s. 'faixa' indica onde circulam. 'cores' referencia as famílias de data/arte/paleta.json. 'tris' segue o orçamento do SPEC (20–60, cidadão + veículo juntos). 'kind' e 'lane' são os identificadores usados no city.json (SPEC §6).",
+  "faixas": {
+    "calcada": {
+      "lane": "sidewalk",
+      "descricao": "Pedestres e cadeiras de roda manuais"
+    },
+    "rodinha_lenta": {
+      "lane": "slow",
+      "descricao": "Patinete, patins, cadeira motorizada, hoverboard"
+    },
+    "rodinha_rapida": {
+      "lane": "fast",
+      "descricao": "Skate, longboard, patinete elétrico, monociclo, BMX"
+    },
+    "coletivo": {
+      "lane": "transit",
+      "descricao": "Tandem e tuk-tuk (faixa central, com paradas)"
+    }
+  },
+  "individuais": [
+    {
+      "id": "pedestre",
+      "kind": "pedestrian",
+      "nome": "Pedestre",
+      "faixa": "calcada",
+      "velocidade": [
+        1.2,
+        1.6
+      ],
+      "frequencia": 0.2,
+      "manobras": false,
+      "tris": 24
+    },
+    {
+      "id": "skate",
+      "kind": "skate",
+      "nome": "Skate",
+      "faixa": "rodinha_rapida",
+      "velocidade": [
+        4.0,
+        7.0
+      ],
+      "frequencia": 0.18,
+      "manobras": true,
+      "tris": 28
+    },
+    {
+      "id": "longboard",
+      "kind": "longboard",
+      "nome": "Longboard",
+      "faixa": "rodinha_rapida",
+      "velocidade": [
+        5.0,
+        8.0
+      ],
+      "frequencia": 0.07,
+      "manobras": false,
+      "tris": 28
+    },
+    {
+      "id": "patinete",
+      "kind": "kick_scooter",
+      "nome": "Patinete (kick)",
+      "faixa": "rodinha_lenta",
+      "velocidade": [
+        3.0,
+        5.0
+      ],
+      "frequencia": 0.1,
+      "manobras": true,
+      "tris": 32
+    },
+    {
+      "id": "patinete_eletrico",
+      "kind": "e_scooter",
+      "nome": "Patinete Elétrico",
+      "faixa": "rodinha_rapida",
+      "velocidade": [
+        5.0,
+        7.5
+      ],
+      "frequencia": 0.08,
+      "manobras": false,
+      "tris": 34
+    },
+    {
+      "id": "patins",
+      "kind": "skates",
+      "nome": "Patins (inline/quad)",
+      "faixa": "rodinha_lenta",
+      "velocidade": [
+        3.5,
+        6.0
+      ],
+      "frequencia": 0.08,
+      "manobras": true,
+      "tris": 26
+    },
+    {
+      "id": "cadeira_rodas",
+      "kind": "wheelchair",
+      "nome": "Cadeira de Rodas",
+      "faixa": "calcada",
+      "velocidade": [
+        1.5,
+        3.0
+      ],
+      "frequencia": 0.06,
+      "manobras": true,
+      "tris": 44
+    },
+    {
+      "id": "cadeira_motorizada",
+      "kind": "wheelchair_powered",
+      "nome": "Cadeira de Rodas Motorizada",
+      "faixa": "rodinha_lenta",
+      "velocidade": [
+        2.5,
+        4.0
+      ],
+      "frequencia": 0.04,
+      "manobras": false,
+      "tris": 48
+    },
+    {
+      "id": "hoverboard",
+      "kind": "hoverboard",
+      "nome": "Hoverboard",
+      "faixa": "rodinha_lenta",
+      "velocidade": [
+        3.0,
+        5.0
+      ],
+      "frequencia": 0.08,
+      "manobras": false,
+      "tris": 24
+    },
+    {
+      "id": "monociclo_eletrico",
+      "kind": "e_unicycle",
+      "nome": "Monociclo Elétrico",
+      "faixa": "rodinha_rapida",
+      "velocidade": [
+        4.5,
+        7.0
+      ],
+      "frequencia": 0.04,
+      "manobras": false,
+      "tris": 26
+    },
+    {
+      "id": "bmx",
+      "kind": "bmx",
+      "nome": "BMX",
+      "faixa": "rodinha_rapida",
+      "velocidade": [
+        5.0,
+        8.5
+      ],
+      "frequencia": 0.07,
+      "manobras": true,
+      "tris": 52
+    }
+  ],
+  "transporte_publico": [
+    {
+      "id": "tandem",
+      "kind": "tandem",
+      "nome": "Bicicleta Tandem",
+      "faixa": "coletivo",
+      "variantes": [
+        {
+          "id": "tandem_2",
+          "lugares": 2
+        },
+        {
+          "id": "tandem_3",
+          "lugares": 3
+        },
+        {
+          "id": "tandem_4",
+          "lugares": 4
+        }
+      ],
+      "velocidade": [
+        4.0,
+        6.0
+      ],
+      "linhas": "bairro",
+      "visual": "Quadro cromado, assentos em gel coloridos por linha, cestinha na frente e placa da linha em pílula Aero.",
+      "tris": 60
+    },
+    {
+      "id": "tuktuk",
+      "kind": "tuktuk",
+      "nome": "Tuk-tuk",
+      "faixa": "coletivo",
+      "lugares": 3,
+      "velocidade": [
+        6.0,
+        9.0
+      ],
+      "linhas": "principais",
+      "visual": "Capota de vidro arredondada estilo bolha, carenagem lustrosa na cor da linha, adesivos de skate e letreiro LED de destino.",
+      "tris": 60
+    }
+  ],
+  "paradas": {
+    "visual": "Abrigo em vidro curvo verde-água, banco de concreto grindável, mapa da linha em gel e bicicletário/rack de skate.",
+    "acessivel": true
+  }
+}
