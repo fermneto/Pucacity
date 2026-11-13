@@ -6,7 +6,10 @@
       "nome": "Rampa-Ponte",
       "substitui_ponte": true,
       "descricao": "Kicker de lançamento numa margem e rampa de aterrissagem na outra.",
-      "vao_m": [8, 25],
+      "vao_m": [
+        8,
+        25
+      ],
       "pontos_gap": 500,
       "visual": "Concreto com borda zebrada amarelo/preto; aterrissagem com faixa verde-limão; placa em gel com o nome do gap.",
       "rota_acessivel": "elevador_bolha"
@@ -16,7 +19,10 @@
       "nome": "Loop Aéreo",
       "substitui_ponte": true,
       "descricao": "Loop vertical completo sobre avenidas largas.",
-      "diametro_m": [10, 18],
+      "diametro_m": [
+        10,
+        18
+      ],
       "velocidade_minima": 7.0,
       "pontos_gap": 1500,
       "visual": "Pista de vidro ciano translúcido com estrutura cromada e bolhas saindo das bordas.",
@@ -27,7 +33,10 @@
       "nome": "Salto Mortal",
       "substitui_ponte": true,
       "descricao": "Gap longo sobre canal ou trilho, com recorde de distância exibido na placa.",
-      "vao_m": [25, 60],
+      "vao_m": [
+        25,
+        60
+      ],
       "pontos_gap": 3000,
       "visual": "Rampa alta com bandeirolas, placar de recorde em CRT e rede de segurança verde-água embaixo.",
       "rota_acessivel": "elevador_bolha"
@@ -37,7 +46,10 @@
       "nome": "Rail-Passarela",
       "substitui_ponte": true,
       "descricao": "Corrimão longo entre prédios, atravessado só no grind.",
-      "comprimento_m": [15, 40],
+      "comprimento_m": [
+        15,
+        40
+      ],
       "pontos_por_metro": 20,
       "visual": "Tubo cromado com luzes de gel a cada 2 m; passarela de vidro coberta paralela para pedestres.",
       "rota_acessivel": "passarela_vidro"
@@ -62,6 +74,25 @@
       "substitui_ponte": false,
       "descricao": "Praça rebaixada em forma de bowl, usada como rotatória do trânsito de rodinhas.",
       "visual": "Bowl de concreto com piscina-fonte no centro, borda de azulejo azul-céu."
+    },
+    {
+      "id": "torre_espiral",
+      "nome": "Torre Espiral",
+      "substitui_ponte": false,
+      "descricao": "Rampa em hélice de 2 voltas em volta de um cilindro de vidro; do topo, salta-se de volta à praça.",
+      "altura_m": 12,
+      "pontos_gap": 2000,
+      "visual": "Madeira com faixas rosa-algodão, guarda-corpo cromado, cilindro de vidro ciano e lábio zebrado no topo."
+    },
+    {
+      "id": "mega_halfpipe",
+      "nome": "Mega Half-pipe",
+      "substitui_ponte": false,
+      "descricao": "Half-pipe gigante de praça; riders pendulam de um lado a outro e fazem aéreos acima do coping.",
+      "altura_m": 5,
+      "comprimento_m": 16,
+      "pontos_gap": 800,
+      "visual": "U de madeira com faixa central amarela, decks de concreto, coping cromado e paredes pichadas."
     },
     {
       "id": "elevador_bolha",

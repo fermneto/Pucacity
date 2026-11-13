@@ -5,6 +5,7 @@ import veiculos from '../../data/arte/veiculos.json';
 import type { CityCrossing, CityFile, LaneKind } from '../core/CityFile';
 import { CityView, LANE_OFFSET, type OverlayStrip } from './CityView';
 import { buildModel } from './models/catalog';
+import { MEGAPIPE, SPIRAL } from './models/radical';
 import { createPs1Material } from './ps1/Ps1Material';
 import { getAtlas } from './textures/Atlas';
 import { pickLook } from './palette';
@@ -34,6 +35,8 @@ const TRICK_NAMES: Record<string, string[]> = {
   kick_scooter: ['TAILWHIP', 'BARSPIN'], bmx: ['BACKFLIP', 'SUPERMAN'], wheelchair: ['BACKFLIP DE CADEIRA'],
 };
 
+interface Stunt { kind: 'spiral_tower' | 'megapipe'; x: number; z: number; rot: number; phase: number; lane: number }
+
 interface Agent {
   model: string;
   info: VehicleInfo | null;
@@ -46,6 +49,7 @@ interface Agent {
   airborne: boolean;
   slot: number;
   fixedRoute?: number[];   // coletivo: sequência de links
+  stunt?: Stunt;           // acrobata preso a um elemento radical
   routeIdx?: number;
 }
 
@@ -56,7 +60,8 @@ interface Link {
   edgeId?: number;
   loop?: boolean;
   hasLane: Record<LaneKind, boolean>;
-  grid: 'N' | 'S';
+  /** Faixa de cidade entre canais (0 = norte); -1 = travessia. */
+  grid: number;
 }
 
 export interface TrafficEvents { onTrick?: (text: string) => void }
@@ -87,16 +92,32 @@ export class DemoTraffic {
       this.spawn(model, info);
     }
     const transitLinks = this.links.map((l, i) => ({ l, i })).filter(({ l }) => l.hasLane.transit && !l.crossing);
-    const lines = [
-      { model: 'veh_tuktuk', grid: 'N' as const, color: '#3FD0E8', n: 5 },
-      { model: 'veh_tandem', grid: 'S' as const, color: '#FF5FA8', n: 4 },
-      { model: 'veh_tandem_4', grid: 'S' as const, color: '#FFE23A', n: 2 },
-    ];
+    // linhas de coletivo: uma por faixa de cidade, alternando tuk-tuk e tandem
+    const COLORS = ['#3FD0E8', '#FF5FA8', '#B8F02A', '#FFE23A', '#7B4FD6'];
+    const bands = [...new Set(this.links.filter((l) => l.grid >= 0).map((l) => l.grid))];
+    const lines = bands.flatMap((g) => [
+      { model: g % 2 ? 'veh_tandem' : 'veh_tuktuk', grid: g, color: COLORS[g % COLORS.length], n: 6 },
+      { model: 'veh_tandem_4', grid: g, color: COLORS[(g + 3) % COLORS.length], n: 2 },
+    ]);
     for (const line of lines) {
       const route = transitLinks.filter(({ l }) => l.grid === line.grid).map(({ i }) => i);
       for (let k = 0; k < line.n; k++) {
         this.spawn(line.model, null, route, line.color);
         counts.set(line.model, (counts.get(line.model) ?? 0) + 1);
+      }
+    }
+
+    // acrobatas: riders presos à Torre Espiral e ao Mega Half-pipe
+    const STUNT_MODELS = ['veh_skate', 'veh_bmx', 'veh_skates', 'veh_kick_scooter', 'veh_wheelchair'];
+    for (const f of city.features ?? []) {
+      if (f.kind !== 'spiral_tower' && f.kind !== 'megapipe') continue;
+      const n = f.kind === 'spiral_tower' ? 5 : 5;
+      for (let k = 0; k < n; k++) {
+        const model = STUNT_MODELS[(k + Math.floor(this.rng() * 5)) % STUNT_MODELS.length];
+        const info = INFO.find((v) => `veh_${v.kind}` === model)!;
+        this.spawn(model, info);
+        this.agents[this.agents.length - 1].stunt = { kind: f.kind, x: f.x, z: f.y, rot: (f.rot * Math.PI) / 2, phase: k / n, lane: k };
+        counts.set(model, (counts.get(model) ?? 0) + 1);
       }
     }
 
@@ -146,16 +167,17 @@ export class DemoTraffic {
       const i = this.links.push(l) - 1;
       for (const n of [l.a, l.b]) this.adj.set(n, [...(this.adj.get(n) ?? []), i]);
     };
-    const canalY = this.city.canal ? (this.city.canal.y0 + this.city.canal.y1) / 2 : Infinity;
+    const canals = this.city.canals ?? [];
+    const band = (y: number) => canals.filter((c) => c.y1 < y).length;
     for (const e of this.city.edges) {
       const A = nodes[e.from], B = nodes[e.to];
       const hasLane = { sidewalk: !!e.lanes.sidewalk, slow: !!e.lanes.slow, fast: !!e.lanes.fast, transit: !!e.lanes.transit };
       const loop = (this.city.features ?? []).some((f) => f.kind === 'air_loop' && Math.abs(f.y - A.y) < 0.01 && Math.abs(f.y - B.y) < 0.01 && f.x > Math.min(A.x, B.x) && f.x < Math.max(A.x, B.x));
-      add({ a: e.from, b: e.to, len: Math.hypot(B.x - A.x, B.y - A.y), edgeId: e.id, loop, hasLane, grid: A.y < canalY ? 'N' : 'S' });
+      add({ a: e.from, b: e.to, len: Math.hypot(B.x - A.x, B.y - A.y), edgeId: e.id, loop, hasLane, grid: band(A.y) });
     }
     for (const c of this.city.crossings) {
       const A = nodes[c.from], B = nodes[c.to];
-      add({ a: c.from, b: c.to, len: Math.hypot(B.x - A.x, B.y - A.y), crossing: c, hasLane: { sidewalk: true, slow: true, fast: true, transit: false }, grid: 'N' });
+      add({ a: c.from, b: c.to, len: Math.hypot(B.x - A.x, B.y - A.y), crossing: c, hasLane: { sidewalk: true, slow: true, fast: true, transit: false }, grid: -1 });
     }
   }
 
@@ -205,6 +227,11 @@ export class DemoTraffic {
     this.time += dt;
     this.airborneCount = 0;
     for (const a of this.agents) {
+      if (a.stunt) {
+        this.placeStunt(a);
+        if (a.airborne) this.airborneCount++;
+        continue;
+      }
       const l = this.links[a.edge];
       a.t += (a.speed * dt) / l.len;
       if (a.t >= 1) {
@@ -308,6 +335,63 @@ export class DemoTraffic {
       if (flip) m.multiply(new Matrix4().makeRotationX(-flip));
       m.setPosition(pos);
     }
+    this.meshes.get(a.model)!.setMatrixAt(a.slot, m);
+  }
+
+  /** Trajetórias dos acrobatas, em metros no espaço local do elemento → mundo. */
+  private placeStunt(a: Agent) {
+    const st = a.stunt!;
+    let pos: Vector3, dir: Vector3, up = new Vector3(0, 1, 0);
+    let spin = 0, flip = 0;
+    a.airborne = false;
+    if (st.kind === 'spiral_tower') {
+      const { rIn, rOut, turns, height } = SPIRAL;
+      const r = (rIn + rOut) / 2;
+      const u = (this.time / 16 + st.phase) % 1;
+      if (u < 0.7) { // sobe a hélice
+        const s = u / 0.7, ang = s * turns * Math.PI * 2;
+        pos = new Vector3(Math.cos(ang) * r, s * height, Math.sin(ang) * r);
+        dir = new Vector3(-Math.sin(ang), height / (turns * Math.PI * 2 * r), Math.cos(ang));
+      } else if (u < 0.88) { // salta do topo com mortal duplo
+        const v = (u - 0.7) / 0.18;
+        pos = new Vector3(r + v * 6, height * (1 - v) + 4 * 4 * v * (1 - v), 0);
+        dir = new Vector3(1, 0, 0);
+        flip = v * Math.PI * 4;
+        a.airborne = true;
+      } else { // volta rolando para a base
+        const v = (u - 0.88) / 0.12;
+        pos = new Vector3(r + 6 - v * 6, 0, -0.8 * Math.sin(v * Math.PI));
+        dir = new Vector3(-1, 0, 0);
+      }
+    } else {
+      const { R, L } = MEGAPIPE;
+      const w = (Math.PI * 2) / 3.6;
+      const ph = this.time * w + st.phase * Math.PI * 2;
+      const sn = Math.sin(ph), phi = (Math.PI / 2) * sn;
+      const x = -L / 2 + 2 + (st.lane % 5) * ((L - 4) / 4);
+      pos = new Vector3(x, R * (1 - Math.cos(phi)), R * Math.sin(phi));
+      const going = Math.sign(Math.cos(ph)) || 1;
+      dir = new Vector3(0, Math.sin(phi), Math.cos(phi)).multiplyScalar(going);
+      up = new Vector3(0, Math.cos(phi), -Math.sin(phi));
+      const extra = Math.max(0, (Math.abs(sn) - 0.9) / 0.1);
+      if (extra > 0) { // aéreo acima do coping
+        pos.y += extra * 3.5;
+        spin = extra * Math.PI;
+        a.airborne = true;
+      }
+    }
+    // local (m) → mundo (tiles)
+    const rot = new Matrix4().makeRotationY(st.rot);
+    pos.applyMatrix4(rot).multiplyScalar(1 / TILE_M).add(new Vector3(st.x, 0, st.z));
+    dir.applyMatrix4(rot).normalize();
+    up.applyMatrix4(rot).normalize();
+    const z = dir;
+    const xv = new Vector3().crossVectors(up, z).normalize();
+    const yv = new Vector3().crossVectors(z, xv);
+    const m = new Matrix4().makeBasis(xv, yv, z);
+    if (spin) m.multiply(new Matrix4().makeRotationY(spin));
+    if (flip) m.multiply(new Matrix4().makeRotationX(-flip));
+    m.setPosition(pos);
     this.meshes.get(a.model)!.setMatrixAt(a.slot, m);
   }
 

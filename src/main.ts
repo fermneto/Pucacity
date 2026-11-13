@@ -29,7 +29,8 @@ const scene = new Scene();
 const view = new CityView(city);
 scene.add(view.group);
 const center = new Vector3(city.size.w / 2 - 0.5, 0, city.size.h / 2 - 0.5);
-const atmo = new Atmosphere(center, city.canal ? { ...city.canal, x0: -25, x1: city.size.w + 25 } : undefined);
+const firstCanal = city.canals?.[0];
+const atmo = new Atmosphere(center, firstCanal ? { ...firstCanal, x0: -25, x1: city.size.w + 25 } : undefined);
 scene.add(atmo.group);
 
 const hud = new Hud();
@@ -129,8 +130,8 @@ const NOMES: Record<string, string> = {
   bubble_lift: 'Elevador de Bolha', glass_walkway: 'Passarela de vidro', transit_only: 'Só coletivo',
 };
 function select(p: Vector3) {
-  const canal = city.canal;
-  if (canal && p.z > canal.y0 - 0.6 && p.z < canal.y1 + 0.6) {
+  const canal = city.canals?.find((c) => p.z > c.y0 - 0.6 && p.z < c.y1 + 0.6);
+  if (canal) {
     const c = city.crossings.find((c) => Math.abs(city.nodes[c.from].x - p.x) < 0.9);
     if (c) {
       const ok = crossingIsAccessible(c);

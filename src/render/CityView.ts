@@ -36,6 +36,7 @@ const FEATURE_MODEL: Record<string, string> = {
   air_loop: 'rad_air_loop', wallride: 'rad_wallride', quarter: 'rad_quarter', bowl: 'rad_bowl',
   stop_shelter: 'prop_stop_shelter', share_station: 'prop_share_station', crt_billboard: 'prop_crt_billboard',
   tree: 'prop_tree_aero', lamp: 'prop_lamp', bench: 'prop_bench',
+  spiral_tower: 'rad_spiral_tower', megapipe: 'rad_megapipe',
 };
 
 export interface OverlayStrip { edge: number; lane: LaneKind; side: number; start: number }
@@ -55,8 +56,8 @@ export class CityView {
     const water = new MeshBuilder();
     const over = new MeshBuilder();
     const access = new MeshBuilder();
-    const canal = city.canal ?? { y0: 0, y1: 0 };
-    this.canalSpanM = (canal.y1 - canal.y0) * TILE_M;
+    const canals = city.canals ?? [];
+    this.canalSpanM = canals.length ? (canals[0].y1 - canals[0].y0) * TILE_M : 0;
 
     this.ground(opaque, water);
     for (const e of city.edges) this.road(opaque, over, e);
@@ -70,10 +71,13 @@ export class CityView {
     };
 
     for (const b of city.buildings) place(b.model, b.x, b.y, (b.rotation * Math.PI) / 2);
-    for (const f of city.features ?? []) place(FEATURE_MODEL[f.kind], f.x, f.y, (f.rot * Math.PI) / 2);
+    for (const f of city.features ?? []) {
+      if (FEATURE_MODEL[f.kind]) place(FEATURE_MODEL[f.kind], f.x, f.y, (f.rot * Math.PI) / 2);
+    }
 
     for (const c of city.crossings) {
       const A = city.nodes[c.from], B = city.nodes[c.to];
+      const canal = canals.find((k) => k.y0 > A.y && k.y1 < B.y) ?? { y0: A.y, y1: B.y };
       const x = A.x, zMid = (canal.y0 + canal.y1) / 2;
       place(RADICAL_MODEL[c.radical], x, zMid, 0, this.canalSpanM);
       if (c.access === 'bubble_lift') {
@@ -102,7 +106,7 @@ export class CityView {
 
   private ground(o: MeshBuilder, water: MeshBuilder) {
     const { w, h } = this.city.size;
-    const canal = this.city.canal;
+    const canals = [...(this.city.canals ?? [])].sort((a, b) => a.y0 - b.y0);
     // Pisos grandes são subdivididos (como no PS1) para o affine warping não deformar demais;
     // UV em coordenadas de mundo para não haver costura entre os pedaços.
     const flat = (b: MeshBuilder, x0: number, z0: number, x1: number, z1: number, y: number, p: Paint, step = 1) => {
@@ -116,24 +120,26 @@ export class CityView {
         b.tri(A, C, D, uv(xa, za), uv(xb, zb), uv(xa, zb), p, up);
       }
     };
-    // gramado em volta + "ilhas" de concreto nos quarteirões
+    // gramado em volta + chão de concreto/calçada entre os canais
     const pad = 30;
     const grass: Paint = { tile: 'grass', uvScale: 0.5 };
     flat(o, -pad, -pad, w + pad, -0.5, -0.01, grass, 2);
     flat(o, -pad, h - 0.5, w + pad, h + pad, -0.01, grass, 2);
-    const bands: [number, number][] = canal ? [[-0.5, canal.y0], [canal.y1, h - 0.5]] : [[-0.5, h - 0.5]];
-    for (const [z0, z1] of bands) {
+    const cuts = [-0.5, ...canals.flatMap((c) => [c.y0, c.y1]), h - 0.5];
+    for (let k = 0; k < cuts.length; k += 2) {
+      const [z0, z1] = [cuts[k], cuts[k + 1]];
       flat(o, -pad, z0, -0.5, z1, -0.01, grass, 2);
       flat(o, w - 1.5, z0, w + pad, z1, -0.01, grass, 2);
+      flat(o, -0.5, z0, w - 1.5, z1, 0, { tile: 'sidewalk', uvScale: 2 });
     }
-    if (canal) {
-      flat(o, -0.5, -0.5, w - 1.5, canal.y0, 0, { tile: 'sidewalk', uvScale: 2 });
-      flat(o, -0.5, canal.y1, w - 1.5, h - 0.5, 0, { tile: 'sidewalk', uvScale: 2 });
-      // canal: água rebaixada + muretas de concreto
+    for (const canal of canals) {
+      // canal: água rebaixada + muretas de concreto (em pedaços, anti-affine)
       flat(water, -pad, canal.y0, w + pad, canal.y1, -0.18, { tile: 'water', uvScale: 1, gloss: 0.35 }, 1.2);
       for (const [z, n] of [[canal.y0, 1], [canal.y1, -1]] as const) {
-        o.quad(new Vector3(-pad, -0.2, z), new Vector3(w + pad, -0.2, z), new Vector3(w + pad, 0, z), new Vector3(-pad, 0, z),
-          { tile: 'concrete', uvScale: 1 }, new Vector3(0, 0, n));
+        for (let x = -pad; x < w + pad; x += 2) {
+          o.quad(new Vector3(x, -0.2, z), new Vector3(x + 2, -0.2, z), new Vector3(x + 2, 0, z), new Vector3(x, 0, z),
+            { tile: 'concrete', uvScale: 1 }, new Vector3(0, 0, n));
+        }
       }
     }
   }

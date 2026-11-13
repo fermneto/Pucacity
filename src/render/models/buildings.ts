@@ -49,6 +49,24 @@ export const BUILDING_BUILDERS: Record<string, (b: B) => void> = {
     b.at(0, 0, 3.7, 0, (b) => b.box(3, 2.8, 0.5, { color: GEL[1], gloss: 0.8, omit: ['bottom', 'nz'] }));
   },
 
+  /** Torre Bolha: esferas de vidro empilhadas (Aero no talo). */
+  bld_com_3: (b) => {
+    b.prism(3, 3, 8, { tile: 'concrete', topPaint: { color: CHROME, gloss: 1 } });
+    b.at(0, 2.4, 0, 0, (b) => b.sphere(3.2, 8, 4, { tile: 'glass', gloss: 1, uvScale: 0.2 }));
+    b.at(0, 8.2, 0, 0, (b) => b.sphere(2.6, 8, 4, { color: '#A6F0D2', gloss: 1 }));
+    b.at(0, 13, 0, 0, (b) => b.sphere(1.9, 8, 4, { color: '#C9A4F2', gloss: 1 }));
+    b.at(0, 16.6, 0, 0, (b) => b.prism(0.1, 3, 3, { color: CHROME, radiusTop: 0 }));
+  },
+
+  /** Conjunto com pista no telhado: quarter-pipe e rail lá em cima. */
+  bld_res_3: (b) => {
+    b.box(7, 3.2, 6.5, { tile: 'graffiti', omit: ['top', 'bottom'] });
+    b.at(0, 3.2, 0, 0, (b) => b.box(7, 7, 6.5, { tile: 'facade', faces: { top: { tile: 'concrete' } }, omit: ['bottom'] }));
+    b.at(0, 10.2, -1.6, Math.PI, (b) => quarterPipe(b, 6, 1.4, 3));
+    b.at(0, 10.2, 2.2, 0, (b) => b.box(5, 0.35, 0.1, { color: CHROME, gloss: 1, omit: ['bottom'] }));
+    b.at(-3.2, 5, 3.3, 0, (b) => b.box(0.3, 4.5, 0.2, { color: '#FF7A1A', gloss: 0.8, omit: ['bottom'] }));
+  },
+
   /** Pátio Industrial: galpão de tijolo com telhado dente-de-serra e chaminé. */
   bld_ind_1: (b) => {
     b.box(7.5, 5, 7, { tile: 'brick', omit: ['top', 'bottom'], faces: { pz: { tile: 'graffiti' } } });
