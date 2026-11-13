@@ -23,9 +23,41 @@ export class Rng {
     return min + Math.floor(this.next() * (max - min + 1));
   }
 
+  /** Float em [min, max). */
+  range(min: number, max: number): number {
+    return min + this.next() * (max - min);
+  }
+
+  /** true com probabilidade p. */
+  chance(p: number): boolean {
+    return this.next() < p;
+  }
+
+  /** Distribuição triangular simétrica em [min, max] (soma de dois uniformes). */
+  triangular(min: number, max: number): number {
+    return min + ((this.next() + this.next()) / 2) * (max - min);
+  }
+
   pick<T>(list: readonly T[]): T {
     if (list.length === 0) throw new Error('Rng.pick: lista vazia');
     return list[Math.floor(this.next() * list.length)] as T;
+  }
+
+  /** Índice sorteado proporcionalmente aos pesos (pesos ≤ 0 nunca saem). -1 se todos forem ≤ 0. */
+  weighted(weights: readonly number[]): number {
+    let total = 0;
+    for (const w of weights) if (w > 0) total += w;
+    if (total <= 0) return -1;
+    let r = this.next() * total;
+    let last = -1;
+    for (let i = 0; i < weights.length; i++) {
+      const w = weights[i]!;
+      if (w <= 0) continue;
+      last = i;
+      if (r < w) return i;
+      r -= w;
+    }
+    return last;
   }
 
   /** Estado atual (para save/load). */
