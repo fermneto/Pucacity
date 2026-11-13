@@ -65,7 +65,7 @@ describe('computeKpis', () => {
     const g = new RoadGraph(city);
     expect(computeKpis(stats(), { city, graph: g }).congestionPct).toBe(0);
     const e = g.edges.find((x) => x.link === 'road')!;
-    e.flowVph.fast = g.params.laneCapacityVph.fast * 1.2;
+    e.flowVph.fast = 1e6; // muito acima de qualquer capacidade (não depende do formato de graph.params)
     const roads = g.edges.filter((x) => x.link === 'road').length;
     expect(computeKpis(stats(), { city, graph: g }).congestionPct).toBeCloseTo(100 / roads);
   });
