@@ -15,7 +15,9 @@ export function makeRng(seed: number): Rng {
 }
 
 export function pick<T>(rng: Rng, items: readonly T[]): T {
-  return items[Math.floor(rng() * items.length)];
+  const item = items[Math.floor(rng() * items.length)];
+  if (item === undefined) throw new Error('pick: lista vazia');
+  return item;
 }
 
 export function pickWeighted<T>(rng: Rng, items: readonly T[], weight: (t: T) => number): T {
@@ -25,11 +27,13 @@ export function pickWeighted<T>(rng: Rng, items: readonly T[], weight: (t: T) =>
     r -= weight(i);
     if (r <= 0) return i;
   }
-  return items[items.length - 1];
+  const last = items[items.length - 1];
+  if (last === undefined) throw new Error('pickWeighted: lista vazia');
+  return last;
 }
 
 /** Parâmetros de URL usados pelo jogo e pelo script de capturas. */
-export const params = new URLSearchParams(location.search);
+export const params = new URLSearchParams(typeof location === 'undefined' ? '' : location.search);
 export function numParam(name: string, fallback: number): number {
   const v = params.get(name);
   return v === null || v === '' || Number.isNaN(Number(v)) ? fallback : Number(v);

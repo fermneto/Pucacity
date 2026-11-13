@@ -66,9 +66,14 @@ export class Ps1Renderer {
     ps1Shared.uJitter.value = s.ps1 ? s.jitter : 0;
     ps1Shared.uAffine.value = s.ps1 ? s.affine : 0;
     const u = this.post.material.uniforms;
-    u.uLowRes.value.set(this.width, this.height);
-    u.uDither.value = s.ps1 ? s.dither : 0;
-    u.uQuant.value = s.ps1 && s.quantize15bit ? 1 : 0;
+    const uniform = (name: string) => {
+      const v = u[name];
+      if (!v) throw new Error(`PostFx: uniform '${name}' não existe`);
+      return v;
+    };
+    uniform('uLowRes').value.set(this.width, this.height);
+    uniform('uDither').value = s.ps1 ? s.dither : 0;
+    uniform('uQuant').value = s.ps1 && s.quantize15bit ? 1 : 0;
   }
 
   get aspect() {
